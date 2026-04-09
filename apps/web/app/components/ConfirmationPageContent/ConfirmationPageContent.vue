@@ -104,6 +104,56 @@ import { paths } from '~/utils/paths';
 
 const NuxtLink = resolveComponent('NuxtLink');
 const { order } = defineProps<ConfirmationPageContentProps>();
+
+const { data: shippingCountries } = useActiveShippingCountries();
+const countryName = computed(() => {
+  const countryId = orderGetters.getBillingAddress(order)?.countryId;
+  return shippingCountries.value.find((c) => c.id === countryId)?.currLangName ?? '';
+});
+
+useHead({
+  script: [
+    {
+      id: 'ecommerce',
+      tagPosition: 'bodyOpen',
+      tagPriority: `before:gtm`,
+      innerHTML: `
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    'event': 'purchase',
+    'ecommerce': {
+      'transaction_id': '${ orderGetters.getId(order) }',
+      'affiliation': '${ process.env.NUXT_PUBLIC_OG_TITLE|| process.env.OG_TITLE || 'PlentyShop' }',
+      'value': '${ orderGetters.getTotal(order.totals) }',
+      'tax': '${ orderGetters.getVatAmount(order.totals) }',
+      'shipping': '${ orderGetters.getShippingAmount(order.totals) }',
+      'currency': '${ orderGetters.getCurrency(order) }',
+      'coupon': '${ orderGetters.getCouponValue(order.totals) }',
+      'payment_type': '${ orderGetters.getPaymentMethodName(order) }',
+      'shipping_tier': '${ orderGetters.getShippingProfileName(order) }',
+      'items': ${ JSON.stringify(
+        orderGetters.getItems(order)
+          .filter((item) => !orderGetters.isBundleItem(item) && !orderGetters.isCouponItem(item))
+          .map((item) => ({
+            'item_id': item.itemVariationId,
+            'item_name': item.orderItemName,
+            'price': item.amounts[0]?.priceGross,
+            'quantity': item.quantity,
+          }))
+      )}
+    },
+    'customer_info': {
+      'email': '${ orderGetters.getOrderEmail(order) }',
+      'zip': '${ orderGetters.getBillingAddress(order)?.postalCode }',
+      'city': '${ orderGetters.getBillingAddress(order)?.town }',
+      'country': '${ countryName.value }'
+    }
+  });
+`
+    },
+  ],
+});
+
 const { isOpen: isAuthenticationOpen, toggle: closeAuthentication } = useDisclosure();
 const { isAuthorized } = useCustomer();
 const { getActiveShippingCountries } = useActiveShippingCountries();
