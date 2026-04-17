@@ -106,8 +106,14 @@ const NuxtLink = resolveComponent('NuxtLink');
 const { order } = defineProps<ConfirmationPageContentProps>();
 
 const { data: shippingCountries } = useActiveShippingCountries();
+const billingAddress = computed(() => orderGetters.getBillingAddress(order));
+
+const customerPhone = computed(() => {
+  return billingAddress.value?.options?.find((option) => option.typeId === 4)?.value ?? '';
+});
+
 const countryName = computed(() => {
-  const countryId = orderGetters.getBillingAddress(order)?.countryId;
+  const countryId = billingAddress.value?.countryId;
   return shippingCountries.value.find((c) => c.id === countryId)?.currLangName ?? '';
 });
 
@@ -143,9 +149,13 @@ useHead({
       )}
     },
     'customer_info': {
+      'firstname': '${ billingAddress.value?.name2 }',
+      'lastname': '${ billingAddress.value?.name3 }',
+      'street': '${ billingAddress.value?.address1 } ${ billingAddress.value?.address2 }',
+      'phone': '${ customerPhone.value }',
       'email': '${ orderGetters.getOrderEmail(order) }',
-      'zip': '${ orderGetters.getBillingAddress(order)?.postalCode }',
-      'city': '${ orderGetters.getBillingAddress(order)?.town }',
+      'zip': '${ billingAddress.value?.postalCode }',
+      'city': '${ billingAddress.value?.town }',
       'country': '${ countryName.value }'
     }
   });
