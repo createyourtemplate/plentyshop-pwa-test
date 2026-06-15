@@ -6,7 +6,9 @@ export default defineNuxtModule({
   },
   setup(_options, nuxt) {
     const resolver = createResolver(import.meta.url);
-    addPlugin({ src: resolver.resolve('./runtime/gtm.plugin'), mode: 'server' });
+    addPlugin({ src: resolver.resolve('./runtime/plugins/gtm-init.server'), mode: 'server' });
+    addPlugin({ src: resolver.resolve('./runtime/plugins/gtm-consent.server'), mode: 'server' });
+    
 
     nuxt.options.app.head.script = nuxt.options.app.head.script ?? [];
     nuxt.options.app.head.script.push({
