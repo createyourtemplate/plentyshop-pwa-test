@@ -1,17 +1,45 @@
-export default defineNuxtPlugin({
-  name: 'gtm-consent',
-  parallel: true,
-  setup() {
+export default defineNuxtPlugin(() => {
+
+    if (import.meta.client) {
+      return;
+    }
+
+    const { public: {
+      // googleAnalyticsToRegister,
+      googleAdsCookieGroup,
+      googleAdsCookiesToRegister,
+      // googleAdsTrackingId,
+      enableGoogleAds,
+      registerAdsCookieAsOptOut,
+      googleGtmCookieGroup,
+      googleGtmCookiesToRegister,
+      enableGoogleGtm,
+      registerGtmCookieAsOptOut 
+    } } = useRuntimeConfig();
+
     const { add } = useRegisterCookie();
 
-    add({
-        name: 'Meins',
-        Provider: 'Meins',
-        Status: 'Meins',
+    if ( enableGoogleGtm ) {
+      add({
+        name: 'Google GTM',
+        Provider: 'Cyt.cookieBar.moduleGoogleGtm.provider',
+        Status: 'CookieBar.moduleGoogleAnalytics.status',
         PrivacyPolicy: 'https://policies.google.com/privacy',
         Lifespan: 'Session',
-        cookieNames: ['/^_ga/', '_ga', '_gid', '_gat'],
-        accepted: true
-    }, 'essentials');
-  },
+        cookieNames: googleGtmCookiesToRegister.split(','),
+        accepted: registerGtmCookieAsOptOut,
+      }, googleGtmCookieGroup || 'CookieBar.essentials.label');
+    }
+
+    if ( enableGoogleAds ) {
+      add({
+        name: 'Google Ads',
+        Provider: 'Cyt.cookieBar.moduleGoogleGtm.provider',
+        Status: 'CookieBar.moduleGoogleAnalytics.status',
+        PrivacyPolicy: 'https://policies.google.com/privacy',
+        Lifespan: 'Session',
+        cookieNames: googleAdsCookiesToRegister.split(','),
+        accepted: registerAdsCookieAsOptOut,
+      }, googleAdsCookieGroup || 'CookieBar.essentials.label');
+    }
 });
