@@ -21,11 +21,11 @@ export default defineNuxtPlugin(() => {
 
     if ( enableGoogleGtm ) {
       add({
-        name: 'Google GTM',
-        Provider: 'Cyt.cookieBar.moduleGoogleGtm.provider',
-        Status: 'CookieBar.moduleGoogleAnalytics.status',
-        PrivacyPolicy: 'https://policies.google.com/privacy',
-        Lifespan: 'Session',
+        name: t('Cyt.cookieBar.moduleGoogleGtm.name'),
+        Provider: t('Cyt.cookieBar.moduleGoogleGtm.provider'),
+        Status: t('Cyt.cookieBar.moduleGoogleGtm.status'),
+        PrivacyPolicy: "https://policies.google.com/privacy",
+        Lifespan: t('Cyt.cookieBar.moduleGoogleGtm.lifeSpan'),
         cookieNames: googleGtmCookiesToRegister.split(','),
         accepted: registerGtmCookieAsOptOut,
       }, googleGtmCookieGroup || 'CookieBar.essentials.label');
@@ -33,11 +33,11 @@ export default defineNuxtPlugin(() => {
 
     if ( enableGoogleAds ) {
       add({
-        name: 'Google Ads',
-        Provider: 'Cyt.cookieBar.moduleGoogleGtm.provider',
-        Status: 'CookieBar.moduleGoogleAnalytics.status',
-        PrivacyPolicy: 'https://policies.google.com/privacy',
-        Lifespan: 'Session',
+        name: t('Cyt.cookieBar.moduleGoogleAds.name'),
+        Provider: t('Cyt.cookieBar.moduleGoogleAds.provider'),
+        Status: t('Cyt.cookieBar.moduleGoogleAds.status'),
+        PrivacyPolicy: "https://policies.google.com/privacy/ads",
+        Lifespan: t('Cyt.cookieBar.moduleGoogleAds.lifeSpan'),
         cookieNames: googleAdsCookiesToRegister.split(','),
         accepted: registerAdsCookieAsOptOut,
       }, googleAdsCookieGroup || 'CookieBar.essentials.label');

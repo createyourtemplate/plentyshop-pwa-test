@@ -2,7 +2,16 @@
     "Cyt": {
         "cookieBar": {
             "moduleGoogleGtm": {
-                "provider": "Google"
+                "name": "Google Tag Manager",
+                "provider": "Google LLC",
+                "status": "Einbindung vom Google Tag Manager, der zur Aussteuerung von Scripten benötigt wird.",
+                "lifeSpan": "VARIABEL"
+            },
+            "moduleGoogleAds": {
+                "name": "Google Ads Conversion Messung und dynamisches Remarketing",
+                "provider": "Google, Doubleclick.net",
+                "status": "Cookies von Google Ads, die für Website-Analysen, Ad Targeting und Anzeigenmessung verwendet werden.",
+                "lifeSpan": "VARIABEL, siehe Beschreibung"
             }
         }
     }
