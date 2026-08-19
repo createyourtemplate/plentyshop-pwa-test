@@ -28,11 +28,11 @@ const googleGtmCookiesToRegister = computed({
 {
   "en": {
     "label": "Cookies that should be registered",
-    "placeholder": "Comma-separated"
+    "placeholder": "no-cookies"
   },
   "de": {
     "label": "Cookies die registriert werden sollen",
-    "placeholder": "Kommasepariert"
+    "placeholder": "no-cookies"
   }
 }
 </i18n>
