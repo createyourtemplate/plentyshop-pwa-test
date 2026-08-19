@@ -28,11 +28,11 @@ const googlegtmTrackingId = computed({
 {
   "en": {
     "label": "Google Tag Manager ID",
-    "placeholder": "Google Tag Manager ID"
+    "placeholder": "GTM-XXXXXXX"
   },
   "de": {
     "label": "Google Tag Manager ID",
-    "placeholder": "Google Tag Manager ID"
+    "placeholder": "GTM-XXXXXXX"
   }
 }
 </i18n>
