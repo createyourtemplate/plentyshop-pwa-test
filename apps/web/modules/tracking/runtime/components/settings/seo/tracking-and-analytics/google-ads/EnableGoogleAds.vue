@@ -28,7 +28,7 @@ const enableGoogleAds = computed({
     "label": "Enable Google Ads"
   },
   "de": {
-    "label": "Enable Google Ads"
+    "label": "Google Ads aktivieren"
   }
 }
 </i18n>
