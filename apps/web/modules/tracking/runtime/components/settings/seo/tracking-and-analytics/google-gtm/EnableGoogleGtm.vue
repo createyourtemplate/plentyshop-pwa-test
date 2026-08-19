@@ -25,10 +25,10 @@ const enableGoogleGtm = computed({
 <i18n lang="json">
 {
   "en": {
-    "label": "Enable Google GTM"
+    "label": "Enable Google Tag Manager"
   },
   "de": {
-    "label": "Enable Google GTM"
+    "label": "Google Tag Manager aktivieren"
   }
 }
 </i18n>
