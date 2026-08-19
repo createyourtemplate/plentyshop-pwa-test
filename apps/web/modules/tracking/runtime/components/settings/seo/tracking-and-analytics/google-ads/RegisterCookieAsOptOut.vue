@@ -25,10 +25,10 @@ const registerAdsCookieAsOptOut = computed({
 <i18n lang="json">
 {
   "en": {
-    "label": "Register Cookie as opt-out"
+    "label": "Register Cookie as Opt-Out"
   },
   "de": {
-    "label": "Register Cookie as opt-out"
+    "label": "Registriere Cookie als Opt-Out"
   }
 }
 </i18n>
