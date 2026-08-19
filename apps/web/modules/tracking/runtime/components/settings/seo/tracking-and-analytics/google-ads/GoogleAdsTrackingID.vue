@@ -27,12 +27,12 @@ const googleAdsTrackingId = computed({
 <i18n lang="json">
 {
   "en": {
-    "label": "Google Ads Tracking ID",
-    "placeholder": "Google Ads Tracking ID"
+    "label": "Google Ads Conversion-ID",
+    "placeholder": "Google Ads Conversion-ID"
   },
   "de": {
-    "label": "Google Ads Tracking ID",
-    "placeholder": "Google Ads Tracking ID"
+    "label": "Google Ads Conversion-ID",
+    "placeholder": "Google Ads Conversion-ID"
   }
 }
 </i18n>
