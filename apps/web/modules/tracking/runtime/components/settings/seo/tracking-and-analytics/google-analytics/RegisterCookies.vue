@@ -5,7 +5,7 @@
     </div>
     <label>
       <SfInput
-        v-model="googleAnalyticsToRegister"
+        v-model="googleCytGACookiesToRegister"
         type="text"
         data-testid="google-analytics-cookies-to-register"
         :placeholder="getEditorTranslation('placeholder')"
@@ -16,9 +16,9 @@
 <script setup lang="ts">
 import { SfInput } from '@storefront-ui/vue';
 
-const { updateSetting, getSetting } = useSiteSettings('googleAnalyticsToRegister');
+const { updateSetting, getSetting } = useSiteSettings('googleCytGACookiesToRegister');
 
-const googleAnalyticsToRegister = computed({
+const googleCytGACookiesToRegister = computed({
   get: () => getSetting(),
   set: (value) => updateSetting(value),
 });

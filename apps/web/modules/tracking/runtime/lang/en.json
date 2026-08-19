@@ -1,6 +1,13 @@
 {
     "Cyt": {
         "cookieBar": {
+            "moduleGoogleAnalytics": {
+                "name": "Google Analytics",
+                "provider": "Google LLC",
+                "status": "Cookies from Google Analytics, used for website analytics, ad targeting, and ad measurement.",
+                "privacyPolicy": "https://policies.google.com/privacy",
+                "lifeSpan": "VARIABEL"
+            },
             "moduleGoogleGtm": {
                 "name": "Google Tag Manager",
                 "provider": "Google LLC",
@@ -12,6 +19,10 @@
                 "provider": "Google, Doubleclick.net",
                 "status": "Cookies von Google Ads, die für Website-Analysen, Ad Targeting und Anzeigenmessung verwendet werden.",
                 "lifeSpan": "VARIABEL, siehe Beschreibung"
+            },
+            "statistics": {
+                "label": "Statistik",
+                "description": "Statistic cookies collect information anonymously. This information helps us understand how our visitors use our website."
             }
         }
     }

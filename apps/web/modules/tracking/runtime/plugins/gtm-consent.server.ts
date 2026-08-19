@@ -5,19 +5,19 @@ export default defineNuxtPlugin(() => {
     }
 
     const { public: {
-      // googleAnalyticsToRegister,
-      googleAdsCookieGroup,
+      enableCytGA,
+      googleCytGACookiesToRegister,
+      registerCookieAsOptOut,
       googleAdsCookiesToRegister,
-      // googleAdsTrackingId,
       enableGoogleAds,
       registerAdsCookieAsOptOut,
-      googleGtmCookieGroup,
       googleGtmCookiesToRegister,
       enableGoogleGtm,
       registerGtmCookieAsOptOut 
     } } = useRuntimeConfig();
 
     const { add } = useRegisterCookie();
+
 
     if ( enableGoogleGtm ) {
       add({
@@ -28,8 +28,21 @@ export default defineNuxtPlugin(() => {
         Lifespan: t('Cyt.cookieBar.moduleGoogleGtm.lifeSpan'),
         cookieNames: googleGtmCookiesToRegister.split(','),
         accepted: registerGtmCookieAsOptOut,
-      }, googleGtmCookieGroup || 'CookieBar.essentials.label');
+      }, "CookieBar.functional.label");
     }
+
+    if ( enableCytGA ) {
+      add({
+        name: t('Cyt.cookieBar.moduleGoogleAnalytics.name'),
+        Provider: t('Cyt.cookieBar.moduleGoogleAnalytics.provider'),
+        Status: t('Cyt.cookieBar.moduleGoogleAnalytics.status'),
+        PrivacyPolicy: "https://policies.google.com/privacy",
+        Lifespan: t('Cyt.cookieBar.moduleGoogleAnalytics.lifeSpan'),
+        cookieNames: googleCytGACookiesToRegister.split(','),
+        accepted: registerCookieAsOptOut,
+      }, "Cyt.cookieBar.statistics.label");
+    }
+
 
     if ( enableGoogleAds ) {
       add({
@@ -40,6 +53,6 @@ export default defineNuxtPlugin(() => {
         Lifespan: t('Cyt.cookieBar.moduleGoogleAds.lifeSpan'),
         cookieNames: googleAdsCookiesToRegister.split(','),
         accepted: registerAdsCookieAsOptOut,
-      }, googleAdsCookieGroup || 'CookieBar.essentials.label');
+      }, 'CookieBar.marketing.label');
     }
 });
