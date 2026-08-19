@@ -17,11 +17,11 @@
 <i18n lang="json">
 {
   "en": {
-    "label": "Tracking & analytics",
+    "label": "GTM Tracking with GA4 & GAds",
     "description": ""
   },
   "de": {
-    "label": "Tracking & analytics",
+    "label": "GTM Tracking mit GA4 & GAds",
     "description": ""
   }
 }
