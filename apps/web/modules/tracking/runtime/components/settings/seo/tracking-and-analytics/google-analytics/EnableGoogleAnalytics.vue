@@ -28,7 +28,7 @@ const enableCytGA = computed({
     "label": "Enable Google Analytics"
   },
   "de": {
-    "label": "Enable Google Analytics"
+    "label": "Google Analytics aktivieren"
   }
 }
 </i18n>
