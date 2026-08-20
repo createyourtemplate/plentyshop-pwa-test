@@ -38,7 +38,7 @@ export const sessionLifetimeOptions = [
 ];
 
 export const getSeoAvailabilityOptions = (): SettingOption[] => {
-  const locale = 'en';
+  const locale = 'de';
   const { $i18n } = useNuxtApp();
 
   return seoAvailabilities.map((option) => ({
@@ -48,7 +48,7 @@ export const getSeoAvailabilityOptions = (): SettingOption[] => {
 };
 
 export const getCookieGroupOptions = (): SettingOption[] => {
-  const locale = 'en';
+  const locale = 'de';
   const { $i18n } = useNuxtApp();
 
   return cookieGroupOptions.map((option) => ({
@@ -58,7 +58,7 @@ export const getCookieGroupOptions = (): SettingOption[] => {
 };
 
 export const getSessionLifetimeOptions = (): SettingOption[] => {
-  const locale = 'en';
+  const locale = 'de';
   const { $i18n } = useNuxtApp();
 
   return sessionLifetimeOptions.map((option) => ({
