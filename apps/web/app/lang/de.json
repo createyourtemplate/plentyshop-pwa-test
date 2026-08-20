@@ -525,6 +525,14 @@
       "description": "Marketing-Cookies werden von Drittanbietern und Publishern verwendet, um personalisierte Werbung anzuzeigen. Sie tun dies, indem Sie Besucher über Websites hinweg verfolgen.",
       "label": "Marketing"
     },
+    "necessary": {
+    "description": "Notwendige Cookies sind für Kernfunktionen wie Sicherheit und Netzwerkmanagement unerlässlich. Sie können nicht deaktiviert werden.",
+    "label": "Essenziell"
+    },    
+    "statistic": {
+      "description": "Statistik-Cookies erfassen anonym Informationen. Diese Informationen helfen uns zu verstehen, wie unsere Besucher unsere Website nutzen.",
+      "label": "Statistiken"
+    },
     "More information": "Mehr Informationen",
     "Privacy Settings": "Datenschutzeinstellungen",
     "legalDisclosure": "Impressum",
