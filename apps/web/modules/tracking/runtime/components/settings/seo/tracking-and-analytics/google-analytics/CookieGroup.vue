@@ -30,7 +30,7 @@ const { updateSetting, getSetting } = useSiteSettings('googleAnalyticsCookieGrou
 
 const options = computed(() => getCookieGroupOptions());
 
-const googleAdsCookieGroup = computed({
+const googleAnalyticsCookieGroup = computed({
   get: () => {
     return options.value.find((o: SettingOption) => o.value === getSetting());
   },
