@@ -476,7 +476,8 @@
       "externalMedia": "External Media",
       "functional": "Functional",
       "marketing": "Marketing (recommended)",
-      "necessary": "Necessary"
+      "necessary": "Necessary",
+      "statistic": "Statistic"
     },
     "essentials": {
       "cookies": {
@@ -523,6 +524,14 @@
     "marketing": {
       "description": "Marketing cookies are used by third parties and publishers to display personalised advertisements by following users across websites.",
       "label": "Marketing"
+    },
+    "necessary": {
+      "description": "Necessary cookies are essential for core functionalities such as security and network management. They cannot be deactivated.",
+      "label": "Necessary"
+    },    
+    "statistic": {
+      "description": "Statistic cookies collect information anonymously. This information helps us understand how our visitors use our website.",
+      "label": "Statistics"
     },
     "More information": "More information",
     "Privacy Settings": "Privacy Settings",
