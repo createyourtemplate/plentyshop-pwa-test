@@ -5,7 +5,7 @@
         {{ getEditorTranslation('label') }}
       </UiFormLabel>
       <SfSwitch
-        v-model="sendGrossPricesToCytGoogleAds"
+        v-model="sendGrossPricesToCytGA"
         class="checked:bg-editor-button checked:before:hover:bg-editor-button checked:border-gray-500 checked:hover:border:bg-gray-700 hover:border-gray-700 hover:before:bg-gray-700 checked:hover:bg-gray-300 checked:hover:border-gray-400"
       />
     </div>
@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { SfSwitch } from '@storefront-ui/vue';
 
-const { updateSetting, getSetting } = useSiteSettings('sendGrossPricesToCytGoogleAds');
+const { updateSetting, getSetting } = useSiteSettings('sendGrossPricesToCytGA');
 
 const sendGrossPricesToCytGoogleAds = computed({
   get: () => !!getSetting(),
