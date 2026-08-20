@@ -25,10 +25,10 @@ const enableCytGA = computed({
 <i18n lang="json">
 {
   "en": {
-    "label": "Enable Google Analitics"
+    "label": "Enable Google Analytics"
   },
   "de": {
-    "label": "Enable Google Analitics"
+    "label": "Enable Google Analytics"
   }
 }
 </i18n>
