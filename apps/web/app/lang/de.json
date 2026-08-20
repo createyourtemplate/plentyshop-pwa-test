@@ -475,9 +475,8 @@
     "group": {
       "externalMedia": "Externe Medien",
       "functional": "Funktional",
-      "marketing": "Marketing (Google Ads)",
-      "necessary": "Essenziell (Google Tag Manager)",
-      "statistic": "Statistiken (Google Analytics)"      
+      "marketing": "Marketing (empfohlen)",
+      "necessary": "Essenziell",
     },
     "essentials": {
       "cookies": {
@@ -512,10 +511,6 @@
     "functional": {
       "description": "Diese Cookies ermöglichen, dass die von Nutzern getroffenen Auswahlmöglichkeiten und bevorzugte Einstellungen (z.B. das Deaktivieren der Sprachweiterleitung) gespeichert werden können.",
       "label": "Funktional"
-    },
-    "statistic": {
-      "description": "Statistik-Cookies erfassen anonyme Informationen. Diese Informationen helfen uns zu verstehen, wie unsere Besucher unsere Website nutzen.",
-      "label": "Statistics"
     },
     "Further Settings": "Weitere Einstellungen",
     "keys": {
