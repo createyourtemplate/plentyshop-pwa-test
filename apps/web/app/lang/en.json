@@ -475,8 +475,9 @@
     "group": {
       "externalMedia": "External Media",
       "functional": "Functional",
-      "marketing": "Marketing (recommended)",
-      "necessary": "Necessary"
+      "marketing": "Marketing (Google Ads)",
+      "necessary": "Necessary (Google Tag Manager)",
+      "statistic": "Statistics (Google Analytics)"
     },
     "essentials": {
       "cookies": {
@@ -511,6 +512,10 @@
     "functional": {
       "description": "These cookies are used to store preferred settings and certain options selected by the user.",
       "label": "Functional"
+    },
+    "statistic": {
+      "description": "Statistic cookies collect information anonymously. This information helps us understand how our visitors use our website.",
+      "label": "Statistics"
     },
     "Further Settings": "Further Settings",
     "keys": {
