@@ -19,6 +19,7 @@ export const cookieGroupOptions = [
   { key: 'CookieBar.group.externalMedia', value: 'CookieBar.externalMedia.label' },
   { key: 'CookieBar.group.necessary', value: 'CookieBar.essentials.label' },
   { key: 'CookieBar.group.marketing', value: 'CookieBar.marketing.label' },
+  { key: 'CookieBar.group.statistic', value: 'CookieBar.statistic.label' },
 ];
 
 export const conditionOptions = [
