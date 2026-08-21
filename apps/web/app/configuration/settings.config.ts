@@ -73,7 +73,6 @@ export default {
   sortingDynamicPrio1: process.env.NUXT_PUBLIC_SORTING_DYNAMIC_PRIO1 || 'filter.prices.price_asc',
   sortingDynamicPrio2: process.env.NUXT_PUBLIC_SORTING_DYNAMIC_PRIO2 || 'filter.prices.price_asc',
   themeColor: process.env.NUXT_PUBLIC_PRIMARY_COLOR || '#062633',
-  enableCytGA: process.env.NUXT_PUBLIC_ENABLE_CYT_G_A === 'true',
   headerLogo:
     process.env.NUXT_PUBLIC_HEADER_LOGO ||
     process.env.LOGO ||

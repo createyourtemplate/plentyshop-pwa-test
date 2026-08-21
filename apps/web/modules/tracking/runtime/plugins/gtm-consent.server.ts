@@ -19,9 +19,6 @@ export default defineNuxtPlugin(() => {
       registerGtmCookieAsOptOut 
     } } = useRuntimeConfig();
 
-    const { getSetting } = useSiteSettings('enableCytGA');
-
-
     if ( enableGoogleGtm ) {
       add({
         name: t('Cyt.cookieBar.moduleGoogleGtm.name'),

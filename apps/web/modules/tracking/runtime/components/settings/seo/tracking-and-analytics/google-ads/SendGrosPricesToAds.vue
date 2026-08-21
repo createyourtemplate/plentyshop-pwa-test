@@ -1,5 +1,5 @@
 <template>
-  <div class="py-2">
+  <div class="py-2 d-none hidden">
     <div class="flex justify-between mb-2">
       <UiFormLabel class="mb-1">
         {{ getEditorTranslation('label') }}
