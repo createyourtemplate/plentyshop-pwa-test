@@ -21,6 +21,10 @@
                 "status": "Cookies von Google Ads, die für Website-Analysen, Ad Targeting und Anzeigenmessung verwendet werden.",
                 "privacyPolicy": "https://policies.google.com/privacy/ads",
                 "lifeSpan": "VARIABEL, siehe Beschreibung"
+            "statistics": {
+                "label": "Statistiken",
+                "description": "Statistik-Cookies erfassen anonym Informationen. Diese Informationen helfen uns zu verstehen, wie unsere Besucher unsere Website nutzen."
+                }     
             }
         }
     }
