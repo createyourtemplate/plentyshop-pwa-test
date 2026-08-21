@@ -61,7 +61,7 @@ export default defineNuxtModule({
 
     nuxt.options.app.head.script = nuxt.options.app.head.script ?? [];
     nuxt.options.app.head.script.push({
-      innerHTML: `<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${process.env.NUXT_PUBLIC_GOOGLE_GTM_TRACKING_ID}"
+      innerHTML: `<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${publicRuntimeConfig.googleGtmTrackingId}"
       height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>`,
       tagPosition: 'bodyOpen',
     });
