@@ -66,13 +66,14 @@ export default {
   enableGoogleAnalytics: process.env.NUXT_PUBLIC_ENABLE_GOOGLE_ANALITICS === 'true',
   googleAnalyticsTrackingId: process.env.NUXT_PUBLIC_GOOGLE_ANALITICS_TRACKING_ID || '',
   sendGrossPricesToGoogleAnalytics: process.env.NUXT_PUBLIC_SEND_GROSS_PRICES_TO_GOOGLE_ANALITICS === 'true',
-  googleAnalyticsCookieGroup: process.env.NUXT_PUBLIC_GOOGLE_ANALITICS_COOKIE_GROUP || 'CookieBar.statistic.label',
+  googleAnalyticsCookieGroup: process.env.NUXT_PUBLIC_GOOGLE_ANALITICS_COOKIE_GROUP || 'CookieBar.marketing.label',
   googleAdsCookieGroup: process.env.NUXT_PUBLIC_GOOGLE_ADS_COOKIE_GROUP || 'CookieBar.marketing.label',
   registerCookieAsOptOut: process.env.NUXT_PUBLIC_REGISTER_COOKIE_AS_OPT_OUT === 'true',
   sortingDynamicInherit: process.env.NUXT_PUBLIC_SORTING_DINAMIC_INHERIT || '[]',
   sortingDynamicPrio1: process.env.NUXT_PUBLIC_SORTING_DYNAMIC_PRIO1 || 'filter.prices.price_asc',
   sortingDynamicPrio2: process.env.NUXT_PUBLIC_SORTING_DYNAMIC_PRIO2 || 'filter.prices.price_asc',
   themeColor: process.env.NUXT_PUBLIC_PRIMARY_COLOR || '#062633',
+  enableCytGA: process.env.NUXT_PUBLIC_ENABLE_CYT_G_A === 'true',
   headerLogo:
     process.env.NUXT_PUBLIC_HEADER_LOGO ||
     process.env.LOGO ||

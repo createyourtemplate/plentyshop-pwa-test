@@ -1,13 +1,13 @@
 <template>
-  <div class="py-2">
+  <div class="py-2 hidden d-none">
     <div class="flex justify-between mb-2">
       <UiFormLabel>{{ getEditorTranslation('label') }}</UiFormLabel>
     </div>
     <label>
       <SfInput
-        v-model="googleGtmTrackingId"
+        v-model="googleAnalyticsTrackingId"
         type="text"
-        data-testid="google-gtm-tracking-id"
+        data-testid="google-analytics-tracking-id"
         :placeholder="getEditorTranslation('placeholder')"
       />
     </label>
@@ -16,9 +16,9 @@
 <script setup lang="ts">
 import { SfInput } from '@storefront-ui/vue';
 
-const { updateSetting, getSetting } = useSiteSettings('googleGtmTrackingId');
+const { updateSetting, getSetting } = useSiteSettings('googleAnalyticsTrackingId');
 
-const googleGtmTrackingId = computed({
+const googleAnalyticsTrackingId = computed({
   get: () => getSetting(),
   set: (value) => updateSetting(value),
 });
@@ -27,12 +27,12 @@ const googleGtmTrackingId = computed({
 <i18n lang="json">
 {
   "en": {
-    "label": "Google Tag Manager ID",
-    "placeholder": "GTM-XXXXXXX"
+    "label": "Google analytics Tracking ID",
+    "placeholder": "Google analytics Tracking ID"
   },
   "de": {
-    "label": "Google Tag Manager ID",
-    "placeholder": "GTM-XXXXXXX"
+    "label": "Google analytics Tracking ID",
+    "placeholder": "Google analytics Tracking ID"
   }
 }
 </i18n>

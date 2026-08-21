@@ -4,6 +4,8 @@ export default defineNuxtPlugin(() => {
       return;
     }
 
+    const { add } = useRegisterCookie();
+
     const { public: {
       enableCytGA,
       googleCytGACookiesToRegister,
@@ -13,10 +15,11 @@ export default defineNuxtPlugin(() => {
       registerAdsCookieAsOptOut,
       googleGtmCookiesToRegister,
       enableGoogleGtm,
+      googleGtmCookieGroup,
       registerGtmCookieAsOptOut 
     } } = useRuntimeConfig();
 
-    const { add } = useRegisterCookie();
+    const { getSetting } = useSiteSettings('enableCytGA');
 
 
     if ( enableGoogleGtm ) {
@@ -28,7 +31,7 @@ export default defineNuxtPlugin(() => {
         Lifespan: t('Cyt.cookieBar.moduleGoogleGtm.lifeSpan'),
         cookieNames: googleGtmCookiesToRegister.split(','),
         accepted: registerGtmCookieAsOptOut,
-      }, "CookieBar.functional.label");
+      }, googleGtmCookieGroup ?? "CookieBar.functional.label");
     }
 
     if ( enableCytGA ) {
@@ -39,7 +42,7 @@ export default defineNuxtPlugin(() => {
         PrivacyPolicy: "https://policies.google.com/privacy",
         Lifespan: t('Cyt.cookieBar.moduleGoogleAnalytics.lifeSpan'),
         cookieNames: googleCytGACookiesToRegister.split(','),
-        accepted: registerCookieAsOptOut,
+        accepted: registerCookieAsOptOut ,
       }, "Cyt.cookieBar.statistics.label");
     }
 
@@ -52,7 +55,7 @@ export default defineNuxtPlugin(() => {
         PrivacyPolicy: "https://policies.google.com/privacy/ads",
         Lifespan: t('Cyt.cookieBar.moduleGoogleAds.lifeSpan'),
         cookieNames: googleAdsCookiesToRegister.split(','),
-        accepted: registerAdsCookieAsOptOut,
+        accepted: registerAdsCookieAsOptOut === true,
       }, 'CookieBar.marketing.label');
     }
 });

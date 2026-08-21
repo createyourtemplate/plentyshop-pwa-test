@@ -1,5 +1,5 @@
 <template>
-  <div class="py-2">
+  <div class="py-2 hidden d-none">
     <p class="mb-4">{{ getEditorTranslation('description1') }}</p>
     <p class="mb-4">{{ getEditorTranslation('description2') }}</p>
     <div class="flex justify-between mb-2">

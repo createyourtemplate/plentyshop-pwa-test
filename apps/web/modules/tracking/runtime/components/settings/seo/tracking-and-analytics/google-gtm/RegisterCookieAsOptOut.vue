@@ -1,5 +1,4 @@
 <template>
-  <!--
   <div class="py-2">
     <div class="flex justify-between mb-2">
       <UiFormLabel class="mb-1">
@@ -11,11 +10,8 @@
       />
     </div>
   </div>
-  -->
 </template>
-
 <script setup lang="ts">
-/*
 import { SfSwitch } from '@storefront-ui/vue';
 
 const { updateSetting, getSetting } = useSiteSettings('registerGtmCookieAsOptOut');
@@ -24,18 +20,15 @@ const registerGtmCookieAsOptOut = computed({
   get: () => !!getSetting(),
   set: (value) => updateSetting(value.toString()),
 });
-*/
 </script>
 
-<!--
 <i18n lang="json">
 {
   "en": {
-    "label": "Register Cookie as opt-out"
+    "label": "Register Cookie as Opt-Out"
   },
   "de": {
-    "label": "Register Cookie as opt-out"
+    "label": "Registriere Cookie als Opt-Out"
   }
 }
 </i18n>
--->
