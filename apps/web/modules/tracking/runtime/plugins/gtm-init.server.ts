@@ -1,15 +1,60 @@
 export default defineNuxtPlugin(() => {
-
   if (import.meta.client) {
     return;
   }
 
-  const { public: {
-      googleGtmTrackingId
-    } } = useRuntimeConfig();
+  const { public: { googleGtmTrackingId } } = useRuntimeConfig();
 
+  // 1. Consent-Cookie serverseitig lesen
+  const rawCookie = useCookie<string | Record<string, any> | null>('consent-cookie').value;
+
+  let gaStatus = 'denied';
+  let adsStatus = 'denied';
+
+  if (rawCookie) {
+    try {
+      const consent = typeof rawCookie === 'string' ? JSON.parse(decodeURIComponent(rawCookie)) : rawCookie;
+      const groups = consent?.groups || {};
+
+      // Google Analytics prüfen
+      const stats = groups['Cyt.cookieBar.statistics.label'] || {};
+      if (stats['Google Analytics'] === true) {
+        gaStatus = 'granted';
+      }
+
+      // Google Ads prüfen
+      const marketing = groups['CookieBar.marketing.label'] || {};
+      if (marketing['Google Ads Conversion Messung und dynamisches Remarketing'] === true) {
+        adsStatus = 'granted';
+      }
+    } catch (e) {
+      // Fallback bleibt 'denied'
+    }
+  }
+
+  // 2. Consent Default Script + GTM Container rendern
   useHead({
     script: [
+      {
+        type: 'text/javascript',
+        innerHTML: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('consent', 'default', {
+            'ad_storage': '${adsStatus}',
+            'ad_user_data': '${adsStatus}',
+            'ad_personalization': '${adsStatus}',
+            'analytics_storage': '${gaStatus}',
+            'personalization_storage': 'granted',
+            'functionality_storage': 'granted',
+            'security_storage': 'granted',
+            'wait_for_update': 500
+          });
+        `,
+        tagPosition: 'bodyOpen',
+        tagPriority: 'critical', // Stellt sicher, dass es VOR dem GTM ausgeführt wird
+        id: 'gtm-consent-default',
+      },
       {
         type: 'text/javascript',
         innerHTML: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -21,6 +66,6 @@ export default defineNuxtPlugin(() => {
         tagPriority: 'low',
         id: 'gtm',
       },
-    ]
+    ],
   });
 });
