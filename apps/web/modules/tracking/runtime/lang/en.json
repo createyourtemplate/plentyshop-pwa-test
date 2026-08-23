@@ -2,7 +2,7 @@
     "Cyt": {
         "cookieBar": {
             "moduleGoogleAnalytics": {
-                "name": "Google Analytics",
+                "name": "Google Analytics 4",
                 "provider": "Google LLC",
                 "status": "Cookies from Google Analytics, used for website analytics, ad targeting, and ad measurement.",
                 "privacyPolicy": "https://policies.google.com/privacy",
