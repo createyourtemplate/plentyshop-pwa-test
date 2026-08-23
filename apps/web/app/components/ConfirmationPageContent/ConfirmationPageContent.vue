@@ -105,65 +105,6 @@ import { paths } from '~/utils/paths';
 const NuxtLink = resolveComponent('NuxtLink');
 const { order } = defineProps<ConfirmationPageContentProps>();
 
-const { data: shippingCountries } = useActiveShippingCountries();
-const billingAddress = computed(() => orderGetters.getBillingAddress(order));
-
-const customerPhone = computed(() => {
-  return billingAddress.value?.options?.find((option) => option.typeId === 4)?.value ?? '';
-});
-
-const countryName = computed(() => {
-  const countryId = billingAddress.value?.countryId;
-  return shippingCountries.value.find((c) => c.id === countryId)?.currLangName ?? '';
-});
-
-useHead({
-  script: [
-    {
-      id: 'ecommerce',
-      tagPosition: 'bodyOpen',
-      tagPriority: `before:gtm`,
-      innerHTML: `
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({
-    'event': 'purchase',
-    'ecommerce': {
-      'transaction_id': '${ orderGetters.getId(order) }',
-      'affiliation': '${ process.env.NUXT_PUBLIC_OG_TITLE|| process.env.OG_TITLE || 'PlentyShop' }',
-      'value': '${ orderGetters.getTotal(order.totals) }',
-      'tax': '${ orderGetters.getVatAmount(order.totals) }',
-      'shipping': '${ orderGetters.getShippingAmount(order.totals) }',
-      'currency': '${ orderGetters.getCurrency(order) }',
-      'coupon': '${ orderGetters.getCouponValue(order.totals) }',
-      'payment_type': '${ orderGetters.getPaymentMethodName(order) }',
-      'shipping_tier': '${ orderGetters.getShippingProfileName(order) }',
-      'items': ${ JSON.stringify(
-        orderGetters.getItems(order)
-          .filter((item) => !orderGetters.isBundleItem(item) && !orderGetters.isCouponItem(item))
-          .map((item) => ({
-            'item_id': item.itemVariationId,
-            'item_name': item.orderItemName,
-            'price': item.amounts[0]?.priceGross,
-            'quantity': item.quantity,
-          }))
-      )}
-    },
-    'customer_info': {
-      'firstname': '${ billingAddress.value?.name2 }',
-      'lastname': '${ billingAddress.value?.name3 }',
-      'street': '${ billingAddress.value?.address1 } ${ billingAddress.value?.address2 }',
-      'phone': '${ customerPhone.value }',
-      'email': '${ orderGetters.getOrderEmail(order) }',
-      'zip': '${ billingAddress.value?.postalCode }',
-      'city': '${ billingAddress.value?.town }',
-      'country': '${ countryName.value }'
-    }
-  });
-`
-    },
-  ],
-});
-
 const { isOpen: isAuthenticationOpen, toggle: closeAuthentication } = useDisclosure();
 const { isAuthorized } = useCustomer();
 const { getActiveShippingCountries } = useActiveShippingCountries();

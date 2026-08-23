@@ -1,3 +1,5 @@
+import { toBool } from "../utils/utils";
+
 export default defineNuxtPlugin(() => {
 
     if (import.meta.client) {
@@ -27,7 +29,7 @@ export default defineNuxtPlugin(() => {
         PrivacyPolicy: "https://policies.google.com/privacy",
         Lifespan: t('Cyt.cookieBar.moduleGoogleGtm.lifeSpan'),
         cookieNames: googleGtmCookiesToRegister.split(','),
-        accepted: registerGtmCookieAsOptOut,
+        accepted: toBool(registerGtmCookieAsOptOut),
       }, googleGtmCookieGroup ?? "CookieBar.functional.label");
     }
 
@@ -39,7 +41,7 @@ export default defineNuxtPlugin(() => {
         PrivacyPolicy: "https://policies.google.com/privacy",
         Lifespan: t('Cyt.cookieBar.moduleGoogleAnalytics.lifeSpan'),
         cookieNames: googleCytGACookiesToRegister.split(','),
-        accepted: registerCookieAsOptOut,
+        accepted: toBool(registerCookieAsOptOut),
       }, "Cyt.cookieBar.statistics.label");
     }
 
@@ -52,7 +54,7 @@ export default defineNuxtPlugin(() => {
         PrivacyPolicy: "https://policies.google.com/privacy/ads",
         Lifespan: t('Cyt.cookieBar.moduleGoogleAds.lifeSpan'),
         cookieNames: googleAdsCookiesToRegister.split(','),
-        accepted: registerAdsCookieAsOptOut === true,
+        accepted: toBool(registerAdsCookieAsOptOut),
       }, 'CookieBar.marketing.label');
     }
 });

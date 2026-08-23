@@ -1,3 +1,6 @@
+import { AddressOption, cartGetters, orderGetters } from '@plentymarkets/shop-api'
+import { findPhoneOptionValue, getCountryName } from '../utils/utils';
+
 export default defineNuxtPlugin(() => {
   if (import.meta.client) {
     return;
@@ -68,4 +71,41 @@ export default defineNuxtPlugin(() => {
       },
     ],
   });
+
+  const { on } = usePlentyEvent();
+  
+  on('frontend:orderCreated', (order) => {
+    if (gaStatus === 'granted' && order.order && order.totals) {
+      const billingAddress = computed(() => orderGetters.getBillingAddress(order));
+      const customerPhone = findPhoneOptionValue(billingAddress.value?.options);
+      const totalVat = order.totals.vats.reduce((acc: number, vat: { value: number }) => acc + vat.value, 0)
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        'event': 'purchase',
+        'ecommerce': {
+          transaction_id: orderGetters.getId(order),
+          value: order.totals.totalGross,
+          currency: order.totals.currency,
+          tax: totalVat,
+          shipping: order.totals.shippingGross,
+          items: order.order.orderItems.map((item) => ({
+            item_id: orderGetters.getItemVariationId(item),
+            item_name: orderGetters.getItemName(item),
+            quantity: orderGetters.getItemQty(item),
+            affiliation: item.referrerId.toString(),
+          }))
+        },
+        'customer_info': {
+          firstname: billingAddress.value?.name2,
+          lastname: billingAddress.value?.name3,
+          street: `${ billingAddress.value?.address1 } ${ billingAddress.value?.address2 }`,
+          phone: customerPhone,
+          email: orderGetters.getOrderEmail(order),
+          zip: billingAddress.value?.postalCode,
+          city: billingAddress.value?.town,
+          country: getCountryName(billingAddress.value?.countryId),
+        }
+      })
+    }
+  })
 });
