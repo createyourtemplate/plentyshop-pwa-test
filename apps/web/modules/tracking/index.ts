@@ -29,8 +29,8 @@ export default defineNuxtModule({
     // Bestehende Gruppen sicher laden
     const existingGroups = (nuxt.options.runtimeConfig.public as any).cookieGroups?.groups ?? [];
     
-    // Sichere ID-Vergabe (höchste bestehende ID + 1)
-    const nextId = existingGroups.length > 0 
+    // Basis-ID für neue Gruppen ermitteln (höchste bestehende ID + 1)
+    const baseId = existingGroups.length > 0 
       ? Math.max(...existingGroups.map((g: any) => Number(g.id) || 0)) + 1 
       : 1;
 
@@ -55,16 +55,23 @@ export default defineNuxtModule({
     publicRuntimeConfig.googleGtmTrackingId = process.env.NUXT_PUBLIC_GOOGLE_GTM_TRACKING_ID || '';  
     publicRuntimeConfig.registerGtmCookieAsOptOut = process.env.NUXT_PUBLIC_REGISTER_GTM_COOKIE_AS_OPT_OUT === 'true';
 
-    // Cookie Groups registrieren
+    // Cookie Groups registrieren (Statistiken + Marketing)
     publicRuntimeConfig.cookieGroups = {
       ...(nuxt.options.runtimeConfig.public as any).cookieGroups,
       groups: [
         ...existingGroups,
         {
-          id: nextId,
+          id: baseId,
           name: 'Cyt.cookieBar.statistics.label',
           showMore: false,
           description: 'Cyt.cookieBar.statistics.description',
+          cookies: [],
+        },
+        {
+          id: baseId + 1,
+          name: 'Cyt.cookieBar.marketing.label',
+          showMore: false,
+          description: 'Cyt.cookieBar.marketing.description',
           cookies: [],
         }
       ]
