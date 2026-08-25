@@ -11,10 +11,14 @@ export default defineNuxtPlugin(() => {
     const { public: {
       enableCytGA,
       googleCytGACookiesToRegister,
-      registerCookieAsOptOut,     
+      googleCytGACookieGroup,
+      registerCytGACookieAsOptOut,       
+        
       enableGoogleAds,
       googleAdsCookiesToRegister,
-      registerAdsCookieAsOptOut,      
+      googleAdsCookieGroup,   
+      registerAdsCookieAsOptOut,
+        
       enableGoogleGtm,  
       googleGtmCookiesToRegister,    
       googleGtmCookieGroup,      
@@ -42,7 +46,7 @@ export default defineNuxtPlugin(() => {
         Lifespan: t('Cyt.cookieBar.moduleGoogleAnalytics.lifeSpan'),
         cookieNames: googleCytGACookiesToRegister.split(','),
         accepted: toBool(registerCookieAsOptOut),
-      }, "Cyt.cookieBar.statistics.label");
+      }, googleCytGACookieGroup ?? "Cyt.cookieBar.statistics.label");
     }
 
 
@@ -55,6 +59,6 @@ export default defineNuxtPlugin(() => {
         Lifespan: t('Cyt.cookieBar.moduleGoogleAds.lifeSpan'),
         cookieNames: googleAdsCookiesToRegister.split(','),
         accepted: toBool(registerAdsCookieAsOptOut),
-      }, 'CookieBar.marketing.label');
+      }, googleAdsCookieGroup ?? 'CookieBar.marketing.label');
     }
 });
