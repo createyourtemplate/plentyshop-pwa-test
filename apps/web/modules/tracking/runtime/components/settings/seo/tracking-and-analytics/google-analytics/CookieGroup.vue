@@ -16,7 +16,7 @@
         track-by="value"
         select-label=""
         deselect-label=""
-        data-testid="google-analytics-cookie-group"
+        data-testid="google-cyt-ga-cookie-group"
       />
     </label>
   </div>
