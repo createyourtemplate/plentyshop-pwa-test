@@ -1,36 +1,34 @@
 export default defineNuxtPlugin(() => {
-  if (import.meta.client) {
-    return;
-  }
+ if (import.meta.client) {
+ return;
+ }
 
-  const { public: { googleGtmTrackingId } } = useRuntimeConfig();
+ const { public: { googleGtmTrackingId } } = useRuntimeConfig();
 
-  // 1. Consent-Cookie serverseitig lesen
-  const rawCookie = useCookie<string | Record<string, any> | null>('consent-cookie').value;
+ const rawCookie = useCookie<string | Record<string, any> | null>('consent-cookie').value;
 
-  let gaStatus = 'denied';
-  let adsStatus = 'denied';
+ let gaStatus = 'denied';
+ let adsStatus = 'denied';
 
-  if (rawCookie) {
-    try {
-      const consent = typeof rawCookie === 'string' ? JSON.parse(decodeURIComponent(rawCookie)) : rawCookie;
-      const groups = consent?.groups || {};
+ if (rawCookie) {
+ try {
+ const consent = typeof rawCookie === 'string' ? JSON.parse(decodeURIComponent(rawCookie)) : rawCookie;
+ const groups = consent?.groups || {};
 
-      // Google Analytics prüfen
-      if (groups['Cyt.cookieBar.statistics.label']?.['Google Analytics'] === true) {
-        gaStatus = 'granted';
-      }
+ // Google Analytics prüfen
+ if (groups['Cyt.cookieBar.statistics.label']?.['Google Analytics'] === true) {
+ gaStatus = 'granted';
+ }
 
-      // Google Ads prüfen
-      if (groups['Cyt.cookieBar.marketing.label']?.['Google Ads Conversion Messung und dynamisches Remarketing'] === true) {
-        adsStatus = 'granted';
-      }
-    } catch (e) {
-      // Fallback bleibt denied
-    }
-  }
-
-  // 2. Consent Default Script + GTM Container rendern
+ // KORREKTUR: Google Ads prüft nun das exakte Gegenstück aus der index.ts
+ if (groups['Cyt.cookieBar.marketing.label']?.['Google Ads Conversion Messung und dynamisches Remarketing'] === true) {
+ adsStatus = 'granted';
+ }
+ } catch (e) {
+ // Fallback bleibt denied
+ }
+ }
+  
   useHead({
     script: [
       {
