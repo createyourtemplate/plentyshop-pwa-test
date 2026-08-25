@@ -36,13 +36,16 @@ export default defineNuxtModule({
     publicRuntimeConfig.googleAdsCookieGroup = process.env.NUXT_PUBLIC_GOOGLE_ADS_COOKIE_GROUP || 'Cyt.cookieBar.statistics.label';
     publicRuntimeConfig.googleAdsCookiesToRegister = process.env.NUXT_PUBLIC_GOOGLE_ADS_COOKIES_TO_REGISTER || '';
     publicRuntimeConfig.googleAdsTrackingId = process.env.NUXT_PUBLIC_GOOGLE_ADS_TRACKING_ID || '';
-    publicRuntimeConfig.sendGrossPricesToCytGoogleAds = process.env.NUXT_PUBLIC_SEND_GROSS_PRICES_TO_CYT_GOOGLE_ADS === 'faöse';
+    publicRuntimeConfig.sendGrossPricesToCytGoogleAds = process.env.NUXT_PUBLIC_SEND_GROSS_PRICES_TO_CYT_GOOGLE_ADS === 'false';
     publicRuntimeConfig.enableGoogleAds = process.env.NUXT_PUBLIC_ENABLE_GOOGLE_ADS === 'true';
+
     publicRuntimeConfig.registerAdsCookieAsOptOut = process.env.NUXT_PUBLIC_REGISTER_ADS_COOKIE_AS_OPT_OUT === 'false';
+
     publicRuntimeConfig.googleGtmCookieGroup = process.env.NUXT_PUBLIC_GOOGLE_GTM_COOKIE_GROUP || 'CookieBar.functional.label';
     publicRuntimeConfig.googleGtmCookiesToRegister = process.env.NUXT_PUBLIC_GOOGLE_GTM_COOKIES_TO_REGISTER || '';
     publicRuntimeConfig.googleGtmTrackingId = process.env.NUXT_PUBLIC_GOOGLE_GTM_TRACKING_ID || '';
     publicRuntimeConfig.enableGoogleGtm = process.env.NUXT_PUBLIC_ENABLE_GOOGLE_GTM === 'true';
+
     publicRuntimeConfig.registerGtmCookieAsOptOut = process.env.NUXT_PUBLIC_REGISTER_GTM_COOKIE_AS_OPT_OUT === 'false';
 
     publicRuntimeConfig.cookieGroups = {
