@@ -7,7 +7,7 @@
     </div>
     <label>
       <Multiselect
-        v-model="googleAnalyticsCookieGroup"
+        v-model="googleCytGACookieGroup"
         :options="options"
         :placeholder="getEditorTranslation('placeholder')"
         :searchable="false"
@@ -26,11 +26,11 @@ import Multiselect from 'vue-multiselect';
 import type { SettingOption } from '~/utils/editorSettings';
 import { getCookieGroupOptions } from '~/utils/editorSettings';
 
-const { updateSetting, getSetting } = useSiteSettings('googleAnalyticsCookieGroup');
+const { updateSetting, getSetting } = useSiteSettings('googleCytGACookieGroup');
 
 const options = computed(() => getCookieGroupOptions());
 
-const googleAnalyticsCookieGroup = computed({
+const googleCytGACookieGroup = computed({
   get: () => {
     return options.value.find((o: SettingOption) => o.value === getSetting());
   },
@@ -56,3 +56,6 @@ const googleAnalyticsCookieGroup = computed({
   }
 }
 </i18n>
+
+
+
