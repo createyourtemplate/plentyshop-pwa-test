@@ -48,7 +48,7 @@ export default defineNuxtPlugin(() => {
 
     if ( enableGoogleAds ) {
       add({
-        name: 'Cyt.cookieBar.moduleGoogleAds.name',
+        name: t('Cyt.cookieBar.moduleGoogleAds.name'),
         Provider: t('Cyt.cookieBar.moduleGoogleAds.provider'),
         Status: t('Cyt.cookieBar.moduleGoogleAds.status'),
         PrivacyPolicy: "https://policies.google.com/privacy/ads",
