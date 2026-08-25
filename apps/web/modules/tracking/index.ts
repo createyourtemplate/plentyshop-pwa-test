@@ -36,7 +36,7 @@ export default defineNuxtModule({
 
     const publicRuntimeConfig = nuxt.options.runtimeConfig.public as Record<string, unknown>;
 
-    // GA Configuration
+    // GA4 Configuration
     publicRuntimeConfig.enableCytGA = process.env.NUXT_PUBLIC_ENABLE_CYT_G_A === 'true';
     publicRuntimeConfig.googleCytGACookieGroup = process.env.NUXT_PUBLIC_GOOGLE_CYT_G_A_COOKIE_GROUP || 'Cyt.cookieBar.statistics.label';
     publicRuntimeConfig.googleCytGACookiesToRegister = process.env.NUXT_PUBLIC_GOOGLE_CYT_G_A_COOKIES_TO_REGISTER || '';
