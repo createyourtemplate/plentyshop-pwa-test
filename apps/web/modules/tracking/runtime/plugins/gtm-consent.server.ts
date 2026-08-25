@@ -11,14 +11,10 @@ export default defineNuxtPlugin(() => {
     const { public: {
       enableCytGA,
       googleCytGACookiesToRegister,
-      registerCookieAsOptOut,
-      
-        
+      registerCookieAsOptOut,     
       enableGoogleAds,
       googleAdsCookiesToRegister,
-      registerAdsCookieAsOptOut,
-      
-        
+      registerAdsCookieAsOptOut,      
       enableGoogleGtm,  
       googleGtmCookiesToRegister,    
       googleGtmCookieGroup,      
