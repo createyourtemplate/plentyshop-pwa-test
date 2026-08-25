@@ -25,43 +25,50 @@ export default defineNuxtModule({
 
     nuxt.options.runtimeConfig = nuxt.options.runtimeConfig || {};
     nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {};
-    nuxt.options.runtimeConfig.public.cookieGroups = nuxt.options.runtimeConfig.public.cookieGroups || {};
-    nuxt.options.runtimeConfig.public.cookieGroups.groups = nuxt.options.runtimeConfig.public.cookieGroups.groups || [];
+    
+    // Bestehende Gruppen sicher laden
+    const existingGroups = (nuxt.options.runtimeConfig.public as any).cookieGroups?.groups ?? [];
+    
+    // Sichere ID-Vergabe (höchste bestehende ID + 1)
+    const nextId = existingGroups.length > 0 
+      ? Math.max(...existingGroups.map((g: any) => Number(g.id) || 0)) + 1 
+      : 1;
 
     const publicRuntimeConfig = nuxt.options.runtimeConfig.public as Record<string, unknown>;
 
+    // GA Configuration
     publicRuntimeConfig.enableCytGA = process.env.NUXT_PUBLIC_ENABLE_CYT_G_A === 'true';
-    publicRuntimeConfig.googleCytGACookieGroup = process.env.NUXT_PUBLIC_GOOGLE_ADS_CYT_G_A_COOKIE_GROUP || 'Cyt.cookieBar.statistics.label';
+    publicRuntimeConfig.googleCytGACookieGroup = process.env.NUXT_PUBLIC_GOOGLE_CYT_G_A_COOKIE_GROUP || 'Cyt.cookieBar.statistics.label';
     publicRuntimeConfig.googleCytGACookiesToRegister = process.env.NUXT_PUBLIC_GOOGLE_CYT_G_A_COOKIES_TO_REGISTER || '';
-    publicRuntimeConfig.registerCytGACookieAsOptOut = process.env.NUXT_PUBLIC_REGISTER_CYT_G_A_COOKIE_AS_OPT_OUT === 'false';
+    publicRuntimeConfig.registerCytGACookieAsOptOut = process.env.NUXT_PUBLIC_REGISTER_CYT_G_A_COOKIE_AS_OPT_OUT === 'true';
 
+    // Ads Configuration
     publicRuntimeConfig.enableGoogleAds = process.env.NUXT_PUBLIC_ENABLE_GOOGLE_ADS === 'true';
     publicRuntimeConfig.googleAdsCookieGroup = process.env.NUXT_PUBLIC_GOOGLE_ADS_COOKIE_GROUP || 'Cyt.cookieBar.marketing.label';
     publicRuntimeConfig.googleAdsCookiesToRegister = process.env.NUXT_PUBLIC_GOOGLE_ADS_COOKIES_TO_REGISTER || '';
-    publicRuntimeConfig.registerAdsCookieAsOptOut = process.env.NUXT_PUBLIC_REGISTER_ADS_COOKIE_AS_OPT_OUT === 'false';
+    publicRuntimeConfig.registerAdsCookieAsOptOut = process.env.NUXT_PUBLIC_REGISTER_ADS_COOKIE_AS_OPT_OUT === 'true';
       
+    // GTM Configuration
     publicRuntimeConfig.enableGoogleGtm = process.env.NUXT_PUBLIC_ENABLE_GOOGLE_GTM === 'true';
     publicRuntimeConfig.googleGtmCookieGroup = process.env.NUXT_PUBLIC_GOOGLE_GTM_COOKIE_GROUP || 'CookieBar.functional.label';
     publicRuntimeConfig.googleGtmCookiesToRegister = process.env.NUXT_PUBLIC_GOOGLE_GTM_COOKIES_TO_REGISTER || '';
     publicRuntimeConfig.googleGtmTrackingId = process.env.NUXT_PUBLIC_GOOGLE_GTM_TRACKING_ID || '';  
-    
-    // publicRuntimeConfig.googleAdsTrackingId = process.env.NUXT_PUBLIC_GOOGLE_ADS_TRACKING_ID || '';    
-    // publicRuntimeConfig.sendGrossPricesToCytGoogleAds = process.env.NUXT_PUBLIC_SEND_GROSS_PRICES_TO_CYT_GOOGLE_ADS === 'false';
-    // publicRuntimeConfig.registerGtmCookieAsOptOut = process.env.NUXT_PUBLIC_REGISTER_GTM_COOKIE_AS_OPT_OUT === 'false';
+    publicRuntimeConfig.registerGtmCookieAsOptOut = process.env.NUXT_PUBLIC_REGISTER_GTM_COOKIE_AS_OPT_OUT === 'true';
 
+    // Cookie Groups registrieren
     publicRuntimeConfig.cookieGroups = {
-      ...nuxt.options.runtimeConfig.public.cookieGroups,
+      ...(nuxt.options.runtimeConfig.public as any).cookieGroups,
       groups: [
-        ...nuxt.options.runtimeConfig.public.cookieGroups.groups,
+        ...existingGroups,
         {
-          id: nuxt.options.runtimeConfig.public.cookieGroups.groups.length-1,
-          name:  'Cyt.cookieBar.statistics.label',
+          id: nextId,
+          name: 'Cyt.cookieBar.statistics.label',
           showMore: false,
           description: 'Cyt.cookieBar.statistics.description',
           cookies: [],
         }
       ]
-    }
+    };
 
     nuxt.options.app.head.script = nuxt.options.app.head.script ?? [];
     nuxt.options.app.head.script.push({
