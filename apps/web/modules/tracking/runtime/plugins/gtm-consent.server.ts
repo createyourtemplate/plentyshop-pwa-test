@@ -12,12 +12,16 @@ export default defineNuxtPlugin(() => {
       enableCytGA,
       googleCytGACookiesToRegister,
       registerCookieAsOptOut,
-      googleAdsCookiesToRegister,
+      
+        
       enableGoogleAds,
+      googleAdsCookiesToRegister,
       registerAdsCookieAsOptOut,
-      googleGtmCookiesToRegister,
-      enableGoogleGtm,
-      googleGtmCookieGroup,
+      
+        
+      enableGoogleGtm,  
+      googleGtmCookiesToRegister,    
+      googleGtmCookieGroup,      
       registerGtmCookieAsOptOut 
     } } = useRuntimeConfig();
 
