@@ -7,22 +7,24 @@ export default defineNuxtPlugin(() => {
 
   const { add } = useRegisterCookie();
 
-  const { public: {
+  const config = useRuntimeConfig().public as any;
+
+  const {
     enableCytGA,
     googleCytGACookiesToRegister,
     googleCytGACookieGroup,
     registerCytGACookieAsOptOut,
-    
+
     enableGoogleAds,
     googleAdsCookiesToRegister,
     googleAdsCookieGroup,
     registerAdsCookieAsOptOut,
-    
+
     enableGoogleGtm,
     googleGtmCookiesToRegister,
     googleGtmCookieGroup,
     registerGtmCookieAsOptOut
-  } } = useRuntimeConfig();
+  } = config;
 
   if (enableGoogleGtm) {
     add({
@@ -32,8 +34,8 @@ export default defineNuxtPlugin(() => {
       PrivacyPolicy: "https://policies.google.com/privacy",
       Lifespan: t('Cyt.cookieBar.moduleGoogleGtm.lifeSpan'),
       cookieNames: typeof googleGtmCookiesToRegister === 'string' ? googleGtmCookiesToRegister.split(',') : [],
-      accepted: toBool(registerGtmCookieAsOptOut as string | boolean | undefined),
-    }, (googleGtmCookieGroup as string) ?? "CookieBar.functional.label");
+      accepted: toBool(registerGtmCookieAsOptOut),
+    }, googleGtmCookieGroup ?? "CookieBar.functional.label");
   }
 
   if (enableCytGA) {
@@ -44,8 +46,8 @@ export default defineNuxtPlugin(() => {
       PrivacyPolicy: "https://policies.google.com/privacy",
       Lifespan: t('Cyt.cookieBar.moduleGoogleAnalytics.lifeSpan'),
       cookieNames: typeof googleCytGACookiesToRegister === 'string' ? googleCytGACookiesToRegister.split(',') : [],
-      accepted: toBool(registerCytGACookieAsOptOut as string | boolean | undefined),
-    }, (googleCytGACookieGroup as string) ?? "Cyt.cookieBar.statistics.label");
+      accepted: toBool(registerCytGACookieAsOptOut),
+    }, googleCytGACookieGroup ?? "Cyt.cookieBar.statistics.label");
   }
 
   if (enableGoogleAds) {
@@ -56,7 +58,7 @@ export default defineNuxtPlugin(() => {
       PrivacyPolicy: "https://policies.google.com/privacy/ads",
       Lifespan: t('Cyt.cookieBar.moduleGoogleAds.lifeSpan'),
       cookieNames: typeof googleAdsCookiesToRegister === 'string' ? googleAdsCookiesToRegister.split(',') : [],
-      accepted: toBool(registerAdsCookieAsOptOut as string | boolean | undefined),
-    }, (googleAdsCookieGroup as string) ?? 'CookieBar.marketing.label');
+      accepted: toBool(registerAdsCookieAsOptOut),
+    }, googleAdsCookieGroup ?? 'CookieBar.marketing.label');
   }
 });
