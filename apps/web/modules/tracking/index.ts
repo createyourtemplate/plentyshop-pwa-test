@@ -71,5 +71,6 @@ export default defineNuxtModule({
 
     nuxt.options.plugins.push(resolve('./runtime/plugins/gtm-init.server'));
     nuxt.options.plugins.push(resolve('./runtime/plugins/gtm-consent.server'));
+    nuxt.options.plugins.push(resolve('./runtime/plugins/gtm-events.client'));
   },
 });
