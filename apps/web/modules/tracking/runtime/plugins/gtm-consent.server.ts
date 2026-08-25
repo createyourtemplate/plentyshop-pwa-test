@@ -45,7 +45,7 @@ export default defineNuxtPlugin(() => {
         PrivacyPolicy: "https://policies.google.com/privacy",
         Lifespan: t('Cyt.cookieBar.moduleGoogleAnalytics.lifeSpan'),
         cookieNames: googleCytGACookiesToRegister.split(','),
-        accepted: toBool(registerCookieAsOptOut),
+        accepted: toBool(registerCytGACookieAsOptOut),
       }, googleCytGACookieGroup ?? "Cyt.cookieBar.statistics.label");
     }
 
