@@ -22,7 +22,7 @@ export default defineNuxtPlugin(() => {
       }
 
       // Google Ads prüfen
-      if (groups['CookieBar.marketing.label']?.['Google Ads Conversion Messung und dynamisches Remarketing'] === true) {
+      if (groups['Cyt.cookieBar.marketing.label']?.['Google Ads Conversion Messung und dynamisches Remarketing'] === true) {
         adsStatus = 'granted';
       }
     } catch (e) {
