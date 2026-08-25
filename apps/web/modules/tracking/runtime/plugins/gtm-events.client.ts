@@ -11,17 +11,23 @@ export default defineNuxtPlugin(() => {
       const totalVat = order.totals.vats?.reduce((acc: number, vat: { value: number }) => acc + vat.value, 0) || 0;
 
       window.dataLayer = window.dataLayer || [];
+      
+      // 1. Ecommerce-Objekt vor dem Event leeren
+      window.dataLayer.push({ ecommerce: null });
+
+      // 2. Purchase Event abschicken
       window.dataLayer.push({
         event: 'purchase',
         ecommerce: {
-          transaction_id: orderGetters.getId(order),
+          transaction_id: String(orderGetters.getId(order)),
           value: order.totals.totalGross,
           currency: order.totals.currency,
           tax: totalVat,
           shipping: order.totals.shippingGross,
           items: order.order.orderItems?.map((item: any) => ({
-            item_id: orderGetters.getItemVariationId(item),
+            item_id: String(orderGetters.getItemVariationId(item)),
             item_name: orderGetters.getItemName(item),
+            price: item.amounts?.[0]?.priceGross ?? 0,
             quantity: orderGetters.getItemQty(item),
             affiliation: item.referrerId?.toString(),
           })) || [],
