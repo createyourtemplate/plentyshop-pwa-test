@@ -19,6 +19,7 @@
                 "name": "Google Ads Conversion Messung und dynamisches Remarketing",
                 "provider": "Google, Doubleclick.net",
                 "status": "Cookies von Google Ads, die für Website-Analysen, Ad Targeting und Anzeigenmessung verwendet werden.",
+                "privacyPolicy": "https://policies.google.com/privacy",
                 "lifeSpan": "VARIABEL, siehe Beschreibung"
             },
             "statistics": {
