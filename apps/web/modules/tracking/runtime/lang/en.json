@@ -25,7 +25,7 @@
       "statistics": {
         "label": "Statistics",
         "description": "Statistic cookies collect information anonymously. This information helps us understand how our visitors use our website."
-      }
+            }
+        }
     }
-  },
 }
