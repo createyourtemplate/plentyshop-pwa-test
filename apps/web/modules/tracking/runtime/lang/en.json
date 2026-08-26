@@ -11,7 +11,7 @@
             "moduleGoogleGtm": {
                 "name": "Google Tag Manager",
                 "provider": "Google LLC",
-                "status": "Einbindung vom Google Tag Manager, der zur Aussteuerung von Scripten benötigt wird.",
+                "status": "Integration of Google Tag Manager, which is required for managing scripts.",
                 "privacyPolicy": "https://policies.google.com/privacy",
                 "lifeSpan": "VARIABEL"
             },
