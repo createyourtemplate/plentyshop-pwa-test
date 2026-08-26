@@ -67,14 +67,7 @@ export default defineNuxtModule({
           description: 'Cyt.cookieBar.statistics.description',
           cookies: [],
         },
-        {
-          id: baseId + 1,
-          name: 'Cyt.cookieBar.marketing.label',
-          showMore: false,
-          description: 'Cyt.cookieBar.marketing.description',
-          cookies: [],
-        }
-      ]
+        ]
     };
 
     nuxt.options.app.head.script = nuxt.options.app.head.script ?? [];
