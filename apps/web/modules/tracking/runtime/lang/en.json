@@ -28,9 +28,4 @@
       }
     }
   },
-  "settings": {
-    "googleAnalytics": "Google Analytics",
-    "googleAds": "Google Ads",
-    "googleGtm": "Google Tag Manager"
-  }
 }
