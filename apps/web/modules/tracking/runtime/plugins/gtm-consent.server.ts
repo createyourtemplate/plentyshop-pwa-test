@@ -58,6 +58,6 @@ export default defineNuxtPlugin(() => {
       Lifespan: t('Cyt.cookieBar.moduleGoogleAds.lifeSpan'),
       cookieNames: typeof googleAdsCookiesToRegister === 'string' ? googleAdsCookiesToRegister.split(',') : [],
       accepted: toBool(registerAdsCookieAsOptOut),
-    }, googleAdsCookieGroup ?? 'Cyt.cookieBar.marketing.label'); 
+    }, googleAdsCookieGroup ?? 'CookieBar.marketing.label'); 
   }
 });
