@@ -55,7 +55,7 @@ export default defineNuxtModule({
     publicRuntimeConfig.googleGtmTrackingId = process.env.NUXT_PUBLIC_GOOGLE_GTM_TRACKING_ID || '';  
     publicRuntimeConfig.registerGtmCookieAsOptOut = process.env.NUXT_PUBLIC_REGISTER_GTM_COOKIE_AS_OPT_OUT === 'true';
 
-    // Cookie Groups registrieren (Statistiken + Marketing)
+    // Cookie Groups registrieren (Statistiken)
     publicRuntimeConfig.cookieGroups = {
       ...(nuxt.options.runtimeConfig.public as any).cookieGroups,
       groups: [
