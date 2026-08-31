@@ -8,7 +8,7 @@
                 "privacyPolicy": "https://policies.google.com/privacy",
                 "lifeSpan": "VARIABEL"
             },
-            "moduleGoogleGtm": {
+            "moduleGoogleGTMm": {
                 "name": "Google Tag Manager",
                 "provider": "Google LLC",
                 "status": "Integration of Google Tag Manager, which is required for managing scripts.",
