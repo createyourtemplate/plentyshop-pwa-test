@@ -51,7 +51,7 @@ const googleGtmCookieGroup = computed({
   "de": {
     "label": "Cookie Gruppe",
     "description1": "⚠️ Damit diese Einstellungen der Gruppe wirksam wird, ist eine erneute Bereitstellung des Shops erforderlich.",
-    "description2": "Steuern Sie, ob und wie Sie Google Google Tag Manager nutzen möchten.",
+    "description2": "Steuern Sie, ob und wie Sie Google Tag Manager nutzen möchten.",
     "placeholder": "Cookie Gruppe auswählen"
   }
 }
