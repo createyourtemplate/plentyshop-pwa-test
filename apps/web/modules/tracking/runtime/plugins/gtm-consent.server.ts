@@ -1,122 +1,88 @@
-export default defineNuxtPlugin(() => {
-  const config = useRuntimeConfig().public as any;
-  const isGtmEnabled = config.enableGoogleGtm === true || config.enableGoogleGtm === 'true';
-  const trackingId = (config.googleGtmTrackingId as string)?.trim();
+import { toBool } from "../utils/utils";
 
-  // 1. Nur ausführen, wenn GTM aktiv ist und eine ID existiert
-  if (!isGtmEnabled || !trackingId) {
+export default defineNuxtPlugin(() => {
+  if (import.meta.client) {
     return;
   }
 
-  // Identische Helper-Funktion zum sprach- und gruppenunabhängigen Prüfen von Consents
-  const isServiceConsentGranted = (
-    groups: Record<string, any>,
-    configuredGroupKey: string | undefined,
-    fallbackGroupKeys: string[],
-    serviceKeywords: string[]
-  ): boolean => {
-    const candidateKeys = [configuredGroupKey, ...fallbackGroupKeys].filter(Boolean) as string[];
+  // i18n Translation-Funktion mit sicherem Fallback
+  const { $i18n } = useNuxtApp();
+  const t = (key: string): string => ($i18n?.t ? ($i18n.t(key) as string) : key);
 
-    for (const key of candidateKeys) {
-      const group = groups[key];
-      if (!group) continue;
+  const { add } = useRegisterCookie();
+  const config = useRuntimeConfig().public as any;
 
-      // Falls die Gruppe als Ganzes als boolean gespeichert ist
-      if (group === true) {
-        return true;
-      }
+  const {
+    enableCytGA,
+    googleCytGACookiesToRegister,
+    googleCytGACookieGroup,
+    registerCytGACookieAsOptOut,
 
-      if (typeof group === 'object') {
-        // Prüfung der einzelnen Cookies innerhalb der Gruppe
-        for (const [cookieName, isGranted] of Object.entries(group)) {
-          if (isGranted === true) {
-            const lowerName = cookieName.toLowerCase();
-            if (serviceKeywords.some((kw) => lowerName.includes(kw.toLowerCase()))) {
-              return true;
-            }
-          }
-        }
+    enableGoogleAds,
+    googleAdsCookiesToRegister,
+    googleAdsCookieGroup,
+    registerAdsCookieAsOptOut,
 
-        // Fallback: Wenn in der Zielgruppe überhaupt ein Cookie akzeptiert wurde
-        if (Object.values(group).some((val) => val === true)) {
-          return true;
-        }
-      }
-    }
+    enableGoogleGtm,
+    googleGtmCookiesToRegister,
+    googleGtmCookieGroup,
+    registerGtmCookieAsOptOut,
+  } = config;
 
-    return false;
-  };
+  // Google Tag Manager
+  if (toBool(enableGoogleGtm)) {
+    add(
+      {
+        name: t("Cyt.cookieBar.moduleGoogleGtm.name"),
+        Provider: t("Cyt.cookieBar.moduleGoogleGtm.provider"),
+        Status: t("Cyt.cookieBar.moduleGoogleGtm.status"),
+        PrivacyPolicy: "https://policies.google.com/privacy",
+        Lifespan: t("Cyt.cookieBar.moduleGoogleGtm.lifeSpan"),
+        cookieNames:
+          typeof googleGtmCookiesToRegister === "string"
+            ? googleGtmCookiesToRegister.split(",")
+            : [],
+        accepted: toBool(registerGtmCookieAsOptOut),
+      },
+      googleGtmCookieGroup ?? "CookieBar.functional.label"
+    );
+  }
 
-  // Auswertung und Senden des Google Consent Mode Updates
-  const updateGtmConsent = (cookieVal: any) => {
-    let gaGranted = false;
-    let adsGranted = false;
+  // Google Analytics
+  if (toBool(enableCytGA)) {
+    add(
+      {
+        name: t("Cyt.cookieBar.moduleGoogleAnalytics.name"),
+        Provider: t("Cyt.cookieBar.moduleGoogleAnalytics.provider"),
+        Status: t("Cyt.cookieBar.moduleGoogleAnalytics.status"),
+        PrivacyPolicy: "https://policies.google.com/privacy",
+        Lifespan: t("Cyt.cookieBar.moduleGoogleAnalytics.lifeSpan"),
+        cookieNames:
+          typeof googleCytGACookiesToRegister === "string"
+            ? googleCytGACookiesToRegister.split(",")
+            : [],
+        accepted: toBool(registerCytGACookieAsOptOut),
+      },
+      googleCytGACookieGroup ?? "Cyt.cookieBar.statistics.label"
+    );
+  }
 
-    if (cookieVal) {
-      try {
-        const consent = typeof cookieVal === 'string' ? JSON.parse(decodeURIComponent(cookieVal)) : cookieVal;
-        const groups = consent?.groups || {};
-
-        // Google Analytics prüfen (DE, EN und konfigurierte Gruppen)
-        gaGranted = isServiceConsentGranted(
-          groups,
-          config.googleCytGACookieGroup,
-          ['Cyt.cookieBar.statistics.label', 'CookieBar.statistics.label', 'statistics'],
-          ['Google Analytics', 'analytics', 'ga4']
-        );
-
-        // Google Ads prüfen (DE, EN und konfigurierte Gruppen)
-        adsGranted = isServiceConsentGranted(
-          groups,
-          config.googleAdsCookieGroup,
-          ['CookieBar.marketing.label', 'Cyt.cookieBar.marketing.label', 'marketing'],
-          ['Google Ads', 'ads', 'remarketing', 'conversion']
-        );
-      } catch (e) {
-        // Parsing-Fehler ignorieren
-      }
-    }
-
-    window.dataLayer = window.dataLayer || [];
-    const gtag = (...args: any[]) => {
-      window.dataLayer.push(args);
-    };
-
-    // Google Consent Mode v2 dynamisch im Browser aktualisieren
-    gtag('consent', 'update', {
-      ad_storage: adsGranted ? 'granted' : 'denied',
-      ad_user_data: adsGranted ? 'granted' : 'denied',
-      ad_personalization: adsGranted ? 'granted' : 'denied',
-      analytics_storage: gaGranted ? 'granted' : 'denied',
-    });
-
-    // Custom Event für GTM Trigger pushen
-    window.dataLayer.push({
-      event: 'consent_update',
-      consent_analytics: gaGranted,
-      consent_ads: adsGranted,
-    });
-  };
-
-  // 1. Reaktiv auf Änderungen des Consent-Cookies hören (beim Speichern im Banner)
-  const consentCookie = useCookie('consent-cookie');
-  watch(
-    consentCookie,
-    (newVal) => {
-      if (newVal) {
-        updateGtmConsent(newVal);
-      }
-    },
-    { deep: true }
-  );
-
-  // 2. Auf Plenty-Shopware Event hören (sofern vorhanden)
-  try {
-    const { on } = usePlentyEvent();
-    on('frontend:consentUpdated', (data: any) => {
-      updateGtmConsent(data || consentCookie.value);
-    });
-  } catch (e) {
-    // usePlentyEvent ist optional
+  // Google Ads
+  if (toBool(enableGoogleAds)) {
+    add(
+      {
+        name: t("Cyt.cookieBar.moduleGoogleAds.name"),
+        Provider: t("Cyt.cookieBar.moduleGoogleAds.provider"),
+        Status: t("Cyt.cookieBar.moduleGoogleAds.status"),
+        PrivacyPolicy: "https://policies.google.com/privacy/ads",
+        Lifespan: t("Cyt.cookieBar.moduleGoogleAds.lifeSpan"),
+        cookieNames:
+          typeof googleAdsCookiesToRegister === "string"
+            ? googleAdsCookiesToRegister.split(",")
+            : [],
+        accepted: toBool(registerAdsCookieAsOptOut),
+      },
+      googleAdsCookieGroup ?? "CookieBar.marketing.label"
+    );
   }
 });
