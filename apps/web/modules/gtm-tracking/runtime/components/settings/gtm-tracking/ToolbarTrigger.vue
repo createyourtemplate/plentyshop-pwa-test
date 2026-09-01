@@ -7,21 +7,23 @@
   >
     <button
       type="button"
-      class="editor-button relative py-2 flex justify-center"
-      :class="{ 'bg-editor-button text-white rounded-md': active }"
+      class="editor-button relative py-2 flex justify-center items-center"
+      :class="{ 'bg-editor-button text-white rounded-md': active, 'text-neutral-900': !active }"
       aria-label="Open tracking settings drawer"
       data-testid="open-tracking-settings-drawer"
     >
-      <NuxtImg v-if="active" width="24" height="24px" :src="whiteIcon" />
-      <NuxtImg v-else width="24" height="24px" :src="blackIcon" />
+      <!-- Target / Tracking Icon -->
+      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <circle cx="12" cy="12" r="6" />
+        <circle cx="12" cy="12" r="2" />
+      </svg>
     </button>
   </SfTooltip>
 </template>
 
 <script setup lang="ts">
 import { SfTooltip } from '@storefront-ui/vue';
-import whiteIcon from '~/assets/icons/paths/seo-white.svg'; // Bei Bedarf durch Tracking-Icon ersetzen
-import blackIcon from '~/assets/icons/paths/seo-black.svg';
 
 defineProps({
   active: Boolean,
