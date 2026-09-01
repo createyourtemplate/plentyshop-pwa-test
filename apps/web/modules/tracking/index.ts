@@ -67,18 +67,21 @@ export default defineNuxtModule({
           description: 'Cyt.cookieBar.statistics.description',
           cookies: [],
         },
-        ]
+      ]
     };
 
-    nuxt.options.app.head.script = nuxt.options.app.head.script ?? [];
-    nuxt.options.app.head.script.push({
-      innerHTML: `<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${publicRuntimeConfig.googleGtmTrackingId}"
-      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>`,
-      tagPosition: 'bodyOpen',
-    });
+    // GTM <noscript> Fallback sauber im noscript-Array registrieren
+    nuxt.options.app.head.noscript = nuxt.options.app.head.noscript ?? [];
+    if (publicRuntimeConfig.googleGtmTrackingId) {
+      nuxt.options.app.head.noscript.push({
+        innerHTML: `<iframe src="https://www.googletagmanager.com/ns.html?id=${publicRuntimeConfig.googleGtmTrackingId}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`,
+        tagPosition: 'bodyOpen',
+      });
+    }
 
     nuxt.options.plugins.push(resolve('./runtime/plugins/gtm-init.server'));
     nuxt.options.plugins.push(resolve('./runtime/plugins/gtm-consent.server'));
+    nuxt.options.plugins.push(resolve('./runtime/plugins/gtm-consent.client'));
     nuxt.options.plugins.push(resolve('./runtime/plugins/gtm-events.client'));
   },
 });
