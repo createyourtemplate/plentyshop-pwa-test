@@ -45,17 +45,14 @@ const googleCytGACookieGroup = computed({
   "en": {
     "label": "Cookie Group",
     "description1": "⚠️ This group of settings will require a shop redeploy to take effect.",
-    "description2": "Control if and how you want to use Google Analytics.",
+    "description2": "Control if and how you want to use Google Tag Manager.",
     "placeholder": "Select Cookie Group"
   },
   "de": {
     "label": "Cookie Gruppe",
     "description1": "⚠️ Damit diese Einstellungen der Gruppe wirksam wird, ist eine erneute Bereitstellung des Shops erforderlich.",
-    "description2": "Steuern Sie, ob und wie Sie Google Analytics nutzen möchten.",
-    "placeholder": "Cookie-Gruppe auswählen"
+    "description2": "Steuern Sie, ob und wie Sie Google Google Tag Manager nutzen möchten.",
+    "placeholder": "Cookie Gruppe auswählen"
   }
 }
 </i18n>
-
-
-
