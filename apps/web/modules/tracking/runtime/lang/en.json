@@ -16,7 +16,7 @@
                 "lifeSpan": "VARIABEL"
             },
             "moduleGoogleAds": {
-                "name": "Google Ads Conversion Messung und dynamisches Remarketing",
+                "name": "Google Ads conversion tracking and dynamic remarketing",
                 "provider": "Google, Doubleclick.net",
                 "status": "Cookies from Google Ads used for website analytics, ad targeting, and ad measurement.",
                 "privacyPolicy": "https://policies.google.com/privacy",
