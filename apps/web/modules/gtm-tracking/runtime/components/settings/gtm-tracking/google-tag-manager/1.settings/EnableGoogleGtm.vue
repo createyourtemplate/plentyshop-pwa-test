@@ -1,58 +1,35 @@
 <template>
   <div class="py-2">
-    <p class="mb-4">{{ getEditorTranslation('description1') }}</p>
-    <p class="mb-4">{{ getEditorTranslation('description2') }}</p>
     <div class="flex justify-between mb-2">
-      <UiFormLabel>{{ getEditorTranslation('label') }}</UiFormLabel>
-    </div>
-    <label>
-      <Multiselect
-        v-model="googleGtmCookieGroup"
-        :options="options"
-        :placeholder="getEditorTranslation('placeholder')"
-        :searchable="false"
-        :allow-empty="false"
-        label="label"
-        track-by="value"
-        select-label=""
-        deselect-label=""
-        data-testid="google-gtm-cookie-group"
+      <UiFormLabel class="mb-1">
+        {{ getEditorTranslation('label') }}
+      </UiFormLabel>
+      <SfSwitch
+        v-model="enableGoogleGtm"
+        class="checked:bg-editor-button checked:before:hover:bg-editor-button checked:border-gray-500 checked:hover:border:bg-gray-700 hover:border-gray-700 hover:before:bg-gray-700 checked:hover:bg-gray-300 checked:hover:border-gray-400"
       />
-    </label>
+    </div>
   </div>
 </template>
+
 <script setup lang="ts">
-import Multiselect from 'vue-multiselect';
-import type { SettingOption } from '~/utils/editorSettings';
-import { getCookieGroupOptions } from '~/utils/editorSettings';
+import { SfSwitch } from '@storefront-ui/vue';
 
-const { updateSetting, getSetting } = useSiteSettings('googleGtmCookieGroup');
+const { updateSetting, getSetting } = useSiteSettings('enableGoogleGtm');
 
-const options = computed(() => getCookieGroupOptions());
-
-const googleGtmCookieGroup = computed({
-  get: () => {
-    return options.value.find((o: SettingOption) => o.value === getSetting());
-  },
-  set: (option) => {
-    updateSetting(option?.value ?? '');
-  },
+const enableGoogleGtm = computed({
+  get: () => !!getSetting(),
+  set: (value) => updateSetting(value.toString()),
 });
 </script>
 
 <i18n lang="json">
 {
   "en": {
-    "label": "Cookie Group",
-    "description1": "⚠️ This group of settings will require a shop redeploy to take effect.",
-    "description2": "Control if and how you want to use Google Tag Manager.",
-    "placeholder": "Select Cookie Group"
+    "label": "Enable Google Tag Manager"
   },
   "de": {
-    "label": "Cookie Gruppe",
-    "description1": "⚠️ Damit diese Einstellungen der Gruppe wirksam wird, ist eine erneute Bereitstellung des Shops erforderlich.",
-    "description2": "Steuern Sie, ob und wie Sie Google Tag Manager nutzen möchten.",
-    "placeholder": "Cookie Gruppe auswählen"
+    "label": "Google Tag Manager aktivieren"
   }
 }
 </i18n>
