@@ -9,8 +9,8 @@
       type="button"
       class="editor-button relative py-2 flex justify-center"
       :class="{ 'bg-editor-button text-white rounded-md': active }"
-      aria-label="Open general settings drawer"
-      data-testid="open-seo-settings-drawer"
+      aria-label="Open tracking settings drawer"
+      data-testid="open-tracking-settings-drawer"
     >
       <NuxtImg v-if="active" width="24" height="24px" :src="whiteIcon" />
       <NuxtImg v-else width="24" height="24px" :src="blackIcon" />
@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { SfTooltip } from '@storefront-ui/vue';
-import whiteIcon from '~/assets/icons/paths/seo-white.svg';
+import whiteIcon from '~/assets/icons/paths/seo-white.svg'; // Bei Bedarf durch Tracking-Icon ersetzen
 import blackIcon from '~/assets/icons/paths/seo-black.svg';
 
 defineProps({
@@ -31,10 +31,10 @@ defineProps({
 <i18n lang="json">
 {
   "en": {
-    "tooltip": "SEO: Manage SEO-relevant settings, like controlling the behaviour of webcrawling robots or defining meta and schema data."
+    "tooltip": "Tracking: Manage Google Tag Manager, GA4, and Google Ads settings."
   },
   "de": {
-    "tooltip": "SEO: Manage SEO-relevant settings, like controlling the behaviour of webcrawling robots or defining meta and schema data."
+    "tooltip": "Tracking: Einstellungen für Google Tag Manager, GA4 und Google Ads verwalten."
   }
 }
 </i18n>
