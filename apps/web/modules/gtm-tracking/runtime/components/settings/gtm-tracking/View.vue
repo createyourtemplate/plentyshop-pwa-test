@@ -1,7 +1,7 @@
 <template>
   <SiteConfigurationView>
-    <!-- Leerer Breadcrumb-Slot entfernt das 'gtm-tracking' oben drüber: -->
-    <template #setting-breadcrumbs><span /></template>
+    <!-- Breadcrumb-Slot -->
+    <template #setting-breadcrumbs>GTM Tracking<span /></template>
 
     <!-- Haupt-Titel: -->
     <template #setting-title>{{ getEditorTranslation('label') }}</template>
