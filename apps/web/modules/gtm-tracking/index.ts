@@ -79,10 +79,10 @@ export default defineNuxtModule({
       });
     }
 
-    // Plugins über Nuxt Kit addPlugin registrieren
-    addPlugin(resolve('./runtime/plugins/gtm-init.server'));
-    addPlugin(resolve('./runtime/plugins/gtm-consent.server'));
-    addPlugin(resolve('./runtime/plugins/gtm-consent.client'));
-    addPlugin(resolve('./runtime/plugins/gtm-events.client'));
+    // Plugins mit expliziter .ts-Endung registrieren
+    addPlugin(resolve('./runtime/plugins/gtm-init.server.ts'));
+    addPlugin(resolve('./runtime/plugins/gtm-consent.server.ts'));
+    addPlugin(resolve('./runtime/plugins/gtm-consent.client.ts'));
+    addPlugin(resolve('./runtime/plugins/gtm-events.client.ts'));
   },
 });
