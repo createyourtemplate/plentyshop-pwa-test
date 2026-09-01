@@ -1,7 +1,18 @@
 <template>
   <SiteConfigurationView>
-    <template #setting-title>{{ getEditorUITranslation('gtm-tracking') }}</template>
+    <template #setting-title>{{ getEditorTranslation('label') }}</template>
   </SiteConfigurationView>
 </template>
 
 <script setup lang="ts"></script>
+
+<i18n lang="json">
+{
+  "en": {
+    "label": "GTM Tracking"
+  },
+  "de": {
+    "label": "GTM Tracking"
+  }
+}
+</i18n>
