@@ -1,0 +1,31 @@
+{
+    "Cyt": {
+        "cookieBar": {
+            "moduleGoogleAnalytics": {
+                "name": "Google Analytics",
+                "provider": "Google LLC",
+                "status": "Cookies from Google Analytics, used for website analytics, ad targeting, and ad measurement.",
+                "privacyPolicy": "https://policies.google.com/privacy",
+                "lifeSpan": "VARIABEL"
+            },
+            "moduleGoogleGtm": {
+                "name": "Google Tag Manager",
+                "provider": "Google LLC",
+                "status": "Integration of Google Tag Manager, which is required for managing scripts.",
+                "privacyPolicy": "https://policies.google.com/privacy",
+                "lifeSpan": "VARIABEL"
+            },
+            "moduleGoogleAds": {
+                "name": "Google Ads conversion tracking and dynamic remarketing",
+                "provider": "Google, Doubleclick.net",
+                "status": "Cookies from Google Ads used for website analytics, ad targeting, and ad measurement.",
+                "privacyPolicy": "https://policies.google.com/privacy",
+                "lifeSpan": "VARIABEL, see description"
+            },
+            "statistics": {
+                "label": "Statistics",
+                "description": "Statistic cookies collect information anonymously. This information helps us understand how our visitors use our website."
+            }
+        }
+    }
+}
