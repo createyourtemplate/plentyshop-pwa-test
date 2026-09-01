@@ -5,8 +5,9 @@ export default defineNuxtPlugin(() => {
     return;
   }
 
+  // i18n Translation-Funktion mit sicherem Fallback
   const { $i18n } = useNuxtApp();
-  const t = $i18n?.t || ((key: string) => key);
+  const t = (key: string): string => ($i18n?.t ? ($i18n.t(key) as string) : key);
 
   const { add } = useRegisterCookie();
   const config = useRuntimeConfig().public as any;
@@ -25,42 +26,63 @@ export default defineNuxtPlugin(() => {
     enableGoogleGtm,
     googleGtmCookiesToRegister,
     googleGtmCookieGroup,
-    registerGtmCookieAsOptOut
+    registerGtmCookieAsOptOut,
   } = config;
 
+  // Google Tag Manager
   if (toBool(enableGoogleGtm)) {
-    add({
-      name: t('Cyt.cookieBar.moduleGoogleGtm.name'),
-      Provider: t('Cyt.cookieBar.moduleGoogleGtm.provider'),
-      Status: t('Cyt.cookieBar.moduleGoogleGtm.status'),
-      PrivacyPolicy: "https://policies.google.com/privacy",
-      Lifespan: t('Cyt.cookieBar.moduleGoogleGtm.lifeSpan'),
-      cookieNames: typeof googleGtmCookiesToRegister === 'string' ? googleGtmCookiesToRegister.split(',') : [],
-      accepted: toBool(registerGtmCookieAsOptOut),
-    }, googleGtmCookieGroup ?? "CookieBar.functional.label");
+    add(
+      {
+        name: t("Cyt.cookieBar.moduleGoogleGtm.name"),
+        Provider: t("Cyt.cookieBar.moduleGoogleGtm.provider"),
+        Status: t("Cyt.cookieBar.moduleGoogleGtm.status"),
+        PrivacyPolicy: "https://policies.google.com/privacy",
+        Lifespan: t("Cyt.cookieBar.moduleGoogleGtm.lifeSpan"),
+        cookieNames:
+          typeof googleGtmCookiesToRegister === "string"
+            ? googleGtmCookiesToRegister.split(",")
+            : [],
+        accepted: toBool(registerGtmCookieAsOptOut),
+      },
+      googleGtmCookieGroup ?? "CookieBar.functional.label"
+    );
   }
 
+  // Google Analytics
   if (toBool(enableCytGA)) {
-    add({
-      name: t('Cyt.cookieBar.moduleGoogleAnalytics.name'),
-      Provider: t('Cyt.cookieBar.moduleGoogleAnalytics.provider'),
-      Status: t('Cyt.cookieBar.moduleGoogleAnalytics.status'),
-      PrivacyPolicy: "https://policies.google.com/privacy",
-      Lifespan: t('Cyt.cookieBar.moduleGoogleAnalytics.lifeSpan'),
-      cookieNames: typeof googleCytGACookiesToRegister === 'string' ? googleCytGACookiesToRegister.split(',') : [],
-      accepted: toBool(registerCytGACookieAsOptOut),
-    }, googleCytGACookieGroup ?? "Cyt.cookieBar.statistics.label");
+    add(
+      {
+        name: t("Cyt.cookieBar.moduleGoogleAnalytics.name"),
+        Provider: t("Cyt.cookieBar.moduleGoogleAnalytics.provider"),
+        Status: t("Cyt.cookieBar.moduleGoogleAnalytics.status"),
+        PrivacyPolicy: "https://policies.google.com/privacy",
+        Lifespan: t("Cyt.cookieBar.moduleGoogleAnalytics.lifeSpan"),
+        cookieNames:
+          typeof googleCytGACookiesToRegister === "string"
+            ? googleCytGACookiesToRegister.split(",")
+            : [],
+        accepted: toBool(registerCytGACookieAsOptOut),
+      },
+      googleCytGACookieGroup ?? "Cyt.cookieBar.statistics.label"
+    );
   }
 
+  // Google Ads
   if (toBool(enableGoogleAds)) {
-    add({
-      name: t('Cyt.cookieBar.moduleGoogleAds.name'),
-      Provider: t('Cyt.cookieBar.moduleGoogleAds.provider'),
-      Status: t('Cyt.cookieBar.moduleGoogleAds.status'),
-      PrivacyPolicy: "https://policies.google.com/privacy/ads",
-      Lifespan: t('Cyt.cookieBar.moduleGoogleAds.lifeSpan'),
-      cookieNames: typeof googleAdsCookiesToRegister === 'string' ? googleAdsCookiesToRegister.split(',') : [],
-      accepted: toBool(registerAdsCookieAsOptOut),
-    }, googleAdsCookieGroup ?? 'CookieBar.marketing.label'); 
+    add(
+      {
+        name: t("Cyt.cookieBar.moduleGoogleAds.name"),
+        Provider: t("Cyt.cookieBar.moduleGoogleAds.provider"),
+        Status: t("Cyt.cookieBar.moduleGoogleAds.status"),
+        PrivacyPolicy: "https://policies.google.com/privacy/ads",
+        Lifespan: t("Cyt.cookieBar.moduleGoogleAds.lifeSpan"),
+        cookieNames:
+          typeof googleAdsCookiesToRegister === "string"
+            ? googleAdsCookiesToRegister.split(",")
+            : [],
+        accepted: toBool(registerAdsCookieAsOptOut),
+      },
+      googleAdsCookieGroup ?? "CookieBar.marketing.label"
+    );
   }
 });
