@@ -5,6 +5,9 @@ export default defineNuxtPlugin(() => {
     return;
   }
 
+  const { $i18n } = useNuxtApp();
+  const t = $i18n?.t || ((key: string) => key);
+
   const { add } = useRegisterCookie();
   const config = useRuntimeConfig().public as any;
 
