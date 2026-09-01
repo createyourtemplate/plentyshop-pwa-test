@@ -1,4 +1,4 @@
-import { defineNuxtModule, createResolver } from '@nuxt/kit';
+import { defineNuxtModule, createResolver, addPlugin } from '@nuxt/kit';
 
 export default defineNuxtModule({
   meta: {
@@ -79,9 +79,10 @@ export default defineNuxtModule({
       });
     }
 
-    nuxt.options.plugins.push(resolve('./runtime/plugins/gtm-init.server'));
-    nuxt.options.plugins.push(resolve('./runtime/plugins/gtm-consent.server'));
-    nuxt.options.plugins.push(resolve('./runtime/plugins/gtm-consent.client'));
-    nuxt.options.plugins.push(resolve('./runtime/plugins/gtm-events.client'));
+    // Plugins über Nuxt Kit addPlugin registrieren
+    addPlugin(resolve('./runtime/plugins/gtm-init.server'));
+    addPlugin(resolve('./runtime/plugins/gtm-consent.server'));
+    addPlugin(resolve('./runtime/plugins/gtm-consent.client'));
+    addPlugin(resolve('./runtime/plugins/gtm-events.client'));
   },
 });
