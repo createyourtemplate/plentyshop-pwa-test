@@ -79,7 +79,7 @@ export default defineNuxtModule({
       });
     }
 
-    // Plugins mit expliziter .ts-Endung registrieren
+    // Plugins über Nuxt Kit addPlugin registrieren
     addPlugin(resolve('./runtime/plugins/gtm-init.server.ts'));
     addPlugin(resolve('./runtime/plugins/gtm-consent.server.ts'));
     addPlugin(resolve('./runtime/plugins/gtm-consent.client.ts'));
