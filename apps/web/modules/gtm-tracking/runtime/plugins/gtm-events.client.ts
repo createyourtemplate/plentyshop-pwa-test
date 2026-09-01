@@ -10,13 +10,14 @@ export default defineNuxtPlugin(() => {
       const customerPhone = findPhoneOptionValue(billingAddress?.options);
       const totalVat = order.totals.vats?.reduce((acc: number, vat: { value: number }) => acc + vat.value, 0) || 0;
 
-      window.dataLayer = window.dataLayer || [];
+      const w = window as any;
+      w.dataLayer = w.dataLayer || [];
       
       // 1. Ecommerce-Objekt vor dem Event leeren
-      window.dataLayer.push({ ecommerce: null });
+      w.dataLayer.push({ ecommerce: null });
 
       // 2. Purchase Event abschicken
-      window.dataLayer.push({
+      w.dataLayer.push({
         event: 'purchase',
         ecommerce: {
           transaction_id: String(orderGetters.getId(order)),
