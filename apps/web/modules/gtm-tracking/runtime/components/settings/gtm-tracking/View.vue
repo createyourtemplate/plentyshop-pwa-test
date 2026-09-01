@@ -1,10 +1,16 @@
 <template>
   <SiteConfigurationView>
+    <!-- Leerer Breadcrumb-Slot entfernt das 'gtm-tracking' oben drüber: -->
+    <template #setting-breadcrumbs><span /></template>
+
+    <!-- Haupt-Titel: -->
     <template #setting-title>{{ getEditorTranslation('label') }}</template>
+
+    <!-- Beschreibung: -->
     <template #setting-description>
       <div class="flex flex-col px-4 text-sm">
-        <p class="pb-2">
-          <span class="align-middle font-bold">{{ getEditorTranslation('description') }}</span>
+        <p class="pb-2 text-neutral-600">
+          {{ getEditorTranslation('description') }}
         </p>
       </div>
     </template>
@@ -16,12 +22,12 @@
 <i18n lang="json">
 {
   "en": {
-    "label": "GTM Tracking",
+    "label": "Tracking & Analytics",
     "description": "Managing tracking settings and controlling marketing and analytics data collection via Google Tag Manager."
   },
   "de": {
-    "label": "GTM Tracking",
-    "description": "Steuerung und Verwaltung des Trackings sowie der Marketing- und Analyse-Datenerfassung mittels Google Tag Manager."
+    "label": "Tracking & Analytics",
+    "description": "Verwaltung der Tracking-Einstellungen und Steuerung der Erfassung von Marketing- und Analysedaten über den Google Tag Manager."
   }
 }
 </i18n>
