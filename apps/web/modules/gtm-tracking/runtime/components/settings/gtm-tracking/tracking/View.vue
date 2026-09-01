@@ -16,11 +16,11 @@
 <i18n lang="json">
 {
   "en": {
-    "label": "SEO Settings",
+    "label": "GTM Tracking",
     "description": "Managing tracking settings and controlling marketing and analytics data collection via Google Tag Manager."
   },
   "de": {
-    "label": "SEO Settings",
+    "label": "GTM Tracking",
     "description": "Steuerung und Verwaltung des Trackings sowie der Marketing- und Analyse-Datenerfassung mittels Google Tag Manager."
   }
 }
