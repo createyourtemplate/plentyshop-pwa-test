@@ -1,12 +1,6 @@
 <template>
   <SiteConfigurationView>
-    <!-- Breadcrumb-Slot -->
-    <template #setting-breadcrumbs>GTM Tracking<span /></template>
-
-    <!-- Haupt-Titel: -->
     <template #setting-title>{{ getEditorTranslation('label') }}</template>
-
-    <!-- Beschreibung: -->
     <template #setting-description>
       <div class="flex flex-col px-4 text-sm">
         <p class="pb-2 text-neutral-600">
