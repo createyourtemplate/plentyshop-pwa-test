@@ -136,7 +136,8 @@ export default defineNuxtConfig({
   modules: [
     '@plentymarkets/shop-core',
     '@plentymarkets/shop-module-mollie',
-    '@plentymarkets/shop-module-gtag',
+     // '@plentymarkets/shop-module-gtag', //
+    './modules/gtm-tracking',
     '@nuxt/eslint',
     '@nuxt/fonts',
     '@nuxt/image',
