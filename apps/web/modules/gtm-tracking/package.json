@@ -1,0 +1,7 @@
+{
+  "name": "@createyourtemplate/plentyshop-gtm-tracking",
+  "version": "1.0.0",
+  "description": "Google Tag Manager, GA4, Google Ads & Consent Mode v2 for PlentyShop PWA",
+  "author": "createyourtemplate",
+  "license": "MIT"
+}
