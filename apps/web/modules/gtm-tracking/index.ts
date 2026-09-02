@@ -3,6 +3,11 @@ import { defineNuxtModule, createResolver, addPlugin } from '@nuxt/kit';
 export default defineNuxtModule({
   meta: {
     name: 'gtm-tracking',
+    version: '1.0.0',
+    configKey: 'gtmTracking',
+    compatibility: {
+      nuxt: '^3.0.0',
+    },
   },
   setup(_options, nuxt) {
     const { resolve } = createResolver(import.meta.url);
