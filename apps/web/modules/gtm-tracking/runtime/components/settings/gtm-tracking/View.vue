@@ -1,11 +1,21 @@
 <template>
   <SiteConfigurationView>
+    <!-- Blendet die Zeile 'gtm-tracking' oben drüber komplett aus: -->
+    <template #setting-breadcrumbs><span /></template>
+
+    <!-- Haupttitel: -->
     <template #setting-title>{{ getEditorTranslation('label') }}</template>
+
+    <!-- Beschreibung & Versionsanzeige: -->
     <template #setting-description>
       <div class="flex flex-col px-4 text-sm">
         <p class="pb-2 text-neutral-600">
           {{ getEditorTranslation('description') }}
         </p>
+        <!-- Versionsangabe: -->
+        <span class="text-xs text-neutral-400 font-mono pb-2">
+          Version 1.0.0 • createyourtemplate
+        </span>
       </div>
     </template>
   </SiteConfigurationView>
