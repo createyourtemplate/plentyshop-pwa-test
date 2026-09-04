@@ -89,5 +89,6 @@ export default defineNuxtModule({
     addPlugin(resolve('./runtime/plugins/gtm-consent.server.ts'));
     addPlugin(resolve('./runtime/plugins/gtm-consent.client.ts'));
     addPlugin(resolve('./runtime/plugins/gtm-events.client.ts'));
+    addPlugin(resolve('./runtime/plugins/gtm-cookies.client.ts'));
   },
 });
