@@ -6,7 +6,7 @@ export default defineNuxtModule({
     version: '1.0.0',
     configKey: 'gtmTracking',
     compatibility: {
-      nuxt: '>=3.0.0', // <-- Von '^3.0.0' auf '>=3.0.0' ändern!
+      nuxt: '>=3.0.0',
     },
   },
   setup(_options, nuxt) {
