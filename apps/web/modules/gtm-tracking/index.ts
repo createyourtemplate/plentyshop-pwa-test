@@ -6,7 +6,7 @@ export default defineNuxtModule({
     version: '1.0.0',
     configKey: 'gtmTracking',
     compatibility: {
-      nuxt: '>=3.0.0', // Nuxt 4 Kompatibilität
+      nuxt: '>=3.0.0',
     },
   },
   setup(_options, nuxt) {
@@ -52,39 +52,19 @@ export default defineNuxtModule({
     publicRuntimeConfig.googleGtmTrackingId = process.env.NUXT_PUBLIC_GOOGLE_GTM_TRACKING_ID || '';
     publicRuntimeConfig.registerGtmCookieAsOptOut = process.env.NUXT_PUBLIC_REGISTER_GTM_COOKIE_AS_OPT_OUT === 'true';
 
-    // --- COOKIE-GRUPPEN AUTOMATISCH IM MODUL AKTIVIEREN ---
+    // --- COOKIE-GRUPPEN IM MODUL SICHERSTELLEN ---
     const cookieConfig = (publicRuntimeConfig.cookieGroups as any) || {};
     const groups = cookieConfig.groups || [];
 
-    // 1. Marketing-Gruppe aktivieren (als einheitlicher Eintrag)
+    // 1. Marketing-Gruppe: Vorbelegung leeren, damit keine manuelle Doppelung entsteht
     const marketingGroup = groups.find((g: any) => g.name === 'CookieBar.marketing.label');
     if (marketingGroup) {
-      marketingGroup.cookies = [
-        {
-          name: 'Cyt.cookieBar.moduleGoogleAds.name',
-          Provider: 'Google, Doubleclick.net',
-          Status: 'Aktiv',
-          PrivacyPolicy: 'https://policies.google.com/privacy/ads',
-          Lifespan: '90 Tage',
-          accepted: false,
-        },
-      ];
+      marketingGroup.cookies = [];
     }
 
-    // 2. Statistik-Gruppe registrieren (mit einheitlichem Eintrag für Google Analytics)
-    const statsGroup = groups.find((g: any) => g.name === 'Cyt.cookieBar.statistics.label');
-    if (statsGroup) {
-      statsGroup.cookies = [
-        {
-          name: 'Cyt.cookieBar.moduleGoogleAnalytics.name',
-          Provider: 'Google LLC',
-          Status: 'Aktiv',
-          PrivacyPolicy: 'https://policies.google.com/privacy',
-          Lifespan: '2 Jahre',
-          accepted: false,
-        },
-      ];
-    } else {
+    // 2. Statistik-Gruppe: Sicherstellen, dass die Gruppe existiert
+    const hasStatsGroup = groups.some((g: any) => g.name === 'Cyt.cookieBar.statistics.label');
+    if (!hasStatsGroup) {
       const nextId = groups.length > 0 ? Math.max(...groups.map((g: any) => Number(g.id) || 0)) + 1 : 4;
       groups.push({
         id: nextId,
@@ -92,16 +72,7 @@ export default defineNuxtModule({
         showMore: false,
         description: 'Cyt.cookieBar.statistics.description',
         accepted: false,
-        cookies: [
-          {
-            name: 'Cyt.cookieBar.moduleGoogleAnalytics.name',
-            Provider: 'Google LLC',
-            Status: 'Aktiv',
-            PrivacyPolicy: 'https://policies.google.com/privacy',
-            Lifespan: '2 Jahre',
-            accepted: false,
-          },
-        ],
+        cookies: [],
       });
     }
 
@@ -110,7 +81,7 @@ export default defineNuxtModule({
       groups,
     };
 
-    // GTM <noscript> Fallback sauber im noscript-Array registrieren
+    // GTM <noscript> Fallback
     nuxt.options.app.head.noscript = nuxt.options.app.head.noscript ?? [];
     if (publicRuntimeConfig.googleGtmTrackingId) {
       nuxt.options.app.head.noscript.push({
@@ -119,7 +90,7 @@ export default defineNuxtModule({
       });
     }
 
-    // Plugins über Nuxt Kit addPlugin registrieren
+    // Plugins registrieren
     addPlugin(resolve('./runtime/plugins/gtm-init.server.ts'));
     addPlugin(resolve('./runtime/plugins/gtm-consent.server.ts'));
     addPlugin(resolve('./runtime/plugins/gtm-consent.client.ts'));
