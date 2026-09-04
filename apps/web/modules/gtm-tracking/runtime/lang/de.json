@@ -20,7 +20,7 @@
                 "provider": "Google, Doubleclick.net",
                 "status": "Cookies von Google Ads, die für Website-Analysen, Ad Targeting und Anzeigenmessung verwendet werden.",
                 "privacyPolicy": "https://policies.google.com/privacy/ads",
-                "lifeSpan": "VARIABEL, siehe Beschreibung"
+                "lifeSpan": "VARIABEL"
             },
             "statistics": {
                 "label": "Statistiken",
