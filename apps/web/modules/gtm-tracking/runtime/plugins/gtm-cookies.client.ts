@@ -16,15 +16,26 @@ export default defineNuxtPlugin({
         return;
       }
 
-      // Passende Gruppe finden (nach Name oder ID)
-      const group = cookieGroups.value?.find(
+      // Passende Gruppe finden (nach Name oder ID) mit automatischer Gruppenerstellung als Fallback
+      let group = cookieGroups.value?.find(
         (g: any) =>
           g.name === groupNameOrId ||
           String(g.id) === String(groupNameOrId) ||
           (typeof groupNameOrId === 'string' && g.name?.toLowerCase().includes(groupNameOrId.toLowerCase()))
       );
 
-      if (!group) return;
+      // Falls die Gruppe noch nicht in Plenty existiert: einfach automatisch anlegen!
+      if (!group && cookieGroups.value) {
+        group = {
+          id: cookieGroups.value.length + 1,
+          name: groupNameOrId,
+          showMore: false,
+          description: groupNameOrId.replace('.label', '.description'),
+          cookies: [],
+          accepted: false,
+        };
+        cookieGroups.value.push(group);
+      }
 
       group.cookies = group.cookies || [];
 
