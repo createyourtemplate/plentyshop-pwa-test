@@ -6,7 +6,7 @@ export default defineNuxtModule({
     version: '1.0.0',
     configKey: 'gtmTracking',
     compatibility: {
-      nuxt: '>=3.0.0',
+      nuxt: '>=3.0.0', // Nuxt 4 Kompatibilität
     },
   },
   setup(_options, nuxt) {
@@ -23,21 +23,13 @@ export default defineNuxtModule({
           {
             code: 'en',
             file: 'en.json',
-          }
+          },
         ],
       });
     });
 
     nuxt.options.runtimeConfig = nuxt.options.runtimeConfig || {};
     nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {};
-    
-    // Bestehende Gruppen sicher laden
-    const existingGroups = (nuxt.options.runtimeConfig.public as any).cookieGroups?.groups ?? [];
-    
-    // Basis-ID für neue Gruppen ermitteln (höchste bestehende ID + 1)
-    const baseId = existingGroups.length > 0 
-      ? Math.max(...existingGroups.map((g: any) => Number(g.id) || 0)) + 1 
-      : 1;
 
     const publicRuntimeConfig = nuxt.options.runtimeConfig.public as Record<string, unknown>;
 
@@ -52,27 +44,59 @@ export default defineNuxtModule({
     publicRuntimeConfig.googleAdsCookieGroup = process.env.NUXT_PUBLIC_GOOGLE_ADS_COOKIE_GROUP || 'CookieBar.marketing.label';
     publicRuntimeConfig.googleAdsCookiesToRegister = process.env.NUXT_PUBLIC_GOOGLE_ADS_COOKIES_TO_REGISTER || '';
     publicRuntimeConfig.registerAdsCookieAsOptOut = process.env.NUXT_PUBLIC_REGISTER_ADS_COOKIE_AS_OPT_OUT === 'true';
-      
+
     // GTM Configuration
     publicRuntimeConfig.enableGoogleGtm = process.env.NUXT_PUBLIC_ENABLE_GOOGLE_GTM === 'true';
     publicRuntimeConfig.googleGtmCookieGroup = process.env.NUXT_PUBLIC_GOOGLE_GTM_COOKIE_GROUP || 'CookieBar.functional.label';
     publicRuntimeConfig.googleGtmCookiesToRegister = process.env.NUXT_PUBLIC_GOOGLE_GTM_COOKIES_TO_REGISTER || '';
-    publicRuntimeConfig.googleGtmTrackingId = process.env.NUXT_PUBLIC_GOOGLE_GTM_TRACKING_ID || '';  
+    publicRuntimeConfig.googleGtmTrackingId = process.env.NUXT_PUBLIC_GOOGLE_GTM_TRACKING_ID || '';
     publicRuntimeConfig.registerGtmCookieAsOptOut = process.env.NUXT_PUBLIC_REGISTER_GTM_COOKIE_AS_OPT_OUT === 'true';
 
-    // Cookie Groups registrieren (Statistiken)
-    publicRuntimeConfig.cookieGroups = {
-      ...(nuxt.options.runtimeConfig.public as any).cookieGroups,
-      groups: [
-        ...existingGroups,
+    // --- COOKIE-GRUPPEN AUTOMATISCH IM MODUL AKTIVIEREN ---
+    const cookieConfig = (publicRuntimeConfig.cookieGroups as any) || {};
+    const groups = cookieConfig.groups || [];
+
+    // 1. Marketing-Gruppe aktivieren (einen Basiseintrag setzen, damit Plenty die Gruppe einblendet)
+    const marketingGroup = groups.find((g: any) => g.name === 'CookieBar.marketing.label');
+    if (marketingGroup && (!marketingGroup.cookies || marketingGroup.cookies.length === 0)) {
+      marketingGroup.cookies = [
         {
-          id: baseId,
-          name: 'Cyt.cookieBar.statistics.label',
-          showMore: false,
-          description: 'Cyt.cookieBar.statistics.description',
-          cookies: [],
+          name: 'Google Ads',
+          Provider: 'Google LLC',
+          Status: 'Aktiv',
+          PrivacyPolicy: 'https://policies.google.com/privacy/ads',
+          Lifespan: '90 Tage',
+          accepted: false,
         },
-      ]
+      ];
+    }
+
+    // 2. Statistik-Gruppe registrieren (mit Basiseintrag für Google Analytics)
+    const hasStatsGroup = groups.some((g: any) => g.name === 'Cyt.cookieBar.statistics.label');
+    if (!hasStatsGroup) {
+      const nextId = groups.length > 0 ? Math.max(...groups.map((g: any) => Number(g.id) || 0)) + 1 : 4;
+      groups.push({
+        id: nextId,
+        name: 'Cyt.cookieBar.statistics.label',
+        showMore: false,
+        description: 'Cyt.cookieBar.statistics.description',
+        accepted: false,
+        cookies: [
+          {
+            name: 'Google Analytics',
+            Provider: 'Google LLC',
+            Status: 'Aktiv',
+            PrivacyPolicy: 'https://policies.google.com/privacy',
+            Lifespan: '2 Jahre',
+            accepted: false,
+          },
+        ],
+      });
+    }
+
+    publicRuntimeConfig.cookieGroups = {
+      ...cookieConfig,
+      groups,
     };
 
     // GTM <noscript> Fallback sauber im noscript-Array registrieren
