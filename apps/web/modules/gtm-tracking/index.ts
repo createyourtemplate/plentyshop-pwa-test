@@ -56,13 +56,13 @@ export default defineNuxtModule({
     const cookieConfig = (publicRuntimeConfig.cookieGroups as any) || {};
     const groups = cookieConfig.groups || [];
 
-    // 1. Marketing-Gruppe aktivieren (einen Basiseintrag setzen, damit Plenty die Gruppe einblendet)
+    // 1. Marketing-Gruppe aktivieren (als einheitlicher Eintrag)
     const marketingGroup = groups.find((g: any) => g.name === 'CookieBar.marketing.label');
-    if (marketingGroup && (!marketingGroup.cookies || marketingGroup.cookies.length === 0)) {
+    if (marketingGroup) {
       marketingGroup.cookies = [
         {
-          name: 'Google Ads',
-          Provider: 'Google LLC',
+          name: 'Cyt.cookieBar.moduleGoogleAds.name',
+          Provider: 'Google, Doubleclick.net',
           Status: 'Aktiv',
           PrivacyPolicy: 'https://policies.google.com/privacy/ads',
           Lifespan: '90 Tage',
@@ -71,9 +71,20 @@ export default defineNuxtModule({
       ];
     }
 
-    // 2. Statistik-Gruppe registrieren (mit Basiseintrag für Google Analytics)
-    const hasStatsGroup = groups.some((g: any) => g.name === 'Cyt.cookieBar.statistics.label');
-    if (!hasStatsGroup) {
+    // 2. Statistik-Gruppe registrieren (mit einheitlichem Eintrag für Google Analytics)
+    const statsGroup = groups.find((g: any) => g.name === 'Cyt.cookieBar.statistics.label');
+    if (statsGroup) {
+      statsGroup.cookies = [
+        {
+          name: 'Cyt.cookieBar.moduleGoogleAnalytics.name',
+          Provider: 'Google LLC',
+          Status: 'Aktiv',
+          PrivacyPolicy: 'https://policies.google.com/privacy',
+          Lifespan: '2 Jahre',
+          accepted: false,
+        },
+      ];
+    } else {
       const nextId = groups.length > 0 ? Math.max(...groups.map((g: any) => Number(g.id) || 0)) + 1 : 4;
       groups.push({
         id: nextId,
@@ -83,7 +94,7 @@ export default defineNuxtModule({
         accepted: false,
         cookies: [
           {
-            name: 'Google Analytics',
+            name: 'Cyt.cookieBar.moduleGoogleAnalytics.name',
             Provider: 'Google LLC',
             Status: 'Aktiv',
             PrivacyPolicy: 'https://policies.google.com/privacy',
