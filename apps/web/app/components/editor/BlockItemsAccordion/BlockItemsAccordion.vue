@@ -25,7 +25,7 @@
             :key="item.meta.uuid"
             class="mb-3 flex items-center justify-between transition-colors"
             :style="
-              currentActiveIndex === index
+              currentActiveIndex === index && isBannerBlock(item)
                 ? { backgroundColor: 'rgba(83, 138, 234, 0.1)', borderLeft: '4px solid #538AEA' }
                 : { backgroundColor: 'white', borderLeft: '4px solid transparent' }
             "
@@ -75,7 +75,7 @@
 
                 <div
                   v-if="openItemMenuIndex === index"
-                  class="absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border z-50"
+                  class="absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border z-dropdown"
                   @click.stop
                 >
                   <div class="px-4 py-3 border-b">
@@ -113,7 +113,7 @@
         <button
           data-testid="actions-add-block-button"
           class="border border-editor-button w-full py-1 rounded-md flex items-center justify-center gap-1 text-editor-button"
-          @click="$emit('add-item')"
+          @click="$emit('add-item', $event)"
         >
           <SfIconAdd />
           {{ getEditorTranslation('add-element-label') }}

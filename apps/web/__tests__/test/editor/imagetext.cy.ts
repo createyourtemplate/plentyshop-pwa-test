@@ -6,10 +6,16 @@ describe('Image Text Block Form', () => {
   const imageText = new ImageTextObject();
 
   const openImageInGrid = () => {
-    cy.get('[data-testid="multi-grid-structure"]').children().should('have.length', 2);
-    cy.get('[data-testid="multi-grid-structure"]').within(() => {
-      cy.get('[data-testid="Image-open-editor-button"]').first().should('exist').click({ force: true });
-    });
+    cy.get('[data-testid="multi-grid-structure"]').first().children().should('have.length', 2);
+    cy.get('[data-testid="multi-grid-structure"]')
+      .first()
+      .parents('[data-testid*="block-wrapper"]')
+      .first()
+      .find('[data-testid="MultiGrid-open-editor-button"]')
+      .first()
+      .should('exist')
+      .click({ force: true });
+    cy.get('[data-testid="actions-edit-item-0"]').should('exist').click({ force: true });
     cy.get('[data-testid="image-group"]').should('exist').click();
   };
 
@@ -19,62 +25,77 @@ describe('Image Text Block Form', () => {
   };
 
   const openTextInGrid = () => {
-    cy.get('[data-testid="multi-grid-structure"]').children().should('have.length', 2);
-    cy.get('[data-testid="multi-grid-structure"]').within(() => {
-      cy.get('[data-testid="TextCard-open-editor-button"]').last().should('exist').click({ force: true });
-    });
+    cy.get('[data-testid="multi-grid-structure"]').first().children().should('have.length', 2);
+    cy.get('[data-testid="multi-grid-structure"]')
+      .first()
+      .parents('[data-testid*="block-wrapper"]')
+      .first()
+      .find('[data-testid="MultiGrid-open-editor-button"]')
+      .first()
+      .should('exist')
+      .click({ force: true });
+    cy.get('[data-testid="actions-edit-item-1"]').should('exist').click({ force: true });
     cy.get('[data-testid="open-text-settings"]').should('exist').click();
   };
 
   const changeText = () => {
-    const textInputs = [
-      { selector: 'input-pretitle', text: 'New Pre title' },
-      { selector: 'input-main-title', text: 'New title' },
-      { selector: 'input-subtitle', text: 'New sub title' },
-      { selector: 'textarea-description', text: 'New Text Area Content' },
-    ];
+    cy.get('[data-testid="rte-editor"]')
+      .scrollIntoView()
+      .should('be.visible')
+      .find('[contenteditable="true"]')
+      .click()
+      .clear()
+      .type('New image text', { delay: 0 });
 
-    textInputs.forEach(({ selector, text }) => {
-      cy.get(`[data-testid="${selector}"]`)
-        .should('exist')
-        .clear({ force: true })
-        .type(text, { delay: 0, force: true });
-    });
-    cy.get('[data-testid="multi-grid-structure"]').scrollIntoView().should('exist');
-    cy.get('[data-testid="multi-grid-structure"]').within(() => {
-      const expectedTexts = [
-        { selector: 'text-pretitle', text: 'New Pre title' },
-        { selector: 'text-title', text: 'New title' },
-        { selector: 'text-subtitle', text: 'New sub title' },
-        { selector: 'text-html', text: 'New Text Area Content' },
-      ];
-
-      expectedTexts.forEach(({ selector, text }) => {
-        cy.get(`[data-testid="${selector}"]`).should('have.text', text);
-      });
-    });
+    cy.get('[data-testid^="text-html"]').filter(':contains("New image text")').should('exist');
   };
 
   const changeTextColor = () => {
-    cy.get('[data-testid="input-text-color"]').should('exist').clear().type('rgb(121, 12, 12)', { delay: 0 });
-    cy.wait(1000);
-    cy.getByTestId('multi-grid-structure').within(() =>
-      cy.getByTestId('text-content').should('have.css', 'color', 'rgb(121, 12, 12)'),
-    );
+    cy.get('[data-testid="rte-editor"]')
+      .filter(':visible')
+      .find('[contenteditable="true"]')
+      .click()
+      .type('{selectall}');
+
+    cy.get('[data-testid="rte-font-color"]').find('button').first().scrollIntoView().click({ force: true });
+
+    cy.get('#HEX').clear().type('#790C0C{enter}', { delay: 0 });
+
+    cy.get('[data-testid="rte-font-color"]').find('button').first().scrollIntoView().click({ force: true });
+
+    cy.get('[data-testid^="text-html"]')
+      .filter(':contains("New image text")')
+      .find('span')
+      .should('have.css', 'color', 'rgb(121, 12, 12)');
   };
 
   const changeTextAlignment = () => {
-    cy.get('[data-testid="text-align-center"]').should('exist').click();
+    cy.get('[data-testid="rte-editor"]')
+      .filter(':visible')
+      .find('[contenteditable="true"]')
+      .click()
+      .type('{selectall}');
 
-    cy.get('[data-testid="text-content"]').should('have.class', 'text-center');
+    cy.get('[data-testid="rte-align-center"]').first().scrollIntoView().click({ force: true });
+    cy.get('[data-testid^="text-html"]')
+      .filter(':contains("New image text")')
+      .find('p')
+      .first()
+      .should('have.css', 'text-align', 'center');
 
-    cy.get('[data-testid="text-align-right"]').should('exist').click();
+    cy.get('[data-testid="rte-align-right"]').first().scrollIntoView().click({ force: true });
+    cy.get('[data-testid^="text-html"]')
+      .filter(':contains("New image text")')
+      .find('p')
+      .first()
+      .should('have.css', 'text-align', 'right');
 
-    cy.get('[data-testid="text-content"]').should('have.class', 'text-right');
-
-    cy.get('[data-testid="text-align-left"]').should('exist').click();
-
-    cy.get('[data-testid="text-content"]').should('have.class', 'text-left');
+    cy.get('[data-testid="rte-align-left"]').first().scrollIntoView().click({ force: true });
+    cy.get('[data-testid^="text-html"]')
+      .filter(':contains("New image text")')
+      .find('p')
+      .first()
+      .should('have.css', 'text-align', 'left');
   };
 
   const openButtonGroup = () => {
@@ -83,40 +104,42 @@ describe('Image Text Block Form', () => {
 
   const changeButtonLabel = () => {
     cy.get('[data-testid="input-button-label"]').should('exist').clear().type('New Button Label', { delay: 0 });
-    cy.get('[data-testid="text-button"]').should('have.text', 'New Button Label');
+    cy.get('[data-testid="text-button"]').first().should('have.text', 'New Button Label');
   };
 
   const changeButtonLink = () => {
     cy.get('[data-testid="input-button-link"]').should('exist').clear().type('https://www.google.com', { delay: 0 });
-    cy.get('[data-testid="text-button"]').should('have.attr', 'href', 'https://www.google.com');
+    cy.get('[data-testid="text-button"]').first().should('have.attr', 'href', 'https://www.google.com');
   };
 
   const changeButtonVariants = () => {
-    cy.get('[data-testid="button-outline-secondary"]').should('exist').click();
-    cy.get('[data-testid="text-button"]').should('have.class', 'active:text-primary-900');
-    cy.get('[data-testid="button-outline-primary"]').should('exist').click();
-    cy.get('[data-testid="text-button"]').should('have.class', 'active:bg-primary-700');
+    cy.get('[data-testid="button-variant-secondary"]').should('exist').click();
+    cy.get('[data-testid="text-button"]').first().should('have.class', 'active:text-primary-900');
+    cy.get('[data-testid="button-variant-primary"]').should('exist').click();
+    cy.get('[data-testid="text-button"]').first().should('have.class', 'active:bg-primary-700');
   };
 
   const cookieBar = new CookieBarObject();
 
   beforeEach(() => {
-    cy.intercept('plentysystems/getStorageItems', {
+    cy.intercept('plentysystems/getTruncatedStorageItems', {
       statusCode: 200,
       body: {
-        data: [
-          {
-            key: '123-demo-picture.jpeg',
-            lastModified: '2025-08-06T11:06:05+00:00',
-            eTag: '4db976b8578d71ee74710e48ad01dc35',
-            size: '1009370',
-            storageClass: 'STANDARD',
-            publicUrl: 'https://cdn02.plentymarkets.com/mevofvd5omld/frontend/123-demo-picture.jpeg',
-            previewUrl: 'https://cdn02.plentymarkets.com/mevofvd5omld/frontend/.thumbs/123-demo-picture.jpeg',
-          },
-        ],
+        data: {
+          objects: [
+            {
+              key: '123-demo-picture.jpeg',
+              lastModified: '2025-08-06T11:06:05+00:00',
+              eTag: '4db976b8578d71ee74710e48ad01dc35',
+              size: '1009370',
+              storageClass: 'STANDARD',
+              publicUrl: 'https://cdn02.plentyone.com/mevofvd5omld/frontend/123-demo-picture.jpeg',
+              previewUrl: 'https://cdn02.plentyone.com/mevofvd5omld/frontend/.thumbs/123-demo-picture.jpeg',
+            },
+          ],
+        },
       },
-    }).as('getStorageItems');
+    }).as('getTruncatedStorageItems');
     cy.intercept('plentysystems/getStorageMetadata', { statusCode: 200, body: {} }).as('getStorageMetadata');
 
     cy.clearCookies();

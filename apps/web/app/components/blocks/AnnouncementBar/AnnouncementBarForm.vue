@@ -1,36 +1,9 @@
 <template>
-  <UiAccordionItem
-    :model-value="expandedTextSettings"
-    summary-active-class="bg-neutral-100"
-    summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
-  >
-    <template #summary>
-      <h2>{{ getEditorTranslation('text-label') }}</h2>
-    </template>
+  <EditorFormPanel v-model="expandedTextSettings" :title="getEditorTranslation('text-label')">
+    <EditorRichTextEditorForm v-model="editingText" :text-align="'center'" />
+  </EditorFormPanel>
 
-    <EditorRichTextEditorForm v-model="editingText" :text-align="'center'">
-      <div class="py-2">
-        <UiFormLabel>{{ getEditorTranslation('html-description-label') }}</UiFormLabel>
-        <SfTextarea
-          id="text-html-description"
-          v-model="editingText"
-          data-testid="textarea-description"
-          name="text-html-description"
-          rows="3"
-          class="min-h-[232px] mt-1 block w-full border border-gray-300 rounded-md shadow-sm sm:text-sm"
-        />
-      </div>
-    </EditorRichTextEditorForm>
-  </UiAccordionItem>
-
-  <UiAccordionItem
-    v-model="expandedLayoutSettings"
-    summary-active-class="bg-neutral-100"
-    summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
-  >
-    <template #summary>
-      <h2>{{ getEditorTranslation('layout-label') }}</h2>
-    </template>
+  <EditorFormPanel v-model="expandedLayoutSettings" :title="getEditorTranslation('layout-label')">
     <div class="py-2 px-2">
       <UiFormLabel class="mb-1">{{ getEditorTranslation('background-color-label') }}</UiFormLabel>
       <EditorColorPicker v-model="editingBackgroundColor" class="w-full">
@@ -49,22 +22,17 @@
         </template>
       </EditorColorPicker>
     </div>
-  </UiAccordionItem>
+  </EditorFormPanel>
 </template>
 
 <script setup lang="ts">
 import type { AnnouncementBarProps, AnnouncementBarFormProps } from './types';
-import { SfInput, SfTextarea } from '@storefront-ui/vue';
+import { SfInput } from '@storefront-ui/vue';
 
 const props = defineProps<AnnouncementBarFormProps>();
 
 const { blockUuid } = useSiteConfiguration();
-const route = useRoute();
-const { data } = useBlockTemplates(
-  route?.meta?.identifier as string,
-  route.meta.type as string,
-  useNuxtApp().$i18n.locale.value,
-);
+const { allBlocks: data } = useBlocks();
 const { findOrDeleteBlockByUuid } = useBlockManager();
 const expandedLayoutSettings = ref(true);
 const expandedTextSettings = ref(true);
@@ -93,14 +61,12 @@ const editingBackgroundColor = computed({
   "en": {
     "text-label": "Text",
     "layout-label": "Layout settings",
-    "background-color-label": "Background color",
-    "html-description-label": "HTML Description"
+    "background-color-label": "Background color"
   },
   "de": {
     "text-label": "Text",
     "layout-label": "Layout-Einstellungen",
-    "background-color-label": "Hintergrundfarbe",
-    "html-description-label": "HTML Beschreibung"
+    "background-color-label": "Hintergrundfarbe"
   }
 }
 </i18n>

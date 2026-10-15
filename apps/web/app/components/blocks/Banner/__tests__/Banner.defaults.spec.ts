@@ -15,40 +15,44 @@ const checkElementOrder = (
 
 describe('Banner', () => {
   describe('with default settings', () => {
-    const wrapper = mount(BlocksBanner, {
-      props: {
-        name: 'Banner',
-        type: 'content',
-        content: {
-          image: {
-            wideScreen: '/test-desktop.jpg',
-            desktop: '/test-desktop.jpg',
-            tablet: '/test-tablet.jpg',
-            mobile: '/test-mobile.jpg',
-            alt: 'test alt text',
+    let wrapper: ReturnType<typeof mount>;
+
+    beforeAll(() => {
+      wrapper = mount(BlocksBanner, {
+        props: {
+          name: 'Banner',
+          type: 'content',
+          content: {
+            image: {
+              wideScreen: '/test-desktop.jpg',
+              desktop: '/test-desktop.jpg',
+              tablet: '/test-tablet.jpg',
+              mobile: '/test-mobile.jpg',
+              alt: 'test alt text',
+            },
+            text: {
+              pretitle: 'Test pretitle',
+              title: 'Test title',
+              subtitle: 'Test subtitle',
+              htmlDescription: '<p>Test description</p>',
+              textAlignment: 'left',
+              justify: 'top',
+              align: 'left',
+              background: true,
+            },
+            button: {
+              label: 'Test button',
+              link: '/test-link',
+              variant: 'primary',
+            },
           },
-          text: {
-            pretitle: 'Test pretitle',
-            title: 'Test title',
-            subtitle: 'Test subtitle',
-            htmlDescription: '<p>Test description</p>',
-            textAlignment: 'left',
-            justify: 'top',
-            align: 'left',
-            background: true,
-          },
-          button: {
-            label: 'Test button',
-            link: '/test-link',
-            variant: 'primary',
+          index: 0,
+          lazyLoading: 'eager',
+          meta: {
+            uuid: bannerBlockUuid,
           },
         },
-        index: 0,
-        lazyLoading: 'eager',
-        meta: {
-          uuid: bannerBlockUuid,
-        },
-      },
+      });
     });
 
     it('should render', () => {
@@ -61,9 +65,6 @@ describe('Banner', () => {
         'overlay',
         'content',
         'text-content',
-        'text-pretitle',
-        'text-title',
-        'text-subtitle',
         'text-html',
         `banner-button-${bannerBlockUuid}`,
       ];
@@ -91,29 +92,10 @@ describe('Banner', () => {
       expect(content.exists()).toBe(true);
     });
 
-    it('should have a pretitle', () => {
-      const pretitle = wrapper.find(`[data-testid="text-pretitle"]`);
-      expect(pretitle.exists()).toBe(true);
-      expect(pretitle.text()).toBe('Test pretitle');
-    });
-
-    it('should have a title', () => {
-      const title = wrapper.find(`[data-testid="text-title"]`);
-      expect(title.exists()).toBe(true);
-      expect(title.text()).toBe('Test title');
-    });
-
-    it('should have a subtitle', () => {
-      const subtitle = wrapper.find(`[data-testid="text-subtitle"]`);
-      expect(subtitle.exists()).toBe(true);
-      expect(subtitle.text()).toBe('Test subtitle');
-    });
-
     it('should have a description', () => {
       const description = wrapper.find(`[data-testid="text-html"]`);
       expect(description.exists()).toBe(true);
-      expect(description.text()).toBe('Test description');
-      expect(description.html()).toContain('<p>Test description</p>');
+      expect(description.text()).toContain('Test description');
     });
 
     it('should have a button', () => {

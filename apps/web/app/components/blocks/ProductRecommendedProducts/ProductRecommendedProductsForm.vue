@@ -1,157 +1,31 @@
 <template>
   <div class="sticky h-[80vh] overflow-y-auto">
-    <UiAccordionItem
+    <EditorFormPanel
       v-model="textsOpen"
-      summary-active-class="bg-neutral-100"
-      summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
+      :title="getEditorTranslation('texts-label')"
       data-testid="open-recommended-products-form-texts"
     >
-      <template #summary>
-        <h2>{{ getEditorTranslation('texts-label') }}</h2>
-      </template>
       <EditorRichTextEditorForm
         v-if="recommendedBlock.text"
         :model-value="recommendedBlock.text.htmlDescription ?? ''"
         :text-align="recommendedBlock.text.textAlignment ?? 'left'"
         @update:model-value="recommendedBlock.text.htmlDescription = $event"
-      >
-        <div v-if="recommendedBlock.text" class="p-2">
-          <UiFormLabel>{{ getEditorTranslation('pretitle-label') }}</UiFormLabel>
-          <SfInput
-            v-model="recommendedBlock.text.pretitle"
-            data-testid="recommended-form-pretitle"
-            name="preTitle"
-            type="text"
-            :placeholder="getEditorTranslation('pretitle-placeholder')"
-          />
-        </div>
-        <div v-if="recommendedBlock.text" class="p-2">
-          <UiFormLabel>{{ getEditorTranslation('main-title-label') }}</UiFormLabel>
-          <SfInput
-            v-model="recommendedBlock.text.title"
-            data-testid="recommended-form-title"
-            name="Title"
-            type="text"
-            :placeholder="getEditorTranslation('main-title-placeholder')"
-          />
-        </div>
-        <div v-if="recommendedBlock.text" class="p-2">
-          <UiFormLabel>{{ getEditorTranslation('subtitle-label') }}</UiFormLabel>
-          <SfInput
-            v-model="recommendedBlock.text.subtitle"
-            data-testid="recommended-form-subtitle"
-            name="Subtitle"
-            type="text"
-            :placeholder="getEditorTranslation('subtitle-placeholder')"
-          />
-        </div>
-        <div v-if="recommendedBlock.text" class="p-2">
-          <UiFormLabel>{{ getEditorTranslation('description-label') }}</UiFormLabel>
-          <SfTextarea
-            v-model="recommendedBlock.text.htmlDescription"
-            name="description"
-            type="text"
-            class="w-full min-h-[232px]"
-            :placeholder="getEditorTranslation('description-placeholder')"
-            data-testid="recommended-form-html"
-          />
-        </div>
-        <div v-if="recommendedBlock.text" class="p-2">
-          <UiFormLabel>{{ getEditorTranslation('text-color-label') }}</UiFormLabel>
-          <EditorColorPicker v-model="recommendedBlock.text.color" class="w-full">
-            <template #trigger="{ color, toggle }">
-              <SfInput v-model="recommendedBlock.text.color" type="text" data-testid="recommended-form-color">
-                <template #suffix>
-                  <button
-                    type="button"
-                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
-                    :style="{ backgroundColor: color }"
-                    @mousedown.stop
-                    @click.stop="toggle"
-                  />
-                </template>
-              </SfInput>
-            </template>
-          </EditorColorPicker>
-        </div>
-        <div v-if="recommendedBlock.text" class="p-2">
-          <UiFormLabel>{{ getEditorTranslation('text-align-label') }}</UiFormLabel>
-          <div class="w-full inline-flex rounded-lg border border-gray-300 bg-white text-gray-700 overflow-hidden">
-            <div
-              for="text-align-left"
-              class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm border-r"
-              :class="{ 'bg-gray-100 text-gray-900 font-semibold': isTextAlignSelected('left') }"
-              data-testid="recommended-form-text-align-left"
-              @click="recommendedBlock.text.textAlignment = 'left'"
-            >
-              <SfIconCheck :class="{ invisible: !isTextAlignSelected('left') }" class="mr-1 w-[1.1rem]" />
-              {{ getEditorTranslation('text-align-option-left-label') }}
-            </div>
-            <div
-              for="text-align-center"
-              class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm border-r"
-              :class="{ 'bg-gray-100 text-gray-900 font-semibold': isTextAlignSelected('center') }"
-              data-testid="recommended-form-text-align-center"
-              @click="recommendedBlock.text.textAlignment = 'center'"
-            >
-              <SfIconCheck :class="{ invisible: !isTextAlignSelected('center') }" class="mr-1 w-[1.1rem]" />
-              {{ getEditorTranslation('text-align-option-center-label') }}
-            </div>
-            <div
-              for="text-align-right"
-              class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm"
-              :class="{ 'bg-gray-100 text-gray-900 font-semibold': isTextAlignSelected('right') }"
-              data-testid="recommended-form-text-align-right"
-              @click="recommendedBlock.text.textAlignment = 'right'"
-            >
-              <SfIconCheck :class="{ invisible: !isTextAlignSelected('right') }" class="mr-1 w-[1.1rem]" />
-              {{ getEditorTranslation('text-align-option-right-label') }}
-            </div>
-          </div>
-        </div>
-      </EditorRichTextEditorForm>
-    </UiAccordionItem>
+      />
+    </EditorFormPanel>
 
-    <UiAccordionItem
+    <EditorFormPanel
       v-model="sourceOpen"
-      summary-active-class="bg-neutral-100"
-      summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
+      :title="getEditorTranslation('source-label')"
       data-testid="open-recommended-products-form-source"
     >
-      <template #summary>
-        <h2>{{ getEditorTranslation('source-label') }}</h2>
-      </template>
-
-      <fieldset class="py-2">
-        <legend class="text-sm font-medium text-black">
-          {{ getEditorTranslation('source-type-label') }}
-        </legend>
-
-        <div class="mt-2 w-full inline-flex rounded-lg border border-gray-300 bg-white text-gray-700 overflow-hidden">
-          <div
-            class="flex items-center justify-center w-1/2 px-4 py-2 cursor-pointer text-sm border-r"
-            :class="{ 'bg-gray-100 text-gray-900 font-semibold': recommendedBlock.source.type === 'cross_selling' }"
-            data-testid="recommended-form-source-product"
-            @click="recommendedBlock.source.type = 'cross_selling'"
-          >
-            <SfIconCheck
-              :class="{ invisible: recommendedBlock.source.type !== 'cross_selling' }"
-              class="mr-1 w-[1.1rem]"
-            />
-            {{ getEditorTranslation('source-type-product') }}
-          </div>
-
-          <div
-            class="flex items-center justify-center w-1/2 px-4 py-2 cursor-pointer text-sm"
-            :class="{ 'bg-gray-100 text-gray-900 font-semibold': recommendedBlock.source.type === 'category' }"
-            data-testid="recommended-form-source-category"
-            @click="selectCategoryTab()"
-          >
-            <SfIconCheck :class="{ invisible: recommendedBlock.source.type !== 'category' }" class="mr-1 w-[1.1rem]" />
-            {{ getEditorTranslation('source-type-category') }}
-          </div>
-        </div>
-      </fieldset>
+      <div class="py-2">
+        <EditorOptionsTabs
+          v-model="sourceTypeModel"
+          :legend="getEditorTranslation('source-type-label')"
+          test-id-prefix="recommended-form-source"
+          :options="sourceTypeOptions"
+        />
+      </div>
 
       <div v-if="recommendedBlock.source.type === 'cross_selling'" class="py-4">
         <UiFormLabel>{{ getEditorTranslation('product-id-label') }}</UiFormLabel>
@@ -182,7 +56,7 @@
         </div>
       </div>
 
-      <div v-else class="py-4">
+      <div v-else-if="recommendedBlock.source.type === 'category'" class="py-4">
         <UiFormLabel>{{ getEditorTranslation('categories-label') }}</UiFormLabel>
 
         <EditorCategorySelect
@@ -191,37 +65,31 @@
           data-testid="recommended-form-categories"
         />
       </div>
-    </UiAccordionItem>
+    </EditorFormPanel>
 
-    <UiAccordionItem
+    <EditorFormPanel
       v-model="layoutOpen"
-      summary-active-class="bg-neutral-100"
-      summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
+      :title="getEditorTranslation('layout-label')"
+      data-testid="slider-button-group-title"
     >
-      <template #summary>
-        <h2 data-testid="slider-button-group-title">{{ getEditorTranslation('layout-label') }}</h2>
-      </template>
-
       <EditorFullWidthToggle v-model="isFullWidth" :block-uuid="blockUuid" />
-    </UiAccordionItem>
+    </EditorFormPanel>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { CrossSellingRelationType, ProductRecommendedProductsContent } from '../ProductRecommendedProducts/types';
-import { SfInput, SfTextarea, SfIconCheck } from '@storefront-ui/vue';
+import { SfInput } from '@storefront-ui/vue';
 import { useDebounceFn } from '@vueuse/core';
 import { productGetters } from '@plentymarkets/shop-api';
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 
-const route = useRoute();
-const { data } = useBlockTemplates(
-  route?.meta?.identifier as string,
-  route.meta.type as string,
-  useNuxtApp().$i18n.locale.value,
-);
+const props = defineProps<{ uuid?: string }>();
+
+const { allBlocks: data } = useBlocks();
 const { blockUuid } = useSiteConfiguration();
+const resolvedUuid = computed(() => props.uuid || blockUuid.value);
 const { findOrDeleteBlockByUuid } = useBlockManager();
 const { currentProduct } = useProducts();
 const { data: categoryTree } = useCategoryTree();
@@ -229,7 +97,7 @@ const layoutOpen = ref(true);
 
 const recommendedBlock = computed(
   () =>
-    (findOrDeleteBlockByUuid(data.value, blockUuid.value)?.content || {
+    (findOrDeleteBlockByUuid(data.value, resolvedUuid.value)?.content || {
       text: {
         pretitle: '',
         title: '',
@@ -255,12 +123,8 @@ const debouncedFn = useDebounceFn((event: Event) => {
   recommendedBlock.value.source.itemId = target.value.toString();
 }, 1000);
 
-const isTextAlignSelected = (align: 'left' | 'center' | 'right') => {
-  return (recommendedBlock.value.text.textAlignment || 'left') === align;
-};
-
-const sourceOpen = ref(false);
-const textsOpen = ref(false);
+const sourceOpen = ref(true);
+const textsOpen = ref(true);
 const crossSellingOptions = [
   { value: 'Accessory', label: getEditorTranslation('cross-selling-relation-accessory') },
   { value: 'ReplacementPart', label: getEditorTranslation('cross-selling-relation-replacement') },
@@ -300,44 +164,22 @@ const recommendedBlockRef = ref(recommendedBlock.value);
 
 const { isFullWidth } = useFullWidthToggleForContent(recommendedBlockRef);
 
-const selectCategoryTab = async () => {
-  recommendedBlock.value.source.type = 'category';
-};
+const { sourceTypeModel, sourceTypeOptions } = useEditorOptionsTabs(() => recommendedBlock.value, getEditorTranslation);
 </script>
 
 <i18n lang="json">
 {
   "en": {
-    "pretitle-label": "Pre-title",
-    "pretitle-placeholder": "PreTitle",
-
-    "main-title-label": "Main Title",
-    "main-title-placeholder": "Title",
-
-    "subtitle-label": "Subtitle",
-    "subtitle-placeholder": "Subtitle",
-
-    "description-label": "Description",
-    "description-placeholder": "Text that supports HTML formatting",
-
-    "category-id-label": "Category ID",
-    "category-id-placeholder": "Enter Category Id",
-
-    "text-color-label": "Text Colour",
-
-    "text-align-label": "Text alignment",
-    "text-align-option-left-label": "Left",
-    "text-align-option-center-label": "Center",
-    "text-align-option-right-label": "Right",
-
     "texts-label": "Texts",
     "source-label": "Source",
     "source-type-label": "Choose source",
     "source-type-product": "Product",
     "source-type-category": "Category",
+    "source-type-last-seen": "Last seen",
     "product-id-label": "Product ID",
     "product-id-placeholder": "Enter Product ID",
     "categories-label": "Categories",
+
     "layout-label": "Layout",
     "cross-selling-relation-label": "Cross-selling relation",
     "cross-selling-relation-accessory": "Accessory",
@@ -346,33 +188,13 @@ const selectCategoryTab = async () => {
     "cross-selling-relation-bundle": "Item bundle"
   },
   "de": {
-    "pretitle-label": "Pre-title",
-    "pretitle-placeholder": "PreTitle",
-
-    "main-title-label": "Main Title",
-    "main-title-placeholder": "Title",
-
-    "subtitle-label": "Subtitle",
-    "subtitle-placeholder": "Subtitle",
-
-    "description-label": "Description",
-    "description-placeholder": "Text that supports HTML formatting",
-
-    "category-id-label": "Category ID",
-    "category-id-placeholder": "Enter Category Id",
-
-    "text-color-label": "Text Colour",
     "layout-label": "Layout",
-    "text-align-label": "Text alignment",
-    "text-align-option-left-label": "Left",
-    "text-align-option-center-label": "Center",
-    "text-align-option-right-label": "Right",
-
     "texts-label": "Texts",
     "source-label": "Source",
     "source-type-label": "Choose source",
     "source-type-product": "Product",
     "source-type-category": "Category",
+    "source-type-last-seen": "Last seen",
     "product-id-label": "Product ID",
     "product-id-placeholder": "Enter Product ID",
     "categories-label": "Categories",

@@ -3,12 +3,7 @@ import { categoryGetters, type Category, type CategoryDetails } from '@plentymar
 import type { CategoryDataContent, CategoryDataFieldKey } from '~/components/blocks/CategoryData/types';
 
 export const useCategoryData = () => {
-  const route = useRoute();
-  const { data } = useBlockTemplates(
-    route?.meta?.identifier as string,
-    route.meta.type as string,
-    useNuxtApp().$i18n.locale.value,
-  );
+  const { allBlocks } = useBlocks();
 
   const { blockUuid } = useSiteConfiguration();
   const { findOrDeleteBlockByUuid } = useBlockManager();
@@ -18,7 +13,7 @@ export const useCategoryData = () => {
   const learnMoreTextUrl: string = 'https://knowledge.plentymarkets.com/en-gb/manual/main/item/categories.html#800';
 
   const categoryDataBlock = computed(() => {
-    const block = findOrDeleteBlockByUuid(data.value, blockUuid.value)?.content as CategoryDataContent;
+    const block = findOrDeleteBlockByUuid(allBlocks.value, blockUuid.value)?.content as CategoryDataContent;
     if (block?.image && typeof block.image.fillMode === 'undefined') {
       block.image.fillMode = 'fill';
     }
@@ -28,6 +23,7 @@ export const useCategoryData = () => {
   const isBlank = (v: string | null | undefined): boolean => v == null || v.trim() === '';
 
   const IMAGE_KEYS = ['wideScreen', 'desktop', 'tablet', 'mobile'] as const;
+  // eslint-disable-next-line custom-rules/file-organization-types
   type ImageKey = (typeof IMAGE_KEYS)[number];
 
   const hasAnyLinkedImage = computed<boolean>(() => {

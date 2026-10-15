@@ -1,5 +1,5 @@
 <template>
-  <nav class="w-full fixed bottom-0 left-0 flex flex-row items-stretch md:hidden z-10" data-testid="navbar-bottom">
+  <nav class="fixed bottom-0 left-0 z-sticky w-full flex flex-row items-stretch @md:hidden" data-testid="navbar-bottom">
     <UiButton
       v-for="{ id, label, icon, link } in items"
       :key="id"
@@ -41,7 +41,6 @@
 
 <script setup lang="ts">
 import { SfBadge, SfIconShoppingCart, SfIconHome, SfIconMenu, SfIconPerson, SfIconFavorite } from '@storefront-ui/vue';
-import { useCustomer } from '~/composables/useCustomer';
 import type { ActionType } from '~/components/blocks/UtilityBar/types';
 import type { NavbarItem } from './types';
 
@@ -60,7 +59,7 @@ const props = withDefaults(
   },
 );
 
-const localePath = useLocalePath();
+const localePath = useLocalizedPath();
 const route = useRoute();
 const { wishlistItemIds } = useWishlist();
 const { data: cart } = useCart();

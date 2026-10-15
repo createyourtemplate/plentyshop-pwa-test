@@ -1,5 +1,6 @@
 import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { mockNuxtImport } from '@nuxt/test-utils/runtime';
+import { proxyNuxtApp } from '~/__tests__/utils/mockNuxtApp';
 import type { Block } from '@plentymarkets/shop-api';
 import type { UtilityBarContent, UtilityBarProps } from '~/components/blocks/UtilityBar/types';
 
@@ -50,14 +51,10 @@ mockNuxtImport('useSiteConfiguration', () => () => ({
 
 mockNuxtImport('useRoute', () => () => routeRef.value);
 
-mockNuxtImport('useNuxtApp', () => () => ({
-  $i18n: {
-    locale: localeRef,
-  },
-}));
+mockNuxtImport('useNuxtApp', () => () => proxyNuxtApp({ $i18n: { locale: localeRef } }));
 
-mockNuxtImport('useBlockTemplates', () => () => ({
-  data: templatesRef,
+mockNuxtImport('useBlocks', () => () => ({
+  allBlocks: templatesRef,
 }));
 
 mockNuxtImport('useBlockManager', () => () => ({
@@ -93,7 +90,7 @@ describe('useUtilityBarConfiguration', () => {
     stateContent.value = createContent();
     setContent.mockImplementation((incoming) => {
       if (incoming) {
-        stateContent.value = JSON.parse(JSON.stringify(incoming));
+        stateContent.value = deepClone(incoming);
       }
     });
 
@@ -140,6 +137,24 @@ describe('useUtilityBarConfiguration', () => {
     const { utilityBarBlock } = useUtilityBarConfiguration();
 
     expect(utilityBarBlock.value).toBeNull();
+  });
+
+  it('should resolve block from allBlocks when uuid matches', () => {
+    const block = createUtilityBarBlock('header-uuid', {
+      ...createContent(),
+      search: { displayMode: 'icon-only' },
+    });
+
+    blockUuidRef.value = 'header-uuid';
+    templatesRef.value = [block];
+
+    findOrDeleteBlockByUuid.mockReturnValue(block);
+
+    const { utilityBarBlock, content } = useUtilityBarConfiguration();
+
+    expect(utilityBarBlock.value).toBe(block);
+    expect(setContent).toHaveBeenCalledWith(block.content);
+    expect(content.value.search.displayMode).toBe('icon-only');
   });
 
   it('should expose utility bar state helpers from useUtilityBarState', () => {

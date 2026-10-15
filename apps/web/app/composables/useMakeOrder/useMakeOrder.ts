@@ -1,11 +1,4 @@
 import { ApiError } from '@plentymarkets/shop-api';
-import type {
-  UseMakeOrderState,
-  UseMakeOrderReturn,
-  CreateOrder,
-  MakeOrderParams,
-} from '~/composables/useMakeOrder/types';
-
 /**
  * @description Composable for managing order creation.
  * @return UseMakeOrderReturn
@@ -23,7 +16,7 @@ export const useMakeOrder: UseMakeOrderReturn = () => {
   const handleMakeOrderError = (error: unknown) => {
     if (error) useHandleError(error as ApiError);
     state.value.loading = false;
-    useProcessingOrder().processingOrder.value = false;
+    useDynamicPaymentButtons().createOrderLoading.value = false;
     return null;
   };
 
@@ -49,8 +42,8 @@ export const useMakeOrder: UseMakeOrderReturn = () => {
     try {
       const { data } = await useSdk().plentysystems.doPreparePayment();
 
-      paymentType.value = data.type ?? 'errorCode';
-      paymentValue.value = data.value ?? '';
+      paymentType.value = data?.type ?? 'errorCode';
+      paymentValue.value = data?.value ?? '';
     } catch (error) {
       return handleMakeOrderError(error);
     }
@@ -61,6 +54,10 @@ export const useMakeOrder: UseMakeOrderReturn = () => {
         state.value.data = data ?? state.value.data;
       } catch (error) {
         return handleMakeOrderError(error);
+      }
+
+      if (!state.value.data) {
+        return handleMakeOrderError(null);
       }
 
       try {

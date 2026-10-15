@@ -125,7 +125,16 @@
       "orderNumber": "Order Number",
       "paymentSummary": {
         "heading": "Payment Summary",
-        "paymentStatus": "Payment status"
+        "paymentStatus": "Payment status",
+        "changePaymentMethod": "change"
+      },
+      "changePaymentMethod": {
+        "heading": "Change payment method",
+        "subHeading": "Here you can change the payment method for your order. The current payment method is {paymentMethod}.",
+        "success": "The payment method has been changed successfully.",
+        "change": "Change",
+        "cancel": "Cancel",
+        "notChangeableAfterHint": "After changing to this payment method, the payment method cannot be changed again."
       },
       "returnDate": "Return Date",
       "returnId": "Return-ID",
@@ -327,6 +336,13 @@
     },
     "googlePay": {
       "paymentInProgress": "Payment in progress..."
+    },
+    "guaranteeNotice": "Your legal guarantee rights"
+  },
+  "guaranteeLabels": {
+    "area": {
+      "close": "Close guarantee of durability details",
+      "open": "Open guarantee of durability details"
     }
   },
   "customAssets": {
@@ -344,6 +360,7 @@
       "back": "Back",
       "browseProducts": "Browse Products",
       "buy": "Buy",
+      "pay": "Pay",
       "cancelOrder": "Cancel order",
       "clear": "Clear",
       "clearAll": "Clear all",
@@ -438,6 +455,9 @@
       "openSearchModal": "Open item search",
       "previousAriaLabel": "Navigate to previous page",
       "socialLabel": "Go to {label} page"
+    },
+    "accessibility": {
+      "viewDetails": "View details for {name}"
     }
   },
   "contact": {
@@ -462,6 +482,18 @@
       "heading": "Contact Information",
       "email": "Email"
     }
+  },
+  "cancellationForm": {
+    "orderId": "Order Number",
+    "name": "Full Name",
+    "email": "Contact-Mail",
+    "reason": "Reason for Cancellation",
+    "submit": "Confirm withdrawal",
+    "asterixHint": "marked fields are required",
+    "orderIdInvalid": "Please enter a valid order number.",
+    "misConfigured": "Our cancellation form is temporarily disabled due to a missing configuration. Please check back later or reach out to us via alternative contact methods.",
+    "success": "Your notice of withdrawal has been successfully submitted. We have sent a confirmation email containing the details of your request to {email}.",
+    "privacyPolicy": "Our {privacyPolicy} applies."
   },
   "CookieBar": {
     "about": {
@@ -584,25 +616,9 @@
     "consentReCaptchaCookieNotSet": "The reCAPTCHA script has not been accepted. reCAPTCHA cannot be carried out. Forms cannot be sent.",
     "couponAlreadyUsedOrInvalidCouponCode": "The coupon has already been used or is invalid.",
     "couponCampaignExpired": "Unfortunately, the coupon has expired.",
-    "couponCampaignNoWebstoreActivated": "The coupon could not be redeemed. Client not activated.",
-    "couponCampaignNoWebstoreIdGiven": "The coupon could not be redeemed. Client ID not transferred.",
-    "couponCampaignWrongWebstoreId": "The coupon could not be redeemed. Incorrect client.",
     "couponExpired": "Unfortunately, the coupon has expired.",
     "couponMinOrderValueNotReached": "The coupon code has been removed since the required value of goods has not been reached. Please insert the code again when the required value of goods is reached.",
-    "couponNoCustomerGroupActivated": "The coupon could not be redeemed. Customer class not activated.",
-    "couponNoCustomerTypeActivated": "The coupon could not be redeemed. Customer type not activated.",
-    "couponNoCustomerTypeProvided": "The coupon could not be redeemed. Customer type not transferred.",
-    "couponNoMatchingItemInBasket": "The coupon code has been removed since no item in the shopping cart has been activated for this coupon.",
-    "couponNoOpenAmount": "The coupon has already been redeemed completely.",
-    "couponnotUsableForSpecialOffer": "The coupon could not be redeemed. Coupons cannot be used for bargain offers.",
-    "couponOnlyForExistingCustomers": "The coupon can only be redeemed by existing customers.",
-    "couponOnlyForNewCustomers": "The coupon can only be redeemed by new customers.",
-    "couponOnlySingleUsage": "The coupon cannot be redeemed for subscription items.",
-    "couponOnlySubscription": "The coupon can only be redeemed for subscription items.",
-    "couponPromotionRequired": "You can only purchase the variation of this item if you redeem a promotional coupon.",
     "couponRemoveFailure": "The coupon could not be removed.",
-    "couponWrongCustomerGroup": "The coupon can only be redeemed by customers with the correct customer class.",
-    "couponWrongCustomerType": "The coupon can only be redeemed by customers with the correct customer type.",
     "csrfTokenMismatch": "You have been logged out for security reasons. You will be redirected to the login page.",
     "errorActionIsNotExecuted": "This action could not be executed.",
     "errorBasketItemMaximumQuantityReachedForItem": "Your order exceeds the maximum order quantity of this item.",
@@ -839,7 +855,8 @@
     "termsRequired": "You have to agree with the terms and conditions.",
     "cancellationForm": "Cancellation form",
     "declarationOfAccessibility": "Declaration of accessibility",
-    "legalDisclosure": "Legal disclosure"
+    "legalDisclosure": "Legal disclosure",
+    "withdrawButton": "Withdraw from contract here"
   },
   "manufacturer": {
     "contactUrl": "Contact form",
@@ -868,6 +885,13 @@
     "confirmation": {
       "newsletterOptInMessage": "Your email address has been confirmed.",
       "newsletterOptInMessageError": "An error occurred while confirming your email."
+    },
+    "unsubscribe": {
+      "label": "Newsletter Unsubscribe",
+      "heading": "Unsubscribe from Newsletter",
+      "info": "Enter your email address below to unsubscribe from our newsletter.",
+      "submit": "Unsubscribe",
+      "success": "You have been successfully unsubscribed from our newsletter."
     }
   },
   "offers": {
@@ -889,7 +913,8 @@
     "successHeader": "Thank you for your order!",
     "successImageAlt": "order successful image",
     "successMessage": "Your order was completed successfully.",
-    "successReturnHeader": "Thank you for your return!"
+    "successReturnHeader": "Thank you for your return!",
+    "rebate": "Rebate"
   },
   "orderConfirmation": {
     "confirmationSendTo": "A confirmation with all details has been sent to {email}",
@@ -952,7 +977,8 @@
     "unbrandedCvv": "CVV",
     "unbrandedExpirationDate": "Expiration date",
     "unbrandedNameOnCard": "Name on card",
-    "unbrandedPay": "Pay"
+    "unbrandedPay": "Pay",
+    "methodNotSupported": "The selected payment method is currently not supported. Please choose another payment method."
   },
   "PreferredDelivery": {
     "general": {
@@ -1017,9 +1043,12 @@
     }
   },
   "previewModeBar": {
+    "configId": "Configuration ID:",
     "exitEditor": "Exit editor and visit live shop",
+    "exitPreviewMode": "Exit preview mode",
     "exitWithoutSaving": "Exit without saving",
-    "label": "Editor controls",
+    "editorLabel": "Editor controls",
+    "previewLabel": "Preview controls",
     "saveAndExit": "Save changes and exit",
     "title": "Exit editor and visit live shop?",
     "unsavedChangesWarning": "You have unsaved changes."
@@ -1138,6 +1167,13 @@
     "numberOfProducts": "{count} items out of {total} items",
     "searchResults": "Search results for \"{phrase}\""
   },
+  "searchBar": {
+    "searchSuggestions": "Search Suggestions",
+    "productSuggestions": "Product Suggestions",
+    "matchingCategories": "Matched Categories",
+    "showAllResults": "See all results for \"{searchTerm}\" ({hitsCount})",
+    "noResultsFound": "No results found."
+  },
   "sessionLifetime": {
     "oneDay": "One day, even if the browser is closed",
     "oneHour": "One hour, even if the browser is closed",
@@ -1199,6 +1235,10 @@
     }
   },
   "storefrontError": {
+    "cancellation": {
+      "recipientNotConfigured": "The cancellation form is not configured. Please contact the site administrator.",
+      "submitFailed": "The cancellation request could not be submitted. Please try again later."
+    },
     "address": {
       "createFailed": "Saving the address has failed.",
       "deleteFailed": "The deletion of the address failed.",
@@ -1270,7 +1310,11 @@
       "loadOrdersFailed": "The orders could not be loaded.",
       "migrateUnauthorized": "The order could not be added to your account.",
       "notFound": "The order does not exist.",
-      "softLoginFailed": "The provided data is invalid."
+      "softLoginFailed": "The provided data is invalid.",
+      "paymentMethodCantSwitch": "The payment method cannot be switched for this order.",
+      "paymentMethodNotExist": "The selected payment method does not exist.",
+      "paymentMethodSwitchFailed": "The payment method could not be switched. Please try again.",
+      "paymentMethodSwitchDisabled": "Switching the payment method is disabled."
     },
     "security": {
       "invalidCsrfToken": "For your security, this action was forbidden. Please try to refresh the page.",

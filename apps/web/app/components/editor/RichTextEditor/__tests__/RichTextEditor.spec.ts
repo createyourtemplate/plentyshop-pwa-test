@@ -2,19 +2,62 @@ import { mount } from '@vue/test-utils';
 import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 import RichTextEditor from '../RichTextEditor.vue';
 import EditorRichTextEditorMenuButton from '../RichTextEditorMenuButton.vue';
+import RichTextEditorBasicButtons from '../RichTextEditorBasicButtons.vue';
 import { createMockUseRichTextEditor } from './test-utils';
 
-const { useRichTextEditor } = vi.hoisted(() => {
+const { useRichTextEditor, useBlocksList } = vi.hoisted(() => {
   return {
     useRichTextEditor: vi.fn(),
+    useBlocksList: vi.fn(),
   };
 });
 
 mockNuxtImport('useRichTextEditor', () => useRichTextEditor);
+mockNuxtImport('useBlocksList', () => useBlocksList);
 
 describe('RichTextEditor', () => {
+  it('should select Footer H2 with a 16px default and recognize the saved variant', async () => {
+    const onFontSizeChange = vi.fn();
+    const onTextSizeChange = vi.fn();
+    const wrapper = mount(RichTextEditorBasicButtons, {
+      props: {
+        cmd: vi.fn(),
+        isActive: () => false,
+        currentBlockType: 'h2',
+        onFontSizeChange,
+        currentFontSize: '',
+        onTextSizeChange,
+        textColor: '',
+        setFontColor: vi.fn(),
+        toggleLink: vi.fn(),
+        insertIcon: vi.fn(),
+        insertEmoji: vi.fn(),
+      },
+      global: {
+        stubs: {
+          SfDropdown: { template: '<div><slot name="trigger" /><slot /></div>' },
+          EditorColorPicker: true,
+          EditorRichTextEditorIconEmojiPicker: true,
+        },
+      },
+    });
+
+    await wrapper.get('[data-testid="rte-heading-option-h2-footer"]').trigger('click');
+
+    expect(onFontSizeChange).toHaveBeenCalledWith('h2-footer');
+    expect(onTextSizeChange).toHaveBeenCalledWith('1rem');
+    await wrapper.setProps({ currentBlockType: 'h2-footer' });
+    expect(wrapper.get('[data-testid="rte-heading-select"]').text()).toBe('Footer H2');
+    expect(wrapper.get('[data-testid="rte-font-size-select"]').text()).toBe('16px');
+    expect(
+      wrapper.get('[data-testid="rte-heading-option-h2-footer"]').element.parentElement?.getAttribute('aria-selected'),
+    ).toBe('true');
+    wrapper.unmount();
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
+    useBlocksList.mockReturnValue({ blocksListContext: ref('') });
   });
 
   it('should initialize with correct default props', () => {
@@ -230,5 +273,55 @@ describe('RichTextEditor', () => {
     await option.trigger('click');
 
     expect(setFontSize).toHaveBeenCalledWith('1.5rem');
+  });
+
+  it('should open the properties modal when the properties button is clicked', async () => {
+    useRichTextEditor.mockReturnValue(createMockUseRichTextEditor());
+    useBlocksList.mockReturnValue({ blocksListContext: ref('product') });
+
+    const wrapper = mount(RichTextEditor, {
+      global: {
+        stubs: {
+          EditorContent: true,
+          EditorColorPicker: true,
+          ItemPropertiesSelectModal: {
+            template: '<div data-testid="item-properties-modal" />',
+          },
+        },
+      },
+    });
+
+    await wrapper.get('[data-testid="rte-properties-button"]').trigger('click');
+    await nextTick();
+
+    expect(wrapper.find('[data-testid="item-properties-modal"]').exists()).toBe(true);
+  });
+
+  it('should open the i18n modal and insert the selected key', async () => {
+    const insertI18nPlaceholder = vi.fn();
+    useRichTextEditor.mockReturnValue(createMockUseRichTextEditor({ insertI18nPlaceholder }));
+
+    const wrapper = mount(RichTextEditor, {
+      global: {
+        stubs: {
+          EditorContent: true,
+          EditorColorPicker: true,
+          I18nKeySelectModal: {
+            emits: ['insert', 'close'],
+            template:
+              "<button data-testid=\"i18n-key-modal\" @click=\"$emit('insert', { key: 'checkout.title', label: 'checkout.title' })\" />",
+          },
+        },
+      },
+    });
+
+    await wrapper.get('[data-testid="rte-i18n-button"]').trigger('click');
+    await nextTick();
+
+    expect(wrapper.find('[data-testid="i18n-key-modal"]').exists()).toBe(true);
+
+    await wrapper.get('[data-testid="i18n-key-modal"]').trigger('click');
+
+    expect(insertI18nPlaceholder).toHaveBeenCalledWith({ key: 'checkout.title', label: 'checkout.title' });
   });
 });

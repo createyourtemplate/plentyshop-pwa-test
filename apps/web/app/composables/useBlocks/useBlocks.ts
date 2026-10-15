@@ -1,0 +1,199 @@
+import type { ApiError, Block, GetBlocksResponse } from '@plentymarkets/shop-api';
+import type { UseBlocksState, UseBlocksReturn } from './types';
+declare module '#app' {
+  interface NuxtApp {
+    _settleTimer?: ReturnType<typeof setTimeout> | null;
+  }
+}
+
+export const useBlocks: UseBlocksReturn = () => {
+  const state = useState<UseBlocksState>(`useBlocks`, () => ({
+    data: {} as GetBlocksResponse,
+    cleanData: {} as GetBlocksResponse,
+    defaultTemplateData: [] as Block[],
+    loading: false,
+    isSettling: false,
+    hasSnapshot: false,
+  }));
+
+  const setBlocks = (blocks: GetBlocksResponse) => {
+    const serialized = JSON.stringify(blocks);
+    state.value.data = JSON.parse(serialized);
+    state.value.cleanData = markRaw(JSON.parse(serialized));
+  };
+
+  /*
+    After a fetch or navigation, the editor may briefly render stale state.
+    This debounced sync waits for the UI to settle before snapshotting cleanData
+    and resetting the editing flag, preventing flicker and dirty-state false positives.
+  */
+  const scheduleCleanDataSync = () => {
+    state.value.isSettling = true;
+    const nuxtApp = useNuxtApp();
+    if (nuxtApp._settleTimer) clearTimeout(nuxtApp._settleTimer);
+    nuxtApp._settleTimer = setTimeout(() => {
+      if (!state.value) return;
+      state.value.cleanData = markRaw(deepClone(state.value.data));
+      const editor = useEditor();
+      if (editor?.isEditingEnabled) editor.isEditingEnabled.value = false;
+      state.value.isSettling = false;
+      nuxtApp._settleTimer = null;
+    }, 150);
+  };
+
+  const cancelCleanDataSync = () => {
+    const nuxtApp = useNuxtApp();
+    if (nuxtApp._settleTimer) {
+      clearTimeout(nuxtApp._settleTimer);
+      nuxtApp._settleTimer = null;
+    }
+    state.value.isSettling = false;
+  };
+
+  const headerContainer = computed(() => state.value.data.HeaderContainer);
+  const footer = computed(() => state.value.data.Footer);
+  const pageBlocks = computed(() => state.value.data.blocks ?? []);
+  const allBlocks = computed(() => [
+    ...(headerContainer.value ? [headerContainer.value] : []),
+    ...pageBlocks.value,
+    ...(footer.value ? [footer.value] : []),
+  ]);
+
+  const fetchBlocks = async (identifier: string | number, type: string) => {
+    state.value.loading = true;
+
+    const { $i18n } = useNuxtApp();
+    const loc = computed(() => $i18n.locale.value);
+    const key = `blocks-${loc.value}-${type}-${identifier}`;
+
+    const { data, error } = await useAsyncData(key, () =>
+      useSdk().plentysystems.getBlocksWithGlobalBlocks({ identifier, type, enableGlobalBlocks: true }),
+    );
+
+    if (error.value) {
+      console.warn('Failed to fetch blocks:', error.value.message);
+    }
+
+    state.value.hasSnapshot = data.value?.meta?.hasSnapshot ?? false;
+
+    const fetchedData = data.value?.data || ({} as GetBlocksResponse);
+
+    const assembled = assembleBlocks(fetchedData, type, identifier, state.value.hasSnapshot);
+
+    if (!fetchedData.HeaderContainer && state.value.data?.HeaderContainer) {
+      (assembled as GetBlocksResponse).HeaderContainer = state.value.data.HeaderContainer;
+    }
+
+    setBlocks(assembled);
+    state.value.loading = false;
+
+    const { isEditingEnabled } = useEditor();
+    isEditingEnabled.value = false;
+
+    if (import.meta.client) {
+      scheduleCleanDataSync();
+    }
+  };
+
+  const saveBlocks = async (identifier: string | number, type: string, content: string): Promise<boolean> => {
+    try {
+      state.value.loading = true;
+
+      const response = await useSdk().plentysystems.doSaveBlocksWithGlobalBlocks({
+        identifier,
+        entityType: type,
+        blocks: content,
+        enableGlobalBlocks: true,
+      });
+
+      state.value.hasSnapshot = true;
+
+      const assembled = assembleBlocks(response?.data ?? state.value.data, type, identifier, state.value.hasSnapshot);
+      setBlocks(assembled);
+
+      clearNuxtData((key) => key.startsWith('blocks-'));
+
+      return true;
+    } catch (error) {
+      useHandleError(error as ApiError);
+      console.error('Error saving blocks:', error);
+      return false;
+    } finally {
+      state.value.loading = false;
+    }
+  };
+
+  const updateBlocks = (blocks: Block[]) => {
+    const current = state.value.data.blocks;
+    if (Array.isArray(current)) {
+      current.splice(0, current.length, ...blocks);
+    } else {
+      state.value.data.blocks = blocks;
+    }
+  };
+
+  const reorderHeaderBlocks = (blocks: Block[]) => {
+    if (!state.value.data.HeaderContainer) {
+      return;
+    }
+
+    if (!isValidHeaderOrder(blocks)) {
+      return;
+    }
+
+    const container = state.value.data.HeaderContainer as { content: Block[] };
+    const reordered = blocks.map((block, index) => ({ ...block, parent_slot: index }));
+    if (Array.isArray(container.content)) {
+      container.content.splice(0, container.content.length, ...reordered);
+    } else {
+      container.content = reordered;
+    }
+  };
+
+  const reorderFooterBlocks = (blocks: Block[]) => {
+    if (!state.value.data.Footer) return;
+    const container = state.value.data.Footer as { content: Block[] };
+    const reordered = blocks.map((block, index) => ({ ...block, parent_slot: index }));
+    if (Array.isArray(container.content)) {
+      container.content.splice(0, container.content.length, ...reordered);
+    } else {
+      container.content = reordered;
+    }
+  };
+
+  const discardChanges = () => {
+    state.value.data = deepClone(state.value.cleanData);
+  };
+
+  const restoreBlocks = (data: GetBlocksResponse) => {
+    state.value.data = deepClone(data);
+  };
+
+  const setDefaultTemplate = (blocks: Block[]) => {
+    state.value.defaultTemplateData = blocks;
+  };
+
+  return {
+    data: computed(() => state.value.data),
+    cleanData: computed(() => state.value.cleanData),
+    pageBlocks,
+    blocks: pageBlocks,
+    allBlocks,
+    headerContainer,
+    footer,
+    loading: computed(() => state.value.loading),
+    hasSnapshot: computed(() => state.value.hasSnapshot),
+    defaultTemplateData: computed(() => state.value.defaultTemplateData),
+    fetchBlocks,
+    saveBlocks,
+    updateBlocks,
+    reorderHeaderBlocks,
+    reorderFooterBlocks,
+    discardChanges,
+    restoreBlocks,
+    setDefaultTemplate,
+    scheduleCleanDataSync,
+    cancelCleanDataSync,
+    isSettling: computed(() => state.value.isSettling),
+  };
+};

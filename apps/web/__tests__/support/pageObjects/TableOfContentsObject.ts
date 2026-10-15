@@ -21,16 +21,24 @@ export class TableOfContentsObject extends PageObject {
     return cy.get('[data-testid^="toc-item-"]');
   }
 
+  get contentTableOfContentsItemLabels() {
+    return cy
+      .getByTestId('toc-section-content')
+      .find('[data-testid^="toc-visibility-"]')
+      .closest('[data-testid^="toc-item-"]')
+      .find('[data-testid="toc-label"]');
+  }
+
   get tableOfContentsItemLabel() {
     return cy.get('[data-testid="toc-label"]');
   }
 
   get deleteIcons() {
-    return cy.get('[data-testid^="toc-delete-"]');
+    return cy.getByTestId('toc-section-content').find('[data-testid^="toc-delete-"]');
   }
 
   get visibilityIcons() {
-    return cy.get('[data-testid^="toc-visibility-"]');
+    return cy.getByTestId('toc-section-content').find('[data-testid^="toc-visibility-"]');
   }
 
   get addElementButton() {
@@ -49,8 +57,16 @@ export class TableOfContentsObject extends PageObject {
     return cy.get('[data-testid^="banner-image-"]');
   }
 
-  get blockPlaceholder() {
-    return cy.getByTestId('block-placeholder');
+  get addBlockPopover() {
+    return cy.getByTestId('add-block-popover');
+  }
+
+  getBlockIcon(uuid: string) {
+    return cy.getByTestId(`toc-block-icon-${uuid}`);
+  }
+
+  get allBlockIcons() {
+    return cy.get('[data-testid^="toc-block-icon-"]');
   }
 
   openTableOfContents() {
@@ -65,6 +81,23 @@ export class TableOfContentsObject extends PageObject {
 
   checkBlocksExist() {
     this.tableOfContentsItems.should('have.length.greaterThan', 0);
+    return this;
+  }
+
+  checkFirstBlockLabel(text: string) {
+    this.tableOfContentsItemLabel.first().should('contain.text', text);
+    return this;
+  }
+
+  checkLastBlockLabel(text: string) {
+    this.tableOfContentsItemLabel.last().should('contain.text', text);
+    return this;
+  }
+
+  checkSectionsExist() {
+    cy.getByTestId('toc-section-header').should('exist');
+    cy.getByTestId('toc-section-content').should('exist');
+    cy.getByTestId('toc-section-footer').should('exist');
     return this;
   }
 
@@ -109,13 +142,13 @@ export class TableOfContentsObject extends PageObject {
   }
 
   toggleBlockVisibility() {
-    this.visibilityIcons.eq(1).click({ force: true });
+    this.visibilityIcons.eq(0).click({ force: true });
     cy.wait(800);
     return this;
   }
 
   checkBlockIsGrayedOut() {
-    this.tableOfContentsItemLabel.eq(1).should('have.class', 'opacity-50');
+    this.contentTableOfContentsItemLabels.eq(0).should('have.class', 'opacity-50');
     return this;
   }
 
@@ -125,7 +158,7 @@ export class TableOfContentsObject extends PageObject {
   }
 
   checkBlockIsNotGrayedOut() {
-    this.tableOfContentsItems.eq(1).should('not.have.class', 'opacity-50');
+    this.contentTableOfContentsItemLabels.eq(0).should('not.have.class', 'opacity-50');
     return this;
   }
 
@@ -135,7 +168,7 @@ export class TableOfContentsObject extends PageObject {
   }
 
   deleteBlockFromToc() {
-    this.deleteIcons.eq(1).click({ force: true });
+    this.deleteIcons.eq(0).click({ force: true });
     cy.wait(500);
     return this;
   }
@@ -175,16 +208,13 @@ export class TableOfContentsObject extends PageObject {
     return this;
   }
 
-  checkPlaceholderAppears() {
-    this.blockPlaceholder.should('be.visible');
+  checkAddBlockPopoverVisible() {
+    this.addBlockPopover.should('be.visible');
     return this;
   }
 
   selectBlockToAdd() {
-    cy.getByTestId('block-category-text').click({ force: true });
-    cy.wait(500);
-
-    cy.get(`[data-testid*="block-add-text-0"]`).click({ force: true });
+    cy.get(`[data-testid="block-add-text-0"]`).click({ force: true });
     cy.wait(1000);
     return this;
   }
@@ -194,9 +224,11 @@ export class TableOfContentsObject extends PageObject {
     return this;
   }
 
-  checkBothDrawersStillVisible() {
-    this.tableOfContentsDrawer.should('be.visible');
-    this.blocksConfigurationDrawer.should('be.visible');
+  checkBlockIconsExist() {
+    this.allBlockIcons.should('have.length.greaterThan', 0);
+    this.allBlockIcons.each(($icon) => {
+      cy.wrap($icon).should('exist');
+    });
     return this;
   }
 }

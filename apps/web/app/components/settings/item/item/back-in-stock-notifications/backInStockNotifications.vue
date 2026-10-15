@@ -6,7 +6,7 @@
     <div class="flex justify-between items-center mb-2">
       <div class="flex items-center gap-2">
         <UiFormLabel>{{ getEditorTranslation('label') }}</UiFormLabel>
-        <SfTooltip :label="getEditorTranslation('tooltip')" :placement="'right'" class="z-[9999]">
+        <SfTooltip :label="getEditorTranslation('tooltip')" :placement="'right'" class="z-max">
           <SfIconInfo :size="'sm'" />
         </SfTooltip>
       </div>
@@ -21,10 +21,10 @@
 <script setup lang="ts">
 import { SfSwitch, SfTooltip, SfIconInfo } from '@storefront-ui/vue';
 
-const { updateSetting, getSetting } = useSiteSettings('showNotifyMe');
+const { updateSetting, getBooleanSetting } = useSiteSettings('showNotifyMe');
 
 const showNotifyMeFeature = computed({
-  get: () => !!getSetting(),
+  get: () => getBooleanSetting(),
   set: (value) => updateSetting(value.toString()),
 });
 </script>

@@ -5,7 +5,7 @@
     aria-labelledby="review-modal"
     tag="section"
     role="dialog"
-    class="h-full md:w-[500px] md:h-fit m-0 p-0 overflow-y-auto"
+    class="h-full @md:w-[500px] @md:h-fit m-0 p-0 overflow-y-auto"
     :data-testid="dataTestId"
   >
     <header>
@@ -36,8 +36,6 @@
 <script setup lang="ts">
 import { productGetters } from '@plentymarkets/shop-api';
 import { SfIconClose } from '@storefront-ui/vue';
-import { defaults } from '~/composables';
-
 const { currentProduct } = useProducts();
 
 const productId = Number(productGetters.getItemId(currentProduct.value));

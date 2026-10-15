@@ -2,7 +2,7 @@
   <div class="py-2">
     <div class="flex justify-between mb-2">
       <UiFormLabel>{{ getEditorTranslation('label') }}</UiFormLabel>
-      <SfTooltip :label="getEditorTranslation('tooltip')" :placement="'top'" :show-arrow="true" class="ml-2 z-10">
+      <SfTooltip :label="getEditorTranslation('tooltip')" :placement="'top'" :show-arrow="true" class="ml-2 z-dropdown">
         <SfIconInfo :size="'sm'" />
       </SfTooltip>
     </div>
@@ -28,8 +28,6 @@
 </template>
 <script setup lang="ts">
 import { SfIconInfo, SfInput, SfTooltip } from '@storefront-ui/vue';
-import { getPaletteFromColor, setColorProperties } from '~/utils/tailwindHelper';
-
 const { updateSetting, getSetting } = useSiteSettings('secondaryColor');
 
 const updateSecondaryColor = (hexColor: string) => {

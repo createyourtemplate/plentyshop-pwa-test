@@ -1,6 +1,29 @@
 import { createI18n } from 'vue-i18n';
 import { config } from '@vue/test-utils';
 import { vi } from 'vitest';
+import { mockNuxtImport } from '@nuxt/test-utils/runtime';
+
+// happy-dom does not implement window.confirm; provide a stub so tests can spy on it.
+if (typeof window !== 'undefined' && typeof window.confirm !== 'function') {
+  window.confirm = () => false;
+}
+
+const plentysystemsMethodMocks = new Map<PropertyKey, ReturnType<typeof vi.fn>>();
+
+mockNuxtImport('useSdk', () => () => ({
+  plentysystems: new Proxy(
+    {},
+    {
+      get: (_target, property) => {
+        if (!plentysystemsMethodMocks.has(property)) {
+          plentysystemsMethodMocks.set(property, vi.fn().mockResolvedValue({ data: undefined }));
+        }
+
+        return plentysystemsMethodMocks.get(property);
+      },
+    },
+  ),
+}));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const FindTestIdPlugin = (wrapper: any) => {

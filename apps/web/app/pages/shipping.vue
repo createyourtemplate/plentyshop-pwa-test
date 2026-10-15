@@ -1,6 +1,20 @@
 <template>
-  <div v-if="text" class="w-full p-5 overflow-x-auto no-preflight" v-html="text" />
-  <h5 v-else class="text-center m-5 p-5">{{ t('shipping.noShippingMessage') }}</h5>
+  <div v-if="hasEditorContent">
+    <EditableBlocks :identifier="SHIPPING_PAGE_IDENTIFIER" type="immutable" :prevent-blocks-request="true" />
+  </div>
+
+  <div v-else-if="templateText" class="w-full p-5 overflow-x-auto break-words no-preflight" v-html="templateText" />
+
+  <EditableBlocks
+    v-else-if="isInEditor"
+    :identifier="SHIPPING_PAGE_IDENTIFIER"
+    type="immutable"
+    :prevent-blocks-request="true"
+  />
+
+  <div v-else class="w-full p-5 break-words flex items-center justify-center text-center min-h-[200px]">
+    {{ t('shipping.noShippingMessage') }}
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -12,23 +26,48 @@ defineI18nRoute({
 
 definePageMeta({
   pageType: 'static',
+  isBlockified: true,
+  type: 'immutable',
+  identifier: SHIPPING_PAGE_IDENTIFIER,
 });
+
 const { setPageMeta } = usePageMeta();
-const { getSetting } = useSiteSettings('shippingTextCategoryId');
-const { categoryTemplateData, fetchCategoryTemplate } = useBlockTemplates();
+const { getNumberSetting } = useSiteSettings('shippingTextCategoryId');
+const { categoryTemplateData, fetchCategoryTemplate, clearCategoryTemplate } = useBlockTemplates();
+const { fetchBlocks, pageBlocks } = useBlocks();
+const { setBlocksListContext } = useBlocksList();
+const { isInEditor } = useEditorState();
 
-await fetchCategoryTemplate(Number(getSetting()));
+setBlocksListContext('content');
 
-const icon = 'page';
-setPageMeta(t('orderConfirmation.shipping'), icon);
+const categoryId = computed(() => getNumberSetting());
 
-const text = computed(() => categoryTemplateData?.value?.data);
-const categoryId = computed(() => getSetting());
+/**
+ * Loads lagacy category id blocks
+ */
+const loadBlocks = async (legacyCategoryId: number) => {
+  if (pageBlocks.value.length === 0 && legacyCategoryId > 0) {
+    await fetchBlocks(legacyCategoryId, 'category');
+  }
+};
 
-watch(
-  () => categoryId.value,
-  async (changedCategoryId) => {
-    await fetchCategoryTemplate(Number(changedCategoryId));
-  },
-);
+await loadBlocks(categoryId.value);
+if (categoryId.value > 0) {
+  await fetchCategoryTemplate(categoryId.value);
+}
+
+setPageMeta(t('orderConfirmation.shipping'), 'page');
+
+const hasEditorContent = computed(() => pageBlocks.value.length > 0);
+
+const templateText = computed(() => (!hasEditorContent.value ? (categoryTemplateData?.value?.data ?? null) : null));
+
+watch(categoryId, async (newCategoryId) => {
+  await loadBlocks(newCategoryId);
+  if (newCategoryId > 0) {
+    await fetchCategoryTemplate(newCategoryId);
+  } else {
+    clearCategoryTemplate();
+  }
+});
 </script>

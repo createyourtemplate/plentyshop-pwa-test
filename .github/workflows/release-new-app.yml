@@ -1,6 +1,7 @@
 name: New release app
 permissions:
   contents: read
+  deployments: write
 
 on:
   release:
@@ -9,9 +10,26 @@ on:
 jobs:
   create-archive:
     runs-on: ubuntu-latest
+    environment: production
     steps:
+      - name: Create deployment
+        id: create_deployment
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const deployment = await github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.ref,
+              environment: 'production',
+              description: `Deployment of ${context.ref} to production`,
+              auto_merge: false,
+              required_contexts: [],
+            });
+            return deployment.data.id;
+
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event.release.tag_name }}
 
@@ -32,3 +50,29 @@ jobs:
           url: "https://pwapublish.plentysystems.com/storeDefaultApplication"
           forms: '{ "token": "${{ secrets.SUPPLIER_TOKEN }}", "version": "${{ github.event.release.tag_name }}" }'
           fileForms: '{ "file": "pwa.tar.gz" }'
+
+      - name: Update deployment status to success
+        if: success()
+        uses: actions/github-script@v9
+        with:
+          script: |
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: ${{ steps.create_deployment.outputs.result }},
+              state: 'success',
+              description: 'Deployment complete',
+            });
+
+      - name: Update deployment status to failure
+        if: failure()
+        uses: actions/github-script@v9
+        with:
+          script: |
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: ${{ steps.create_deployment.outputs.result }},
+              state: 'failure',
+              description: 'Deployment failed',
+            });

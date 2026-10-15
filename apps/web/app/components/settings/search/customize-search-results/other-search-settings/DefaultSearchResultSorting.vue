@@ -2,7 +2,7 @@
   <div class="py-2">
     <div class="flex justify-between mb-2">
       <UiFormLabel>{{ getEditorTranslation('label') }}</UiFormLabel>
-      <SfTooltip :label="getEditorTranslation('tooltip')" :placement="'top'" :show-arrow="true" class="ml-2 z-10">
+      <SfTooltip :label="getEditorTranslation('tooltip')" :placement="'top'" :show-arrow="true" class="ml-2 z-dropdown">
         <SfIconInfo :size="'sm'" />
       </SfTooltip>
     </div>
@@ -25,10 +25,7 @@
 <script setup lang="ts">
 import { SfIconInfo, SfTooltip } from '@storefront-ui/vue';
 import Multiselect from 'vue-multiselect';
-import { getMappedOptions } from '~/utils/sortingOptionsHelper';
 import type { SortingOption } from '~/components/settings/category/sorting/category-sorting/types';
-import { isPageOfType } from '~/utils/pathHelper';
-
 const { updateSetting, getSetting } = useSiteSettings('defaultSortingSearch');
 const { updateSorting } = useCategoryFilter();
 

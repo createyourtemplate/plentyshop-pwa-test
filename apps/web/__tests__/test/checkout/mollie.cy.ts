@@ -2,6 +2,7 @@ import { paths } from '../../../app/utils/paths';
 import { CheckoutPageObject } from '../../support/pageObjects/CheckoutPageObject';
 import { MyAccountPageObject } from '../../support/pageObjects/MyAccountPageObject';
 import { PaymentStatusScreen } from '../../support/pageObjects/PaymentStatusScreen';
+import { TEST_SYSTEM_DOMAIN } from '../../support/variables.ts';
 
 const checkout = new CheckoutPageObject();
 const myAccount = new MyAccountPageObject();
@@ -15,7 +16,7 @@ beforeEach(() => {
   cy.intercept('/plentysystems/doLogin').as('doLogin');
   myAccount.successLogin();
   cy.wait('@doLogin');
-  checkout.goToCheckoutPath().acceptTerms();
+  checkout.goToCheckoutPath(true).acceptTerms();
 });
 
 describe('Mollie payment methods', () => {
@@ -42,7 +43,7 @@ describe('Mollie payment methods', () => {
     cy.window().then((win) => {
       const currentUrl = win.location.href;
       cy.intercept('/plentysystems/getMolliePaymentAndUpdateStatus').as('getMolliePaymentStatus');
-      win.location.href = currentUrl.replace('https://mevofvd5omld.c01-14.plentymarkets.com', 'http://localhost:3000');
+      win.location.href = currentUrl.replace(TEST_SYSTEM_DOMAIN, 'http://localhost:3000');
       cy.wait('@getMolliePaymentStatus');
       cy.wait('@doPlaceOrder');
       cy.wait('@getOrder');
@@ -59,16 +60,18 @@ describe('Mollie payment methods', () => {
     cy.intercept('/plentysystems/getOrder').as('getOrder');
 
     checkout.checkMolliePayPal().placeOrderButtons.click();
-    cy.wait('@doAdditionalInformation');
-    cy.wait('@doPreparePayment');
-    cy.wait('@doCreateMolliePaymentFromBasket');
-    cy.wait('@doCreatePlentyPaymentFromMolliePayment');
+    cy.wait([
+      '@doAdditionalInformation',
+      '@doPreparePayment',
+      '@doCreateMolliePaymentFromBasket',
+      '@doCreatePlentyPaymentFromMolliePayment',
+    ]);
 
     paymentStatus.selectPaid();
     cy.window().then((win) => {
       const currentUrl = win.location.href;
       cy.intercept('/plentysystems/getMolliePaymentAndUpdateStatus').as('getMolliePaymentStatus');
-      win.location.href = currentUrl.replace('https://mevofvd5omld.c01-14.plentymarkets.com', 'http://localhost:3000');
+      win.location.href = currentUrl.replace(TEST_SYSTEM_DOMAIN, 'http://localhost:3000');
       cy.wait('@getMolliePaymentStatus');
       cy.wait('@doPlaceOrder');
       cy.wait('@getOrder');
@@ -92,7 +95,7 @@ describe('Mollie payment methods', () => {
     cy.window().then((win) => {
       const currentUrl = win.location.href;
       cy.intercept('/plentysystems/getMolliePaymentAndUpdateStatus').as('getMolliePaymentStatus');
-      win.location.href = currentUrl.replace('https://mevofvd5omld.c01-14.plentymarkets.com', 'http://localhost:3000');
+      win.location.href = currentUrl.replace(TEST_SYSTEM_DOMAIN, 'http://localhost:3000');
       cy.wait('@getMolliePaymentStatus');
     });
     cy.url().should('include', '/checkout');

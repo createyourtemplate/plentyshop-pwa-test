@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { resolve } from 'node:path';
 import { validateApiUrl } from './app/utils/pathHelper';
 import { nuxtI18nOptions } from './app/configuration/i18n.config';
 import { appConfiguration } from './app/configuration/app.config';
@@ -6,7 +7,9 @@ import cookieConfig from './app/configuration/cookie.config';
 import { paths } from './app/utils/paths';
 import settingsConfig from './app/configuration/settings.config';
 import featureFlagsConfig from './app/configuration/feature-flags.config';
-import { FailOnLargeChunksPlugin } from './app/configuration/vite.config';
+import { FailOnLargeChunksPlugin, FailOnForbiddenDataInPublicFolderPlugin } from './app/configuration/vite.config';
+import { FailOnUnmarkedBlockOverridesPlugin } from './app/configuration/vite.block-overrides';
+import { thirdPartyDeps, localPackageDeps } from './app/configuration/optimize-deps.config';
 
 export default defineNuxtConfig({
   srcDir: 'app/',
@@ -14,7 +17,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/richtext.css'],
   typescript: {
-    typeCheck: true,
+    typeCheck: false, // type checking runs via `npm run typecheck`, on build, and in CI (fitness-code-quality)
   },
   app: appConfiguration,
   experimental: {
@@ -26,83 +29,89 @@ export default defineNuxtConfig({
   },
   imports: {
     dirs: ['~/composables', '~/composables/**', '~/utils/**'],
+    // Nuxt skips node_modules by default, but extension packages (from any agency) ship runtime components
+    // that rely on auto-imports. Re-enable the transform for files matching:
+    //   node_modules/[@scope/]<package>/[<one folder, e.g. dist>/]runtime/...
+    transform: {
+      include: [/node_modules[\\/](?:@[^\\/]+[\\/])?[^\\/]+[\\/](?:[^\\/]+[\\/])?runtime[\\/]/],
+    },
+  },
+  alias: {
+    '@workspace': resolve(__dirname, '..', '..'),
   },
   vite: {
     server: {
       fs: {
         allow: ['../../..'], // relative to the current nuxt.config.ts
       },
-      watch: {
-        usePolling: process.env.NODE_ENV === 'development', // see apps/web/app/plugins/02.pwa-cookie.ts
+      warmup: {
+        clientFiles: [
+          resolve(__dirname, 'app/composables/useRichTextEditor/useRichTextEditor.ts'),
+          resolve(__dirname, 'app/components/editor/RichTextEditor/RichTextEditor.vue'),
+          resolve(__dirname, 'app/components/editor/RichTextEditor/RichTextEditorForm.vue'),
+          resolve(__dirname, 'app/composables/useCustomer/useCustomer.ts'),
+          resolve(__dirname, 'app/components/EditableBlocks/EditableBlocks.vue'),
+          resolve(__dirname, 'app/components/blocks/UtilityBar/UtilityBar.vue'),
+          resolve(__dirname, 'app/components/LanguageSelector/flags.ts'),
+          resolve(__dirname, 'app/components/blocks/structure/Carousel/Carousel.vue'),
+          resolve(__dirname, 'app/utils/tailwindHelper/index.ts'),
+          resolve(__dirname, 'modules/paypal/runtime/composables/usePayPal/usePayPal.ts'),
+          resolve(__dirname, 'app/utils/blocks/block-factories.ts'),
+          resolve(__dirname, 'app/components/editor/Localization/EditorLocalizationDrawer.vue'),
+          resolve(__dirname, 'app/components/editor/RichTextEditor/RichTextEditorLinkModal.vue'),
+          resolve(__dirname, 'app/components/editor/BlockItemsAccordion/BlockItemsAccordion.vue'),
+          // Not app code: these two run on every page (nuxt-viewport's cookie manager, Nuxt devtools' client
+          // plugin), but their deps aren't reachable from any file we import, so warm them up directly.
+          resolve(__dirname, '../../node_modules/nuxt-viewport/dist/runtime/manager.js'),
+          resolve(__dirname, '../../node_modules/@nuxt/devtools/dist/runtime/vue-devtools-client.js'),
+        ],
       },
     },
-    plugins: [FailOnLargeChunksPlugin],
+    plugins: [FailOnLargeChunksPlugin, FailOnForbiddenDataInPublicFolderPlugin, FailOnUnmarkedBlockOverridesPlugin],
+    resolve: {
+      alias: {
+        // cookiejs (via nuxt-viewport) ships a UMD `browser` entry without a default export.
+        // Vite 8 resolves to it and breaks the client bundle; force the ESM build instead.
+        cookiejs: 'cookiejs/dist/cookie.esm.js',
+      },
+    },
     optimizeDeps: {
-      include: [
-        '@codemirror/lang-css',
-        '@codemirror/lang-javascript',
-        '@codemirror/state',
-        '@floating-ui/vue',
-        '@intlify/core-base',
-        '@intlify/shared',
-        '@paypal/paypal-js',
-        '@plentymarkets/shop-api',
-        '@plentymarkets/tailwind-colors',
-        '@storefront-ui/shared',
-        '@storefront-ui/vue',
-        '@tanstack/vue-virtual',
-        '@tiptap/extension-color',
-        '@tiptap/extension-highlight',
-        '@tiptap/extension-link',
-        '@tiptap/extension-text-align',
-        '@tiptap/extension-text-style',
-        '@tiptap/extension-underline',
-        '@tiptap/starter-kit',
-        '@tiptap/vue-3',
-        '@vee-validate/yup',
-        '@vue/devtools-core',
-        '@vue/devtools-kit',
-        '@vueuse/core',
-        '@vueuse/shared',
-        'codemirror',
-        'cookie',
-        'country-flag-icons/string/3x2',
-        'dotenv',
-        'drift-zoom',
-        'js-beautify',
-        'js-sha256',
-        'swiper/modules',
-        'swiper/vue',
-        'uuid',
-        'vue-multiselect',
-        'vue3-lazy-hydration',
-        'vue-tel-input',
-        'vuedraggable/src/vuedraggable',
-        'yup',
-      ],
+      include: [...thirdPartyDeps, ...localPackageDeps],
     },
     build: {
+      modulePreload: { polyfill: false },
       rollupOptions: {
         output: {
-          manualChunks: {
-            tiptap: [
-              '@tiptap/vue-3',
-              '@tiptap/core',
-              '@tiptap/starter-kit',
-              '@tiptap/extension-link',
-              '@tiptap/extension-underline',
-              '@tiptap/extension-text-style',
-              '@tiptap/extension-color',
-              '@tiptap/extension-highlight',
-              '@tiptap/extension-text-align',
-            ],
-            vuetify: ['vuetify', '@mdi/js'],
+          manualChunks(id) {
+            if (id.includes('utils/blocks/blocks-imports')) return 'block-registry';
+            if (/[/\\]blocks[/\\].+[/\\]defaults\.ts$/.test(id)) return 'block-registry';
+
+            /*
+             * Keep Floating UI separate because it is shared by the storefront and Tiptap.
+             * Otherwise Rollup can absorb it into a Tiptap chunk, causing pages to
+             * download the entire editor bundle when e.g. the UtilityBar imports @floating-ui/vue.
+             */
+            const vendorChunks: Record<string, string[]> = {
+              floatingUi: ['@floating-ui/'],
+              tiptapExtensions: [
+                '@tiptap/extension-color',
+                '@tiptap/extension-emoji',
+                '@tiptap/extension-highlight',
+                '@tiptap/extension-placeholder',
+                '@tiptap/extension-text-align',
+                '@tiptap/extension-text-style',
+              ],
+              tiptap: ['@tiptap/'],
+            };
+
+            for (const [chunk, packages] of Object.entries(vendorChunks)) {
+              if (packages.some((pkg) => id.includes(pkg))) return chunk;
+            }
           },
         },
       },
     },
   },
-  // TODO: build is consistently failing because of this. check whether we need pre-render check.
   nitro: {
     prerender: {
       crawlLinks: false,
@@ -112,8 +121,9 @@ export default defineNuxtConfig({
   routeRules: {
     '/_ipx/**': { headers: { 'cache-control': `public, max-age=31536000, immutable` } },
     '/_nuxt-plenty/icons/**': { headers: { 'cache-control': `public, max-age=31536000, immutable` } },
-    '/_nuxt-plenty/favicon.ico': { headers: { 'cache-control': `public, max-age=31536000, immutable` } },
+    '/_nuxt-plenty/favicon.ico': { headers: { 'cache-control': `public, max-age=86400` } },
     '/_nuxt-plenty/images/**': { headers: { 'cache-control': `max-age=604800` } },
+    '/favicon.ico': { redirect: { to: '/_nuxt-plenty/favicon.ico', statusCode: 301 } },
   },
   image: {
     provider: 'none',
@@ -124,7 +134,7 @@ export default defineNuxtConfig({
       domain: validateApiUrl(process.env.API_URL) ?? process.env.API_ENDPOINT,
       apiEndpoint: process.env.API_ENDPOINT,
       activeLanguages: process.env.LANGUAGELIST || 'en,de',
-      disabledEditorSettings: process.env?.ENABLE_ALL_EDITOR_SETTINGS === '1' ? [] : ['shop-search'],
+      disabledEditorSettings: process.env?.ENABLE_ALL_EDITOR_SETTINGS === '1' ? [] : [],
       cookieGroups: cookieConfig,
       turnstileSiteKey: process.env?.CLOUDFLARETURNSTILEAPISITEKEY ?? '',
       noCache: process.env.NO_CACHE || '',
@@ -141,29 +151,17 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@nuxt/image',
     '@nuxt/test-utils/module',
+    '@nuxtjs/critters',
     '@nuxtjs/i18n',
+    '~~/modules/locale-routes',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/turnstile',
     'nuxt-lazy-hydrate',
     'nuxt-viewport',
     '@vee-validate/nuxt',
     '@vite-pwa/nuxt',
-    'vuetify-nuxt-module',
     'nuxt-color-picker',
   ],
-  vuetify: {
-    moduleOptions: {
-      disableVuetifyStyles: true,
-    },
-    vuetifyOptions: {
-      icons: {
-        defaultSet: 'mdi-svg',
-      },
-      theme: {
-        defaultTheme: 'light',
-      },
-    },
-  },
   plentySitemap: {
     locales: (process.env.LANGUAGELIST || 'en,de').split(','),
     defaultLocale: nuxtI18nOptions.defaultLocale,
@@ -179,8 +177,9 @@ export default defineNuxtConfig({
       '/confirmation',
       '/wishlist',
       '/login',
-      '/signup',
+      '/register',
       '/reset-password',
+      '/favicon.ico',
     ],
   },
   shopCore: {
@@ -196,8 +195,7 @@ export default defineNuxtConfig({
   },
   fonts: {
     defaults: {
-      weights: [300, 400, 500, 700],
-      preload: true,
+      weights: [400, 500, 600, 700],
     },
     assets: {
       prefix: '/_nuxt-plenty/fonts/',

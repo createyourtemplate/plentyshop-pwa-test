@@ -1,7 +1,13 @@
 <template>
   <Transition name="drawer-left" appear>
-    <div class="flex-shrink-0 w-1/4 min-w-[250px] max-w-[300px] bg-neutral-50 border-0 border-gray-300 z-[15] relative">
-      <component :is="getDrawerView(siteConfigurationDrawerView)" v-if="siteConfigurationDrawerView" />
+    <div
+      class="flex-shrink-0 w-1/4 min-w-[250px] max-w-[300px] bg-neutral-50 border-0 border-gray-300 z-overlap relative h-full"
+    >
+      <Transition v-if="siteConfigurationDrawerView" :name="transitionName" mode="out-in" appear>
+        <div :key="siteConfigurationDrawerView" class="h-full">
+          <component :is="getDrawerView(siteConfigurationDrawerView)" />
+        </div>
+      </Transition>
 
       <Transition v-else-if="viewComponent" :name="transitionName" mode="out-in" appear>
         <component :is="viewComponent" :key="viewComponent" />
@@ -17,7 +23,6 @@ const getDrawerView = (view: string) => {
   if (view === 'PagesView') return resolveComponent('PagesView');
   if (view === 'LocalizationView') return resolveComponent('LocalizationView');
   if (view === 'TableOfContents') return resolveComponent('TableOfContents');
-  if (view === 'blocksList') return resolveComponent('EditorBlocksNavigation');
 };
 
 const viewComponent = computed(() => getViewComponent(activeSetting.value, activeSubCategory.value));

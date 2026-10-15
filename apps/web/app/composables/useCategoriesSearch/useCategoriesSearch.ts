@@ -117,6 +117,7 @@ export const useCategoriesSearch: UseCategoriesSearchMethodsReturn = () => {
 
   const buildSearchParams = (categoryType: CategoryType, page: number): CategorySearchCriteria => ({
     type: categoryType,
+    level: 1,
     page,
     itemsPerPage: ITEMS_PER_PAGE,
     sortBy: 'position_asc',
@@ -158,7 +159,7 @@ export const useCategoriesSearch: UseCategoriesSearchMethodsReturn = () => {
 
       state.value.data = getCategoriesResult.data ?? state.value.data;
     } catch (error) {
-      throw new Error(error as string);
+      throw new Error(error as string, { cause: error });
     } finally {
       state.value.loadingContent = false;
     }

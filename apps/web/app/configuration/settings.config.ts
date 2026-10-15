@@ -1,3 +1,5 @@
+import { GUARANTEE_NOTICE_DISPLAY_MODE_SETTING } from '../utils/checkout/guarantee-notice-display-mode';
+
 export default {
   useAvif: process.env?.IMAGEAVIF === 'true' || process.env?.NUXT_PUBLIC_USE_AVIF === 'true',
   useWebp: process.env?.IMAGEWEBP === 'true' || process.env?.NUXT_PUBLIC_USE_WEBP === 'true',
@@ -17,7 +19,7 @@ export default {
   passwordMinLength: Number(process.env.PASSWORD_MIN_LENGTH ?? 8),
   passwordMaxLength: Number(process.env.PASSWORD_MAX_LENGTH ?? 64),
   robots: process.env.NUXT_PUBLIC_ROBOTS || 'all',
-  contactShopEmail: process.env.NUXT_PUBLIC_CONTACT_SHOP_EMAIL || 'your@email.com',
+  contactShopEmail: process.env.NUXT_PUBLIC_CONTACT_SHOP_EMAIL,
   robotsHomePage: process.env.NUXT_PUBLIC_ROBOTS_HOME_PAGE || 'all',
   robotsContactPage: process.env.NUXT_PUBLIC_ROBOTS_CONTACT_PAGE || 'all',
   robotsCancellationRights: process.env.NUXT_PUBLIC_ROBOTS_CANCELLATION_RIGHTS || 'all',
@@ -27,7 +29,7 @@ export default {
   robotsTermsAndConditions: process.env.NUXT_PUBLIC_ROBOTS_TERMS_AND_CONDITIONS || 'all',
   robotsSearchResult: process.env.NUXT_PUBLIC_SEARCH_RESULT || 'all',
   robotsAccessibilityDeclaration: process.env.NUXT_PUBLIC_ROBOTS_ACCESSIBILITY_DECLARATION || 'all',
-  robotsStopIndexing: process.env.NUXT_PUBLIC_ROBOTS_STOP_INDEXING || '0',
+  seoCategoryRobotsNoIndex: process.env.NUXT_PUBLIC_ROBOTS_STOP_INDEXING || '1',
   robotsItemPage: process.env.NUXT_PUBLIC_ROBOTS_ITEM_PAGE || 'ALL',
   robotsItemPageId: process.env.NUXT_PUBLIC_ROBOTS_ITEM_PAGE || '1',
   itemCanonicalId: process.env.NUXT_PUBLIC_ITEM_CANONICAL_ID || '',
@@ -76,7 +78,7 @@ export default {
   headerLogo:
     process.env.NUXT_PUBLIC_HEADER_LOGO ||
     process.env.LOGO ||
-    'https://cdn02.plentymarkets.com/mevofvd5omld/frontend/Logo/logo.svg',
+    'https://cdn02.plentyone.com/mevofvd5omld/frontend/Logo/logo.svg',
   storename: process.env.NAME || 'PlentyONE GmbH',
   font: process.env.NUXT_PUBLIC_FONT || 'Red Hat Text',
   verticalBlockSize: process.env.NUXT_PUBLIC_VERTICAL_BLOCK_SIZE || 'm',
@@ -97,12 +99,14 @@ export default {
   iconColor: process.env.NUXT_PUBLIC_ICON_COLOR || '#ffffff',
   showCustomerWishComponent: process.env.NUXT_PUBLIC_SHOW_CUSTOMER_WISH_COMPONENT === 'true',
   showCustomerReferenceComponent: process.env.NUXT_PUBLIC_SHOW_CUSTOMER_REFERENCE_COMPONENT === 'true',
+  [GUARANTEE_NOTICE_DISPLAY_MODE_SETTING]: process.env.NUXT_PUBLIC_GUARANTEE_NOTICE_DISPLAY_MODE || '',
   bundleItemDisplay: process.env.NUXT_PUBLIC_BUNDLE_ITEM_DISPLAY || '2',
   externalVatCheckInactive: process.env.NUXT_PUBLIC_EXTERNAL_VAT_CHECK_INACTIVE === 'true',
   showNotifyMe: process.env.NUXT_PUBLIC_SHOW_NOTIFY_ME === 'true',
   itemSortByMonthlySales: process.env.NUXT_PUBLIC_ITEM_SORT_BY_MONTHLY_SALES || '0',
   defaultCustomerClassId: process.env.NUXT_PUBLIC_DEFAULT_CUSTOMER_CLASS_ID || '0',
   defaultCustomerB2BClassId: process.env.NUXT_PUBLIC_DEFAULT_CUSTOMER_B2B_CLASS_ID || '0',
+  allCustomerB2BClassIds: process.env.NUXT_PUBLIC_ALL_CUSTOMER_B2B_CLASS_IDS || '[]',
   fetchDynamicTranslations: false,
   sessionLifetime: process.env.NUXT_PUBLIC_SESSION_LIFETIME || '3600',
   shippingTextCategoryId: process.env.NUXT_PUBLIC_SHIPPING_TEXT_CATEGORY_ID || '',
@@ -122,4 +126,6 @@ export default {
   manufacturerContactUrl: process.env.NUXT_PUBLIC_MANUFACTURER_CONTACT_URL || '0',
   customAssetsSafeMode: process.env.NUXT_PUBLIC_CUSTOM_ASSETS_SAFE_MODE === 'true',
   enableSingleProductUrlScheme: process.env.NUXT_PUBLIC_ENABLE_SINGLE_PRODUCT_URL_SCHEME === 'true',
+  enableOrderChangePaymentMethod: process.env.NUXT_PUBLIC_ENABLE_ORDER_CHANGE_PAYMENT_METHOD !== 'false',
+  enableLastSeenTracking: process.env.NUXT_PUBLIC_ENABLE_LAST_SEEN_TRACKING === 'true',
 };

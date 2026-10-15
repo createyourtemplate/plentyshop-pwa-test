@@ -1,9 +1,9 @@
 <template>
-  <UiDivider class="col-span-3 -mx-4 !w-auto md:mx-0" />
+  <UiDivider class="col-span-3 -mx-4 !w-auto @md:mx-0" />
   <div v-if="!confirmation" class="col-span-3 !w-auto mx-4">
     <template v-if="currentReturnOrder">
-      <div class="flex justify-between items-center mb-5 text-sm sm:typography-headline-4">
-        <div class="md:grid grid-cols-[1fr_1fr] gap-3">
+      <div class="flex justify-between items-center mb-5 text-sm @sm:typography-headline-4">
+        <div class="@md:grid grid-cols-[1fr_1fr] gap-3">
           <div class="text-neutral-900">
             <span class="font-bold"> {{ t('returns.returnForOrder') }}</span>
             <span> #{{ orderGetters.getId(currentReturnOrder) }}</span>
@@ -49,8 +49,6 @@
 <script setup lang="ts">
 import { orderGetters } from '@plentymarkets/shop-api';
 import { SfIconArrowForward, SfCheckbox } from '@storefront-ui/vue';
-import { useReturnOrder } from '~/composables/useReturnOrder';
-import { paths } from '~/utils/paths';
 import type { Locale } from '#i18n';
 
 defineI18nRoute({
@@ -58,7 +56,7 @@ defineI18nRoute({
 });
 
 const route = useRoute();
-const localePath = useLocalePath();
+const localePath = useLocalizedPath();
 const NuxtLink = resolveComponent('NuxtLink');
 const { locale } = useI18n();
 definePageMeta({

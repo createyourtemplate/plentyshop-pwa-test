@@ -29,7 +29,7 @@
             <div class="flex items-center justify-between mb-2">
               <div class="flex items-center gap-2">
                 <button
-                  class="drag-slides-handle top-2 left-2 z-50 cursor-grab p-2 hover:bg-gray-100 rounded-full"
+                  class="drag-slides-handle top-2 left-2 z-dropdown cursor-grab p-2 hover:bg-gray-100 rounded-full"
                   :aria-label="getEditorTranslation('drag-reorder-aria')"
                   :data-testid="`actions-drag-slide-handle-${index}`"
                 >
@@ -67,8 +67,7 @@
             >
               <pre
                 class="m-0 py-3 pl-3 pr-2 text-right select-none text-gray-500 bg-gray-50 font-mono text-sm leading-5 whitespace-pre"
-                >{{ lineNumbers[asset.uuid] }}</pre
-              >
+                >{{ lineNumbers[asset.uuid] }}</pre>
               <textarea
                 :id="`snippet-${asset.uuid}-overview`"
                 :value="asset.content"

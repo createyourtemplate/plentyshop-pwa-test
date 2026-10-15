@@ -1,11 +1,3 @@
-import type {
-  UseSiteConfigurationReturn,
-  UseSiteConfigurationState,
-  LoadGoogleFont,
-  DrawerView,
-  SettingsType,
-  SetActiveSetting,
-} from '~/composables/useSiteConfiguration/types';
 import type { Block, CategoryTreeItem } from '@plentymarkets/shop-api';
 
 /**
@@ -17,6 +9,11 @@ import type { Block, CategoryTreeItem } from '@plentymarkets/shop-api';
  * ```
  */
 export const useSiteConfiguration: UseSiteConfigurationReturn = () => {
+  const { isEditingEnabled } = useEditor();
+  const { scheduleCleanDataSync } = useBlocks();
+  const { clearStack } = useBlockEditStack();
+  const { clearEditTitle } = useBlockEditTitle();
+
   const state = useState<UseSiteConfigurationState>('siteConfiguration', () => ({
     data: [],
     siteConfigurationDrawerOpen: false,
@@ -55,6 +52,14 @@ export const useSiteConfiguration: UseSiteConfigurationReturn = () => {
   };
 
   const openDrawerWithView = (view: DrawerView, block?: Block) => {
+    if (view === 'blocksSettings' && block && !isEditingEnabled.value) {
+      scheduleCleanDataSync();
+    }
+
+    if (view === 'blocksSettings') {
+      useBlockSnapshots().closeDrawer();
+    }
+
     if (block) {
       state.value.blockType = block.name;
       state.value.blockUuid = block.meta.uuid;
@@ -81,6 +86,8 @@ export const useSiteConfiguration: UseSiteConfigurationReturn = () => {
     state.value.siteConfigurationDrawerView = null;
     state.value.blocksConfigurationDrawerView = null;
     state.value.activeSetting = '';
+    clearStack();
+    clearEditTitle();
   };
 
   const closeSiteConfigurationDrawer = () => {
@@ -92,6 +99,8 @@ export const useSiteConfiguration: UseSiteConfigurationReturn = () => {
   const closeBlocksConfigurationDrawer = () => {
     state.value.blocksConfigurationDrawerOpen = false;
     state.value.blocksConfigurationDrawerView = null;
+    clearStack();
+    clearEditTitle();
   };
 
   const updateNewBlockPosition = (position: number) => {
@@ -117,17 +126,6 @@ export const useSiteConfiguration: UseSiteConfigurationReturn = () => {
     state.value.siteConfigurationDrawerOpen = true;
     state.value.siteConfigurationDrawerView = null;
   };
-  if (import.meta.client) {
-    const route = useRoute();
-    watch(
-      () => route.fullPath,
-      () => {
-        if (state.value.blocksConfigurationDrawerView === 'blocksSettings') {
-          closeBlocksConfigurationDrawer();
-        }
-      },
-    );
-  }
 
   return {
     ...toRefs(state.value),

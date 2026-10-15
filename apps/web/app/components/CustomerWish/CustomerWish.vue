@@ -1,12 +1,12 @@
 <template>
-  <div v-if="showCustomerWishComponent" class="md:px-4 py-6">
+  <div v-if="showCustomerWishComponent" class="@md:px-4 py-6">
     <h2 class="w-full text-neutral-900 text-lg font-bold mb-4">
       {{ t('checkout.fields.customerWish') }}
     </h2>
 
     <SfTextarea
       v-model="customerWish"
-      class="resize-none md:!h-32 sm:!h-20 w-full"
+      class="resize-none @md:!h-32 @sm:!h-20 w-full"
       :placeholder="t('checkout.fields.customerWishMessage')"
       @blur="setCustomerWish(customerWish)"
     />
@@ -16,8 +16,8 @@
 <script setup lang="ts">
 import { SfTextarea } from '@storefront-ui/vue';
 const { setCustomerWish } = useAdditionalInformation();
-const { getSetting } = useSiteSettings('showCustomerWishComponent');
+const { getBooleanSetting } = useSiteSettings('showCustomerWishComponent');
 const customerWish = ref('');
-const showCustomerWishComponent = computed(() => getSetting().toString() === 'true');
+const showCustomerWishComponent = computed(() => getBooleanSetting());
 setCustomerWish(null);
 </script>

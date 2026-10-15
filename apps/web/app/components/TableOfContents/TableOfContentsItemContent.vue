@@ -3,19 +3,20 @@
     class="flex items-center justify-between flex-1 px-2 py-1 rounded-md transition-colors hover:bg-editor-toc-highlight hover:text-black"
     :class="{
       'bg-editor-toc-selected text-white': isSelected,
-      'bg-editor-toc-highlight': isHovered && !isSelected,
+      'bg-editor-toc-hover': isHovered && !isSelected,
     }"
   >
     <div class="flex items-center gap-2 min-w-0 flex-1">
       <slot name="arrow">
-        <div class="shrink-0 w-4" />
+        <div class="shrink-0 w-6" />
       </slot>
 
       <div class="shrink-0 w-5 h-5 relative">
         <div class="transition-opacity" :class="{ 'group-hover:opacity-0': isRoot && !isGlobalBlock(block) }">
           <span
             v-if="getBlockIconSvg(blockName)"
-            class="block w-5 h-5 [&>svg]:w-full [&>svg]:h-full transition-all no-preflight"
+            :data-testid="`toc-block-icon-${uuid}`"
+            class="block w-5 h-5 [&>svg]:w-full [&>svg]:h-full transition-all"
             :class="{
               '[&>svg]:brightness-0 [&>svg]:invert': isSelected,
               'group-hover:[&>svg]:brightness-100 group-hover:[&>svg]:invert-0': isSelected,
@@ -25,6 +26,7 @@
           />
           <NuxtImg
             v-else
+            :data-testid="`toc-block-icon-${uuid}`"
             :src="defaultBlockIcon"
             class="w-5 h-5 transition-all"
             :class="{
@@ -49,6 +51,7 @@
 
     <div v-if="!isGlobalBlock(block)" class="flex items-center gap-1 shrink-0">
       <button
+        v-if="!isLastRemainingHeaderBlock"
         class="p-1 opacity-0 group-hover:opacity-100 rounded hover:bg-editor-icon-hover group-hover:text-black"
         :class="{ 'text-white': isSelected }"
         :data-testid="`toc-delete-${uuid}`"
@@ -83,16 +86,23 @@
 
 <script setup lang="ts">
 import { SfIconDelete, SfIconVisibility, SfIconVisibilityOff, SfTooltip } from '@storefront-ui/vue';
-import { getBlockIconSvg } from '~/utils/block-icons';
 import defaultBlockIcon from '~/assets/icons/paths/block-default-icon.svg';
 import dragIcon from '~/assets/icons/paths/drag.svg';
 import type { TableOfContentsItemContentProps } from './types';
+import type { Block } from '@plentymarkets/shop-api';
 
 const props = defineProps<TableOfContentsItemContentProps>();
 
-const { deleteBlock } = useBlockManager();
+const { deleteBlockHard } = useBlockManager();
 const { isBlockVisible, toggleBlockVisibility } = useBlocksVisibility();
 const { hoveredUuid } = useTableOfContents();
+const { headerContainer } = useBlocks();
+
+const isLastRemainingHeaderBlock = computed(() => {
+  const content = headerContainer.value?.content as Block[] | undefined;
+  if (!Array.isArray(content) || content.length > 1) return false;
+  return content.some((b: Block) => b.meta.uuid === props.uuid);
+});
 
 const isVisible = computed(() => isBlockVisible(props.block));
 const isHovered = computed(() => hoveredUuid.value === props.uuid);
@@ -102,7 +112,7 @@ const handleToggleVisibility = () => {
 };
 
 const handleDelete = () => {
-  deleteBlock(props.uuid);
+  deleteBlockHard(props.uuid);
 };
 </script>
 

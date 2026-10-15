@@ -10,23 +10,72 @@
 
     <component
       :is="SiteConfigurationDrawer"
-      v-if="siteConfigurationDrawerOpen"
+      v-if="siteConfigurationDrawerOpen && clientPreview"
       class="flex-shrink-0 bg-white font-editor border-r border-gray-300 overflow-visible"
     />
 
-    <div class="flex-1 w-full bg-white relative" :class="clientPreview ? 'overflow-auto' : 'overflow-visible'">
-      <Body class="font-body bg-editor-body-bg" :class="bodyClass" :style="currentFont" />
+    <div
+      ref="contentRef"
+      class="flex-1 w-full relative"
+      :class="
+        clientPreview
+          ? ['overflow-auto flex flex-col', isMobilePreview ? 'bg-editor-body-bg' : 'bg-white']
+          : 'overflow-visible bg-white'
+      "
+    >
+      <Body
+        class="font-body bg-editor-body-bg"
+        :class="[bodyClass, { 'overflow-hidden': clientPreview }]"
+        :style="currentFont"
+      />
       <UiNotifications />
       <VitePwaManifest />
       <NuxtLoadingIndicator color="repeating-linear-gradient(to right, #008ebd 0%,#80dfff 50%,#e0f7ff 100%)" />
-      <NuxtLayout>
-        <NuxtPage />
-      </NuxtLayout>
+      <div
+        id="app-container"
+        ref="previewContainerEl"
+        :style="
+          isMobilePreview
+            ? {
+                width: previewWidth,
+                maxWidth: '100%',
+                transform: 'translateZ(0)',
+                height: '99%',
+                overflow: 'clip',
+                display: 'flex',
+                flexDirection: 'column',
+                '--viewport-height': '90dvh',
+                isolation: 'isolate',
+              }
+            : { isolation: 'isolate' }
+        "
+        :class="isMobilePreview ? 'mx-auto bg-white my-auto shadow-md @container' : '@container'"
+        data-testid="editor-preview-container"
+      >
+        <template v-if="isMobilePreview">
+          <div style="flex: 1; min-height: 0; overflow-y: auto">
+            <NuxtLayout>
+              <NuxtPage />
+            </NuxtLayout>
+          </div>
+        </template>
+        <template v-else>
+          <NuxtLayout>
+            <NuxtPage />
+          </NuxtLayout>
+        </template>
+      </div>
     </div>
 
     <component
       :is="BlocksConfigurationDrawer"
-      v-if="blocksConfigurationDrawerOpen"
+      v-if="blocksConfigurationDrawerOpen && clientPreview"
+      class="flex-shrink-0 bg-white font-editor border-l border-gray-300 overflow-y-auto"
+    />
+
+    <component
+      :is="VersionHistoryDrawer"
+      v-if="drawerOpen && clientPreview"
       class="flex-shrink-0 bg-white font-editor border-l border-gray-300 overflow-y-auto"
     />
   </div>
@@ -34,21 +83,29 @@
     <component :is="PageModal" v-if="clientPreview" />
     <component :is="UnlinkCategoryModal" v-if="clientPreview" />
     <component :is="ResetProductPageModal" v-if="clientPreview" />
+    <component :is="AddBlockPopoverComponent" v-if="clientPreview" />
+    <component :is="RestoreSnapshotModal" v-if="clientPreview" />
   </ClientOnly>
 </template>
 
 <script setup lang="ts">
-import { isCssUrl, isJsUrl } from '~/utils/assets';
+import { useMediaQuery } from '@vueuse/core';
 import { categoryGetters } from '@plentymarkets/shop-api';
 
 const bodyClass = ref('');
 const route = useRoute();
 const { disableActions } = useEditor();
 const { siteConfigurationDrawerOpen, blocksConfigurationDrawerOpen, currentFont } = useSiteConfiguration();
+const { drawerOpen, entityKey, resetForCurrentEntity } = useBlockSnapshots();
+const { resetHistory } = useBlockHistory();
 const { setStaticPageMeta } = useUrlPageMeta();
-const { isInEditorClient } = useEditorState();
+const { isInEditorClient, isMobilePreview, previewWidth } = useEditorState();
 
-const clientPreview = computed(() => isInEditorClient.value);
+const isLargeScreen = useMediaQuery('(min-width: 1024px)');
+const clientPreview = computed(() => isInEditorClient.value && isLargeScreen.value);
+const contentRef = ref<HTMLElement | null>(null);
+const previewContainerEl = ref<HTMLElement | null>(null);
+provide('previewContainer', previewContainerEl);
 
 const { getSetting: getFavicon } = useSiteSettings('favicon');
 const { getSetting: getOgTitle } = useSiteSettings('ogTitle');
@@ -58,7 +115,7 @@ const { getSetting: getMetaDescription } = useSiteSettings('metaDescription');
 const { getSetting: getMetaKeywords } = useSiteSettings('metaKeywords');
 const { getSetting: getRobots } = useSiteSettings('robots');
 const { getSetting: getPrimaryColor } = useSiteSettings('primaryColor');
-const { getSetting: customAssetsSafeMode } = useSiteSettings('customAssetsSafeMode');
+const { getBooleanSetting: customAssetsSafeMode } = useSiteSettings('customAssetsSafeMode');
 
 const { data: productsCatalog } = useProducts();
 
@@ -101,18 +158,10 @@ const getCategoryOgTitle = () => {
   return getOgTitle() || getMetaTitle();
 };
 
-const getCategoryOgDescription = () => {
-  if (isCategoryPage.value) {
-    const categoryMetaDescription = categoryGetters.getMetaDescription(category.value);
-    if (categoryMetaDescription) return categoryMetaDescription;
-  }
-  return getMetaDescription();
-};
-
 const title = ref(getCategoryMetaTitle());
 const ogTitle = ref(getCategoryOgTitle());
 const ogImage = ref(getOgImage());
-const ogDescription = ref(getCategoryOgDescription());
+const ogDescription = ref(getCategoryMetaDescription());
 const description = ref(getCategoryMetaDescription());
 const keywords = ref(getCategoryMetaKeywords());
 const robots = ref(getRobots());
@@ -147,7 +196,7 @@ watchEffect(() => {
   title.value = getCategoryMetaTitle();
   ogTitle.value = getCategoryOgTitle();
   ogImage.value = getOgImage();
-  ogDescription.value = getCategoryOgDescription();
+  ogDescription.value = getCategoryMetaDescription();
   description.value = getCategoryMetaDescription();
   keywords.value = getCategoryMetaKeywords();
   robots.value = getRobots();
@@ -161,31 +210,38 @@ useSeoMeta({
   ogImage: () => ogImage.value,
   ogDescription: () => ogDescription.value,
   description: () => description.value,
-  keywords: () => keywords.value,
   robots: () => robots.value,
   themeColor: () => themeColor.value,
   generator: 'plentymarkets',
 });
 
+const localeHead = useLocaleHead();
+
 useHead({
+  htmlAttrs: {
+    lang: () => localeHead.value.htmlAttrs.lang,
+    dir: () => localeHead.value.htmlAttrs.dir as 'ltr' | 'rtl' | 'auto' | undefined,
+  },
   link: () => [
     { rel: 'icon', href: fav.value },
     { rel: 'apple-touch-icon', href: fav.value },
     ...cssExternalAssets.value.map((asset, index) => ({
       key: `external-css-${asset.uuid ?? index}`,
-      rel: 'stylesheet',
+      rel: 'stylesheet' as const,
       media: asset.isActive ? 'all' : 'not all',
       href: asset.content,
     })),
   ],
-  meta: () =>
-    metaAssets.value
+  meta: () => [
+    { name: 'keywords', content: keywords.value },
+    ...metaAssets.value
       .filter((asset) => asset.name && asset.content)
       .map((asset) => ({
         key: `custom-meta-${asset.uuid}`,
         name: asset.name,
         content: asset.content,
       })),
+  ],
   style: () =>
     cssAssets.value.map((asset) => ({
       key: `custom-css-${asset.uuid}-o${asset.order ?? 0}`,
@@ -214,6 +270,30 @@ if (import.meta.client) {
       })),
     ],
   });
+
+  watch(
+    () => route.path,
+    () => {
+      if (clientPreview.value) contentRef.value?.scrollTo({ top: 0 });
+    },
+  );
+
+  watch(entityKey, () => {
+    resetForCurrentEntity();
+  });
+
+  watch(entityKey, () => {
+    resetHistory();
+  });
+
+  watch(
+    () => route.fullPath,
+    () => {
+      if (route.meta.pageType === 'static') {
+        setStaticPageMeta();
+      }
+    },
+  );
 }
 
 if (route?.meta.pageType === 'static') setStaticPageMeta();
@@ -238,6 +318,13 @@ const UnlinkCategoryModal = defineAsyncComponent(
 );
 const ResetProductPageModal = defineAsyncComponent(
   () => import('~/components/ui/ResetProductPageModal/ResetProductPageModal.vue'),
+);
+const AddBlockPopoverComponent = defineAsyncComponent(() => import('~/components/AddBlockPopover/AddBlockPopover.vue'));
+const VersionHistoryDrawer = defineAsyncComponent(
+  () => import('~/components/VersionHistoryDrawer/VersionHistoryDrawer.vue'),
+);
+const RestoreSnapshotModal = defineAsyncComponent(
+  () => import('~/components/ui/RestoreSnapshotModal/RestoreSnapshotModal.vue'),
 );
 </script>
 

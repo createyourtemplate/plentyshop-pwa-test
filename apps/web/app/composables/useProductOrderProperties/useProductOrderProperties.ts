@@ -1,9 +1,3 @@
-import type {
-  GetPropertiesPrice,
-  SetProperties,
-  UseProductOrderPropertiesReturn,
-  UseProductOrderPropertiesState,
-} from '~/composables/useProductOrderProperties/types';
 import { productPropertyGetters } from '@plentymarkets/shop-api';
 import type { ProductProperty, BasketItemOrderParamsProperty, Product, ApiError } from '@plentymarkets/shop-api';
 
@@ -160,7 +154,7 @@ export const useProductOrderProperties: UseProductOrderPropertiesReturn = () => 
         filename: file.name,
         type: file.type,
       });
-      return data.data;
+      return data?.data ?? null;
     } catch (error) {
       useHandleError(error as ApiError);
     } finally {
@@ -177,7 +171,7 @@ export const useProductOrderProperties: UseProductOrderPropertiesReturn = () => 
         hash: split[0] ?? '',
         fileName: split[1] ?? '',
       });
-      if (data.data) {
+      if (data && data.data) {
         const blob = base64ToBlob(data.data.body, data.data['content-type']);
         const url = URL.createObjectURL(blob);
         window.open(url, '_blank');

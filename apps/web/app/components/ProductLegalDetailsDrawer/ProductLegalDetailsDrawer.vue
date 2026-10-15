@@ -6,12 +6,12 @@
       data-testid="product-legal-details-drawer"
       :placement="placement"
       :class="[
-        'lg:w-128',
+        '@lg:w-128',
         'bg-neutral-50',
         'border',
         'border-gray-300',
-        'z-50',
-        { 'lg:min-w-[400px]': placement === 'left' || placement === 'right' },
+        'z-dropdown',
+        { '@lg:min-w-[400px]': placement === 'left' || placement === 'right' },
       ]"
     >
       <header class="flex items-center justify-between px-10 py-6 bg-primary-500">
@@ -92,16 +92,11 @@ const productLegalDrawerRef = ref();
 const { open, openedBlockUuid } = useProductLegalDetailsDrawer();
 useTrapFocus(productLegalDrawerRef, { activeState: open });
 
-const route = useRoute();
-const { data } = useBlockTemplates(
-  route?.meta?.identifier as string,
-  route.meta.type as string,
-  useNuxtApp().$i18n.locale.value,
-);
+const { allBlocks } = useBlocks();
 
 const productLegalBlock = computed(() => {
   if (!openedBlockUuid.value) return null;
-  return data.value
+  return allBlocks.value
     .flatMap((block) => (Array.isArray(block.content) ? block.content : [block]))
     .find((block) => block.meta?.uuid === openedBlockUuid.value);
 });

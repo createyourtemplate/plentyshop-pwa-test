@@ -130,6 +130,7 @@ export const useCart = () => {
           cart: state.value.data,
           addItemParams: params,
         });
+        useLogEvent().logAddItemToBasket();
       }
 
       return !!data;
@@ -169,7 +170,7 @@ export const useCart = () => {
     try {
       const { data } = await useSdk().plentysystems.doAddCartItems(params);
 
-      state.value.data = migrateVariationData(state.value.data, data) ?? state.value.data;
+      state.value.data = migrateVariationData(state.value.data, data ?? undefined) ?? state.value.data;
 
       params.forEach((param) => {
         const item = state?.value?.data?.items?.find((item) => item.variationId === param.productId);
@@ -180,6 +181,7 @@ export const useCart = () => {
             cart: state.value.data,
             addItemParams: param,
           });
+          useLogEvent().logAddItemToBasket();
         }
       });
 
@@ -268,7 +270,7 @@ export const useCart = () => {
         cartItemId: cartItem.id,
       });
 
-      state.value.data = migrateVariationData(state.value.data, data) ?? state.value.data;
+      state.value.data = migrateVariationData(state.value.data, data ?? undefined) ?? state.value.data;
       emit('frontend:removeFromCart', {
         deleteItemParams: { cartItemId: cartItem.id },
         cart: state.value.data,

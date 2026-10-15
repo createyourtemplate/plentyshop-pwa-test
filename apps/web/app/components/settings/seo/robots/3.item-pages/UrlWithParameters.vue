@@ -4,7 +4,7 @@
       <UiFormLabel class="mb-1">
         {{ getEditorTranslation('label') }}
       </UiFormLabel>
-      <SfTooltip :label="getEditorTranslation('tooltip')" :placement="'top'" :show-arrow="true" class="mr-6 z-10">
+      <SfTooltip :label="getEditorTranslation('tooltip')" :placement="'top'" :show-arrow="true" class="mr-6 z-dropdown">
         <SfIconInfo :size="'sm'" />
       </SfTooltip>
       <SfSwitch
@@ -17,10 +17,10 @@
 <script setup lang="ts">
 import { SfIconInfo, SfSwitch, SfTooltip } from '@storefront-ui/vue';
 
-const { updateSetting, getSetting } = useSiteSettings('robotsUrlWithParameters');
+const { updateSetting, getBooleanSetting } = useSiteSettings('robotsUrlWithParameters');
 
 const robotsUrlWithParameters = computed({
-  get: () => !!getSetting(),
+  get: () => getBooleanSetting(),
   set: (value) => updateSetting(value.toString()),
 });
 </script>

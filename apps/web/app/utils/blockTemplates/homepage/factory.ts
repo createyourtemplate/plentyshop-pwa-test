@@ -1,6 +1,9 @@
 import type { Block } from '@plentymarkets/shop-api';
 import { v4 as uuid } from 'uuid';
-import { createFooter } from '../footer/factory';
+
+export const BANNER_BLOCK_NAME = 'Banner';
+
+export const isBannerBlock = (block: Block | null | undefined) => block?.name === BANNER_BLOCK_NAME;
 
 export function createHomepage(): Block[] {
   const banner1Pretitle = t('defaultTemplate.homepage.carousel.banner1.pretitle');
@@ -49,6 +52,7 @@ export function createHomepage(): Block[] {
         uuid: uuid(),
       },
       configuration: {
+        visible: true,
         controls: {
           displayArrows: true,
           color: '#a39f9f',
@@ -64,10 +68,10 @@ export function createHomepage(): Block[] {
           },
           content: {
             image: {
-              wideScreen: 'https://cdn02.plentymarkets.com/mevofvd5omld/frontend/Test_Banner_Person/guy-1024.avif',
-              desktop: 'https://cdn02.plentymarkets.com/mevofvd5omld/frontend/Test_Banner_Person/guy-1024.avif',
-              tablet: 'https://cdn02.plentymarkets.com/mevofvd5omld/frontend/Test_Banner_Person/guy-768.avif',
-              mobile: 'https://cdn02.plentymarkets.com/mevofvd5omld/frontend/Test_Banner_Person/guy-320.avif',
+              wideScreen: 'https://cdn02.plentyone.com/mevofvd5omld/frontend/Test_Banner_Person/guy-1024.avif',
+              desktop: 'https://cdn02.plentyone.com/mevofvd5omld/frontend/Test_Banner_Person/guy-1024.avif',
+              tablet: 'https://cdn02.plentyone.com/mevofvd5omld/frontend/Test_Banner_Person/guy-768.avif',
+              mobile: 'https://cdn02.plentyone.com/mevofvd5omld/frontend/Test_Banner_Person/guy-320.avif',
               alt: '',
               brightness: 0.5,
             },
@@ -99,10 +103,10 @@ export function createHomepage(): Block[] {
           },
           content: {
             image: {
-              wideScreen: 'https://cdn02.plentymarkets.com/mevofvd5omld/frontend/Test_Banner_Drone/drone-A-1024.avif',
-              desktop: 'https://cdn02.plentymarkets.com/mevofvd5omld/frontend/Test_Banner_Drone/drone-A-1024.avif',
-              tablet: 'https://cdn02.plentymarkets.com/mevofvd5omld/frontend/Test_Banner_Drone/drone-A-768.avif',
-              mobile: 'https://cdn02.plentymarkets.com/mevofvd5omld/frontend/Test_Banner_Drone/drone-A-320.avif',
+              wideScreen: 'https://cdn02.plentyone.com/mevofvd5omld/frontend/Test_Banner_Drone/drone-A-1024.avif',
+              desktop: 'https://cdn02.plentyone.com/mevofvd5omld/frontend/Test_Banner_Drone/drone-A-1024.avif',
+              tablet: 'https://cdn02.plentyone.com/mevofvd5omld/frontend/Test_Banner_Drone/drone-A-768.avif',
+              mobile: 'https://cdn02.plentyone.com/mevofvd5omld/frontend/Test_Banner_Drone/drone-A-320.avif',
               alt: '',
               brightness: 0.75,
             },
@@ -175,6 +179,7 @@ export function createHomepage(): Block[] {
         isGlobalTemplate: false,
       },
       configuration: {
+        visible: true,
         columnWidths: [6, 6],
       },
       content: [
@@ -187,10 +192,10 @@ export function createHomepage(): Block[] {
           parent_slot: 0,
           content: {
             image: {
-              wideScreen: 'https://cdn02.plentymarkets.com/mevofvd5omld/frontend/headphones-mediacard.avif',
-              desktop: 'https://cdn02.plentymarkets.com/mevofvd5omld/frontend/headphones-mediacard.avif',
-              tablet: 'https://cdn02.plentymarkets.com/mevofvd5omld/frontend/headphones-mediacard.avif',
-              mobile: 'https://cdn02.plentymarkets.com/mevofvd5omld/frontend/headphones-mediacard.avif',
+              wideScreen: 'https://cdn02.plentyone.com/mevofvd5omld/frontend/headphones-mediacard.avif',
+              desktop: 'https://cdn02.plentyone.com/mevofvd5omld/frontend/headphones-mediacard.avif',
+              tablet: 'https://cdn02.plentyone.com/mevofvd5omld/frontend/headphones-mediacard.avif',
+              mobile: 'https://cdn02.plentyone.com/mevofvd5omld/frontend/headphones-mediacard.avif',
               alt: multigridImageAlt,
               imageAlignment: 'left',
             },
@@ -283,6 +288,5 @@ export function createHomepage(): Block[] {
         },
       },
     },
-    createFooter(),
   ];
 }

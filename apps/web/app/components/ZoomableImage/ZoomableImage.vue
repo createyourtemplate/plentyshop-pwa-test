@@ -5,7 +5,7 @@
   >
     <div
       v-if="showZoomHint && isMobile"
-      class="zoom-hint absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-75 text-white px-4 py-2 rounded z-20"
+      class="zoom-hint absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-75 text-white px-4 py-2 rounded z-editor-inline"
     >
       {{ t('product.doubleTapZoom') }}
     </div>
@@ -106,6 +106,7 @@ const nuxtImgProps = computed<Record<string, unknown>>(() => ({
   alt: imageAlt,
   title: imageTitle,
   'aria-hidden': activeIndex.value !== index.value,
+  src: productImageGetters.getImageUrl(image.value),
   fit: 'fill',
   class: isMobile.value
     ? { 'object-contain h-full w-full': true, zoomed: isZoomed.value }

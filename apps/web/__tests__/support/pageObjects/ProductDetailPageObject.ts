@@ -1,6 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { PageObject } from './PageObject';
 
 export class ProductDetailPageObject extends PageObject {
+  navigateFromCategory(waitForPayPal: boolean = true) {
+    cy.intercept('/plentysystems/getProduct').as('getProduct');
+    if (waitForPayPal) {
+      cy.intercept('/plentysystems/getPayPalSettings').as('getPayPalSettings');
+      cy.intercept('/plentysystems/doHandlePayPalFundingSources').as('doHandlePayPalFundingSources');
+    }
+
+    cy.getByTestId('product-card').first().click();
+    cy.wait('@getProduct');
+    cy.wait('@getBlocks');
+    if (waitForPayPal) {
+      cy.wait('@getPayPalSettings');
+      cy.wait('@doHandlePayPalFundingSources');
+    }
+    return this;
+  }
+
   get addToCartButton() {
     return cy.getByTestId('add-to-cart');
   }
@@ -71,6 +89,98 @@ export class ProductDetailPageObject extends PageObject {
 
   assertModernImageFormat() {
     this.productImage.should('have.attr', 'srcset').and('include', '.avif');
+    return this;
+  }
+
+  assertProductStructuredDataExists() {
+    cy.get('script[type="application/ld+json"]').should((scripts) => {
+      const hasProductData = [...scripts].some((script) => {
+        try {
+          const data = JSON.parse(script.innerHTML) as Record<string, unknown>;
+          return data['@type'] === 'Product' && data['@context'] === 'https://schema.org';
+        } catch {
+          return false;
+        }
+      });
+      expect(hasProductData, 'Product JSON-LD structured data should be present').to.be.true;
+    });
+    return this;
+  }
+
+  assertStructuredData() {
+    cy.get('script[type="application/ld+json"]').should((scripts) => {
+      const jsonLdItems: Record<string, unknown>[] = [];
+
+      [...scripts].forEach((script) => {
+        try {
+          jsonLdItems.push(JSON.parse(script.innerHTML) as Record<string, unknown>);
+        } catch {
+          // ignore malformed scripts
+        }
+      });
+
+      const productData = jsonLdItems.find((item) => item['@type'] === 'Product');
+
+      expect(productData, 'Product structured data should be present').to.not.be.undefined;
+
+      // Top-level schema fields
+      expect(productData).to.have.property('@context', 'https://schema.org');
+      expect(productData).to.have.property('@type', 'Product');
+      expect(productData).to.have.property('name').and.be.a('string').and.not.be.empty;
+      expect(productData).to.have.property('image').and.be.a('string').and.not.be.empty;
+      expect(productData).to.have.property('identifier').and.be.a('string');
+      expect(productData).to.have.property('description').and.be.a('string');
+      expect(productData).to.have.property('disambiguatingDescription').and.be.a('string');
+      expect(productData).to.have.property('category').and.be.a('string');
+      expect(productData).to.have.property('sku').and.be.a('string');
+
+      // Reviews array
+      expect(productData).to.have.property('review').and.be.an('array');
+      const reviews = (productData?.['review'] ?? []) as Record<string, unknown>[];
+      reviews.forEach((review) => {
+        expect(review).to.have.property('@type', 'Review');
+        expect(review).to.have.nested.property('reviewRating.@type', 'Rating');
+        expect(review).to.have.nested.property('reviewRating.ratingValue').and.be.a('number');
+        expect(review).to.have.nested.property('author.@type', 'Person');
+        expect(review).to.have.nested.property('author.name').and.be.a('string');
+      });
+
+      // Aggregate rating, present when reviewCount > 0
+      if (productData?.['aggregateRating']) {
+        expect(productData).to.have.nested.property('aggregateRating.@type', 'AggregateRating');
+        expect(productData)
+          .to.have.nested.property('aggregateRating.ratingValue')
+          .and.be.a('number')
+          .and.be.greaterThan(0);
+        expect(productData)
+          .to.have.nested.property('aggregateRating.reviewCount')
+          .and.be.a('number')
+          .and.be.greaterThan(0);
+      }
+
+      // Offers
+      expect(productData).to.have.nested.property('offers.@type', 'Offer');
+      expect(productData).to.have.nested.property('offers.price').and.be.a('number');
+      expect(productData).to.have.nested.property('offers.priceCurrency').and.be.a('string').and.not.be.empty;
+      expect(productData).to.have.nested.property('offers.itemCondition').and.be.a('string');
+
+      const offers = (productData?.['offers'] ?? {}) as Record<string, unknown>;
+      expect(offers).to.have.property('priceSpecification').and.be.an('array').and.have.length.gte(1);
+      const priceSpecs = (offers['priceSpecification'] ?? []) as Record<string, unknown>[];
+      priceSpecs.forEach((spec) => {
+        expect(spec).to.have.property('@type', 'UnitPriceSpecification');
+        expect(spec).to.have.property('price').and.be.a('number');
+        expect(spec).to.have.property('priceCurrency').and.be.a('string').and.not.be.empty;
+        expect(spec).to.have.property('priceType').and.be.a('string').and.not.be.empty;
+        expect(spec).to.have.nested.property('referenceQuantity.@type', 'QuantitativeValue');
+      });
+
+      // Physical dimensions
+      ['depth', 'width', 'height', 'weight'].forEach((dimension) => {
+        expect(productData).to.have.nested.property(`${dimension}.@type`, 'QuantitativeValue');
+        expect(productData).to.have.nested.property(`${dimension}.value`).and.be.a('number');
+      });
+    });
     return this;
   }
 

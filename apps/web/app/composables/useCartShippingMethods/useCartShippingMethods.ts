@@ -1,13 +1,5 @@
 import type { ShippingProvider, ShippingMethod, ApiError } from '@plentymarkets/shop-api';
 import { shippingProviderGetters } from '@plentymarkets/shop-api';
-import type {
-  UseCartShippingMethodsState,
-  UseCartShippingMethodsReturn,
-  GetShippingMethods,
-  SaveShippingMethod,
-  SetSelectedMethod,
-} from '~/composables/useCartShippingMethods/types';
-
 /**
  * @description Composable for managing shipping methods.
  * @example
@@ -26,6 +18,16 @@ export const useCartShippingMethods: UseCartShippingMethodsReturn = () => {
     state.value.selectedMethod = state.value.data.list?.find(
       (method) => method.parcelServicePresetId === Number(shippingMethodId),
     );
+  };
+
+  /**
+   * @description Function to set shipping methods list and selected method id.
+   * @param list { ShippingMethod[] }
+   * @param selectedId { number }
+   */
+  const setShippingMethods = (list: ShippingMethod[], selectedId: number) => {
+    state.value.data.list = list;
+    setSelectedMethod(selectedId);
   };
 
   /**
@@ -79,6 +81,7 @@ export const useCartShippingMethods: UseCartShippingMethodsReturn = () => {
   };
 
   return {
+    setShippingMethods,
     saveShippingMethod,
     getShippingMethods,
     ...toRefs(state.value),

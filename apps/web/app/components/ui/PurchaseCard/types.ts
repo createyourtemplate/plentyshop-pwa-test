@@ -1,7 +1,17 @@
 import type { Product } from '@plentymarkets/shop-api';
 
+export interface PriceCardTextBlockItem {
+  type: 'textBlock';
+  uuid: string;
+  content: string;
+  visible: boolean;
+}
+
+export type PriceCardOrderItem = PriceCardFieldKey | PriceCardTextBlockItem;
+
 export type PriceCardFieldKey =
   | 'itemName'
+  | 'variationNumber'
   | 'price'
   | 'tags'
   | 'availability'
@@ -15,6 +25,7 @@ export type PriceCardFieldKey =
   | 'addToWishlist'
   | 'quantityAndAddToCart'
   | 'itemText'
+  | 'guaranteeLabel'
   | 'technicalData';
 
 export type WishlistSize = 'small' | 'large';
@@ -31,7 +42,7 @@ export type PriceCardPadding = {
 
 export interface PriceCardContent {
   fields: PriceCardFieldsVisibility;
-  fieldsOrder: PriceCardFieldKey[];
+  fieldsOrder: PriceCardOrderItem[];
   fieldsDisabled: PriceCardFieldKey[];
   wishlistSize: WishlistSize;
 

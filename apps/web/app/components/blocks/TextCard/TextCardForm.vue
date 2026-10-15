@@ -1,220 +1,67 @@
 <template>
-  <UiAccordionItem
+  <EditorFormPanel
     v-model="textSettings"
+    :title="getEditorTranslation('text-group-label')"
     data-testid="open-text-settings"
-    summary-active-class="bg-neutral-100 border-t-0"
-    summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
   >
-    <template #summary>
-      <h2>{{ getEditorTranslation('text-group-label') }}</h2>
-    </template>
-
     <EditorRichTextEditorForm
       v-model="contentModel"
       :text-align="textCardBlock.text.textAlignment"
       :placeholder="getEditorTranslation('placeholder')"
-    >
+    />
+  </EditorFormPanel>
+
+  <div data-testid="button-settings">
+    <EditorFormPanel v-model="buttonSettings" :title="getEditorTranslation('button-group-label')">
       <div class="py-2">
         <div class="flex justify-between mb-2">
-          <UiFormLabel>{{ getEditorTranslation('pretitle-label') }}</UiFormLabel>
+          <UiFormLabel for="textcard-button-label">{{ getEditorTranslation('button-text-label') }}</UiFormLabel>
         </div>
-        <label>
-          <SfInput v-model="textCardBlock.text.pretitle" type="text" data-testid="input-pretitle">
-            <template #suffix>
-              <label for="text-pretitle" class="rounded-lg cursor-pointer">
-                <input id="text-pretitle" v-model="textCardBlock.text.pretitle" type="text" class="invisible w-8" />
-              </label>
-            </template>
-          </SfInput>
-        </label>
-      </div>
-
-      <div class="py-2">
-        <div class="flex justify-between mb-2">
-          <UiFormLabel>{{ getEditorTranslation('main-title-label') }}</UiFormLabel>
-        </div>
-        <label>
-          <SfInput v-model="textCardBlock.text.title" type="text" data-testid="input-main-title">
-            <template #suffix>
-              <label for="text-title" class="rounded-lg cursor-pointer">
-                <input id="text-title" v-model="textCardBlock.text.title" type="text" class="invisible w-8" />
-              </label>
-            </template>
-          </SfInput>
-        </label>
-      </div>
-
-      <div class="py-2">
-        <div class="flex justify-between mb-2">
-          <UiFormLabel>{{ getEditorTranslation('subtitle-label') }}</UiFormLabel>
-        </div>
-        <label>
-          <SfInput v-model="textCardBlock.text.subtitle" type="text" data-testid="input-subtitle">
-            <template #suffix>
-              <label for="text-subtitle" class="rounded-lg cursor-pointer">
-                <input id="text-subtitle" v-model="textCardBlock.text.subtitle" type="text" class="invisible w-8" />
-              </label>
-            </template>
-          </SfInput>
-        </label>
-      </div>
-
-      <div class="py-2">
-        <UiFormLabel>{{ getEditorTranslation('html-description-label') }}</UiFormLabel>
-        <SfTextarea
-          id="text-html-description"
-          v-model="textCardBlock.text.htmlDescription"
-          data-testid="textarea-description"
-          name="text-html-description"
-          rows="3"
-          class="min-h-[232px] mt-1 block w-full border border-gray-300 rounded-md shadow-sm sm:text-sm"
+        <SfInput
+          id="textcard-button-label"
+          v-model="textCardBlock.button.label"
+          type="text"
+          data-testid="input-button-label"
         />
       </div>
 
       <div class="py-2">
         <div class="flex justify-between mb-2">
-          <UiFormLabel>{{ getEditorTranslation('text-color-label') }}</UiFormLabel>
+          <UiFormLabel for="textcard-button-link">{{ getEditorTranslation('button-link-label') }}</UiFormLabel>
         </div>
-        <EditorColorPicker v-model="textCardBlock.text.color" class="w-full">
-          <template #trigger="{ color, toggle }">
-            <label>
-              <SfInput v-model="textCardBlock.text.color" type="text" data-testid="input-text-color">
-                <template #suffix>
-                  <button
-                    type="button"
-                    class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
-                    :style="{ backgroundColor: color }"
-                    @mousedown.stop
-                    @click.stop="toggle"
-                  />
-                </template>
-              </SfInput>
-            </label>
-          </template>
-        </EditorColorPicker>
+        <SfInput
+          id="textcard-button-link"
+          v-model="textCardBlock.button.link"
+          type="text"
+          data-testid="input-button-link"
+        />
       </div>
 
-      <fieldset class="py-2">
-        <legend class="text-sm font-medium text-black">{{ getEditorTranslation('text-align-label') }}</legend>
-
-        <div class="w-full inline-flex rounded-lg border border-gray-300 bg-white text-gray-700 overflow-hidden">
-          <div
-            for="text-align-left"
-            data-testid="text-align-left"
-            class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm border-r"
-            :class="{ 'bg-gray-100 text-gray-900 font-semibold': textCardBlock.text.textAlignment === 'left' }"
-            @click="textCardBlock.text.textAlignment = 'left'"
-          >
-            <SfIconCheck :class="{ invisible: textCardBlock.text.textAlignment !== 'left' }" class="mr-1 w-[1.1rem]" />
-            {{ getEditorTranslation('text-align-option-left-label') }}
-          </div>
-
-          <div
-            for="text-align-center"
-            data-testid="text-align-center"
-            class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm border-r"
-            :class="{ 'bg-gray-100 text-gray-900 font-semibold': textCardBlock.text.textAlignment === 'center' }"
-            @click="textCardBlock.text.textAlignment = 'center'"
-          >
-            <SfIconCheck
-              :class="{ invisible: textCardBlock.text.textAlignment !== 'center' }"
-              class="mr-1 w-[1.1rem]"
-            />
-            {{ getEditorTranslation('text-align-option-center-label') }}
-          </div>
-
-          <div
-            for="text-align-right"
-            data-testid="text-align-right"
-            class="flex items-center justify-center w-1/3 px-4 py-2 cursor-pointer text-sm"
-            :class="{ 'bg-gray-100 text-gray-900 font-semibold': textCardBlock.text.textAlignment === 'right' }"
-            @click="textCardBlock.text.textAlignment = 'right'"
-          >
-            <SfIconCheck :class="{ invisible: textCardBlock.text.textAlignment !== 'right' }" class="mr-1 w-[1.1rem]" />
-            {{ getEditorTranslation('text-align-option-right-label') }}
-          </div>
-        </div>
-      </fieldset>
-    </EditorRichTextEditorForm>
-  </UiAccordionItem>
-
-  <UiAccordionItem
-    v-model="buttonSettings"
-    data-testid="button-settings"
-    summary-active-class="bg-neutral-100 border-t-0"
-    summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
-  >
-    <template #summary>
-      <h2>{{ getEditorTranslation('button-group-label') }}</h2>
-    </template>
-
-    <div class="py-2">
-      <div class="flex justify-between mb-2">
-        <UiFormLabel>{{ getEditorTranslation('button-text-label') }}</UiFormLabel>
+      <div class="py-2">
+        <EditorOptionsTabs
+          v-model="buttonVariantModel"
+          :legend="getEditorTranslation('outline-label')"
+          test-id-prefix="button-variant"
+          :options="buttonVariantOptions"
+        />
       </div>
-      <label>
-        <SfInput v-model="textCardBlock.button.label" type="text" data-testid="input-button-label">
-          <template #suffix>
-            <label for="text-button-label" class="rounded-lg cursor-pointer">
-              <input id="text-button-label" v-model="textCardBlock.button.label" type="text" class="invisible w-8" />
-            </label>
-          </template>
-        </SfInput>
-      </label>
-    </div>
 
-    <div class="py-2">
-      <div class="flex justify-between mb-2">
-        <UiFormLabel>{{ getEditorTranslation('button-link-label') }}</UiFormLabel>
+      <div class="py-2">
+        <EditorOptionsTabs
+          v-model="buttonAlignModel"
+          :legend="getEditorTranslation('button-align-label')"
+          test-id-prefix="button-align"
+          :options="buttonAlignOptions"
+        />
       </div>
-      <label>
-        <SfInput v-model="textCardBlock.button.link" type="text" data-testid="input-button-link">
-          <template #suffix>
-            <label for="text-button-link" class="rounded-lg cursor-pointer">
-              <input id="text-button-link" v-model="textCardBlock.button.link" type="text" class="invisible w-8" />
-            </label>
-          </template>
-        </SfInput>
-      </label>
-    </div>
+    </EditorFormPanel>
+  </div>
 
-    <fieldset class="py-2">
-      <UiFormLabel>{{ getEditorTranslation('outline-label') }}</UiFormLabel>
-
-      <div class="mt-2 w-full inline-flex rounded-lg border border-gray-300 bg-white text-gray-700 overflow-hidden">
-        <div
-          class="flex items-center justify-center w-1/2 px-4 py-2 cursor-pointer text-sm"
-          data-testid="button-outline-primary"
-          :class="{ 'bg-gray-100 text-gray-900 font-semibold': textCardBlock.button.variant === 'primary' }"
-          @click="textCardBlock.button.variant = 'primary'"
-        >
-          <SfIconCheck :class="{ invisible: textCardBlock.button.variant !== 'primary' }" class="mr-1 w-[1.1rem]" />
-          {{ getEditorTranslation('button-variant-primary-label') }}
-        </div>
-
-        <div
-          class="flex items-center justify-center w-1/2 px-4 py-2 cursor-pointer text-sm"
-          data-testid="button-outline-secondary"
-          :class="{ 'bg-gray-100 text-gray-900 font-semibold': textCardBlock.button.variant === 'secondary' }"
-          @click="textCardBlock.button.variant = 'secondary'"
-        >
-          <SfIconCheck :class="{ invisible: textCardBlock.button.variant !== 'secondary' }" class="mr-1 w-[1.1rem]" />
-          {{ getEditorTranslation('button-variant-secondary-label') }}
-        </div>
-      </div>
-    </fieldset>
-  </UiAccordionItem>
-
-  <UiAccordionItem
+  <EditorFormPanel
     v-model="layoutSettings"
+    :title="getEditorTranslation('layout-group-label')"
     data-testid="layout-settings"
-    summary-active-class="bg-neutral-100 border-t-0"
-    summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
   >
-    <template #summary>
-      <h2>{{ getEditorTranslation('layout-group-label') }}</h2>
-    </template>
-
     <div class="py-2 flex items-center justify-between gap-3">
       <UiFormLabel for="keep-transparent" class="m-0">
         {{ getEditorTranslation('keep-transparent-label') }}
@@ -234,19 +81,18 @@
       </div>
       <EditorColorPicker v-model="backgroundColor" class="w-full">
         <template #trigger="{ color, toggle }">
-          <label>
-            <SfInput v-model="backgroundColor" type="text" data-testid="input-background-color">
-              <template #suffix>
-                <button
-                  type="button"
-                  class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
-                  :style="{ backgroundColor: color }"
-                  @mousedown.stop
-                  @click.stop="toggle"
-                />
-              </template>
-            </SfInput>
-          </label>
+          <SfInput id="textcard-bgcolor" v-model="backgroundColor" type="text" data-testid="input-background-color">
+            <template #suffix>
+              <button
+                type="button"
+                class="border border-[#a0a0a0] rounded-lg cursor-pointer w-10 h-8"
+                :style="{ backgroundColor: color }"
+                aria-label="Color picker button"
+                @mousedown.stop
+                @click.stop="toggle"
+              />
+            </template>
+          </SfInput>
         </template>
       </EditorColorPicker>
     </div>
@@ -259,37 +105,45 @@
         <div class="flex items-center justify-center gap-1 px-2 py-1 bg-white border-r">
           <span><SfIconArrowUpward /></span>
           <input
+            id="textcard-padding-top"
             v-model.number="textCardBlock.layout.paddingTop"
             type="number"
             class="w-12 text-center outline-none"
             data-testid="padding-top"
+            aria-label="Top padding"
           />
         </div>
         <div class="flex items-center justify-center gap-1 px-2 py-1 bg-white border-r">
           <span><SfIconArrowDownward /></span>
           <input
+            id="textcard-padding-bottom"
             v-model.number="textCardBlock.layout.paddingBottom"
             type="number"
             class="w-12 text-center outline-none"
             data-testid="padding-bottom"
+            aria-label="Bottom padding"
           />
         </div>
         <div class="flex items-center justify-center gap-1 px-2 py-1 bg-white border-r">
           <span><SfIconArrowBack /></span>
           <input
+            id="textcard-padding-left"
             v-model.number="textCardBlock.layout.paddingLeft"
             type="number"
             class="w-12 text-center outline-none"
             data-testid="padding-left"
+            aria-label="Left padding"
           />
         </div>
         <div class="flex items-center justify-center gap-1 px-2 py-1 bg-white">
           <span><SfIconArrowForward /></span>
           <input
+            id="textcard-padding-right"
             v-model.number="textCardBlock.layout.paddingRight"
             type="number"
             class="w-12 text-center outline-none"
             data-testid="padding-right"
+            aria-label="Right padding"
           />
         </div>
       </div>
@@ -299,15 +153,13 @@
         </span>
       </div>
     </div>
-  </UiAccordionItem>
+  </EditorFormPanel>
 </template>
 
 <script setup lang="ts">
 import {
   SfInput,
-  SfTextarea,
   SfSwitch,
-  SfIconCheck,
   SfIconArrowUpward,
   SfIconArrowDownward,
   SfIconArrowBack,
@@ -316,12 +168,7 @@ import {
 import type { TextCardFormProps, TextCardContent } from './types';
 const props = defineProps<TextCardFormProps>();
 
-const route = useRoute();
-const { data } = useBlockTemplates(
-  route?.meta?.identifier as string,
-  route.meta.type as string,
-  useNuxtApp().$i18n.locale.value,
-);
+const { allBlocks: data } = useBlocks();
 
 const { blockUuid } = useSiteConfiguration();
 const { findOrDeleteBlockByUuid } = useBlockManager();
@@ -339,6 +186,7 @@ const textCardBlock = computed<TextCardContent>(() => {
   content.text.textAlignment = content.text.textAlignment ?? 'left';
 
   if (!content.button) content.button = {};
+  if (!content.button.alignment) content.button.alignment = 'center';
 
   if (!content.layout) {
     content.layout = {
@@ -361,11 +209,16 @@ const contentModel = computed<string>({
   },
 });
 
+const { buttonVariantModel, buttonVariantOptions, buttonAlignModel, buttonAlignOptions } = useEditorOptionsTabs(
+  () => textCardBlock.value,
+  getEditorTranslation,
+);
+
 const { isFullWidth } = useFullWidthToggleForContent(textCardBlock);
 
-const textSettings = ref(false);
-const buttonSettings = ref(false);
-const layoutSettings = ref(false);
+const textSettings = ref(true);
+const buttonSettings = ref(true);
+const layoutSettings = ref(true);
 
 const backgroundColorInit = textCardBlock.value.layout.backgroundColor;
 const isTransparent = ref(!backgroundColorInit || backgroundColorInit === 'transparent');
@@ -379,15 +232,6 @@ watch([isTransparent, backgroundColor], () => {
 {
   "en": {
     "text-group-label": "Text",
-    "pretitle-label": "Pre-title",
-    "main-title-label": "Main title",
-    "subtitle-label": "Subtitle",
-    "html-description-label": "HTML Description",
-    "text-color-label": "Text Color",
-    "text-align-label": "Text alignment",
-    "text-align-option-left-label": "Left",
-    "text-align-option-center-label": "Center",
-    "text-align-option-right-label": "Right",
     "placeholder": "Enter text here...",
 
     "button-group-label": "Button",
@@ -396,6 +240,10 @@ watch([isTransparent, backgroundColor], () => {
     "outline-label": "Outline",
     "button-variant-primary-label": "Primary",
     "button-variant-secondary-label": "Secondary",
+    "button-align-label": "Button Alignment (x)",
+    "button-align-option-left-label": "Left",
+    "button-align-option-center-label": "Center",
+    "button-align-option-right-label": "Right",
 
     "layout-group-label": "Layout",
     "background-color-label": "Background Color",
@@ -405,15 +253,6 @@ watch([isTransparent, backgroundColor], () => {
   },
   "de": {
     "text-group-label": "Text",
-    "pretitle-label": "Pre-title",
-    "main-title-label": "Main title",
-    "subtitle-label": "Subtitle",
-    "html-description-label": "HTML Description",
-    "text-color-label": "Text Color",
-    "text-align-label": "Text alignment",
-    "text-align-option-left-label": "Left",
-    "text-align-option-center-label": "Center",
-    "text-align-option-right-label": "Right",
     "placeholder": "Hier Text eingeben...",
 
     "button-group-label": "Button",
@@ -422,6 +261,10 @@ watch([isTransparent, backgroundColor], () => {
     "outline-label": "Outline",
     "button-variant-primary-label": "Primary",
     "button-variant-secondary-label": "Secondary",
+    "button-align-label": "Button Alignment (x)",
+    "button-align-option-left-label": "Left",
+    "button-align-option-center-label": "Center",
+    "button-align-option-right-label": "Right",
 
     "layout-group-label": "Layout",
     "background-color-label": "Background Color",

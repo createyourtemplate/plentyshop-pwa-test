@@ -1,5 +1,5 @@
 <template>
-  <div v-if="runtimeConfig.enableRichTextEditorV2" data-testid="text-form-v2">
+  <div data-testid="text-form-v2">
     <EditorOptionsTabs
       :model-value="editorMode"
       test-id-prefix="mode"
@@ -8,7 +8,7 @@
       @update:model-value="editorMode = $event"
     />
 
-    <div v-if="editorMode === 'wysiwyg'" class="py-2">
+    <div v-if="editorMode === 'wysiwyg'" class="py-2" data-testid="rte-content">
       <EditorRichTextEditor
         ref="contentRichTextEditor"
         v-model:expanded="expandedToolbars"
@@ -16,7 +16,6 @@
         :min-height="232"
         :expandable="true"
         :text-align="textAlign"
-        data-testid="rte-content"
         @update:model-value="$emit('update:modelValue', $event)"
         @request-html-modal="handleRequestHtmlModal"
       />
@@ -58,6 +57,8 @@
           <li v-for="(e, idx) in htmlErrors.slice(0, 3)" :key="idx">{{ e }}</li>
         </ul>
       </div>
+
+      <EditorCustomCodeHints :content="htmlDraft" />
     </div>
 
     <EditorHtmlEditor
@@ -68,10 +69,6 @@
       @switch-to-wysiwyg="handleSwitchToWysiwygFromModal"
       @close="toggleModal"
     />
-  </div>
-
-  <div v-else data-testid="text-form">
-    <slot />
   </div>
 </template>
 
@@ -87,7 +84,6 @@ const emit = defineEmits<{
   'update:modelValue': [value: string];
 }>();
 
-const runtimeConfig = useRuntimeConfig().public;
 const modalOpen = ref(false);
 const expandedToolbars = ref(true);
 const contentRichTextEditor = ref<{ openModal: () => void } | null>(null);
@@ -101,12 +97,10 @@ const contentModel = computed<string>({
   set: (val) => emit('update:modelValue', val),
 });
 
-const editorModeOptions = computed(
-  (): Array<{ value: EditorMode; label: string; testId: string }> => [
-    { value: 'wysiwyg', label: getEditorTranslation('wysiwyg-label'), testId: 'mode-wysiwyg' },
-    { value: 'html', label: getEditorTranslation('html-label'), testId: 'mode-html' },
-  ],
-);
+const editorModeOptions = computed((): Array<{ value: EditorMode; label: string; testId: string }> => [
+  { value: 'wysiwyg', label: getEditorTranslation('wysiwyg-label'), testId: 'mode-wysiwyg' },
+  { value: 'html', label: getEditorTranslation('html-label'), testId: 'mode-html' },
+]);
 
 const { editorMode, htmlDraft, htmlErrors, ariaDescribedBy, switchToHtmlMode, switchToWysiwygMode } = useHtmlEditorMode(
   contentModel,

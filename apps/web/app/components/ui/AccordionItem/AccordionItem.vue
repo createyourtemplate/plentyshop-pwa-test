@@ -1,12 +1,21 @@
 <template>
   <SfAccordionItem v-model="internalModelValue" :summary-class="finalSummaryClass" data-testid="accordion-item">
     <template #summary>
+      <SfIconChevronLeft
+        v-if="props.iconPosition === 'start'"
+        class="shrink-0 text-neutral-500"
+        :class="internalModelValue ? 'rotate-90' : '-rotate-90'"
+      />
       <slot name="summary">
         <p>{{ summary }}</p>
       </slot>
-      <SfIconChevronLeft :class="['text-neutral-500', internalModelValue ? 'rotate-90' : '-rotate-90']" />
+      <SfIconChevronLeft
+        v-if="props.iconPosition !== 'start'"
+        class="shrink-0 text-neutral-500"
+        :class="internalModelValue ? 'rotate-90' : '-rotate-90'"
+      />
     </template>
-    <div :class="contentPaddingClass"><slot /></div>
+    <div :class="props.contentPaddingClass"><slot /></div>
   </SfAccordionItem>
 </template>
 
@@ -17,6 +26,7 @@ import type { AccordionItemProps } from '~/components/ui/AccordionItem/types';
 
 const props = withDefaults(defineProps<AccordionItemProps>(), {
   contentPaddingClass: 'py-2 px-4',
+  iconPosition: 'end',
 });
 const { summary = '', summaryClass = '', summaryActiveClass = '' } = props;
 const emit = defineEmits(['update:modelValue']);

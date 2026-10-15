@@ -3,7 +3,12 @@
     <div class="flex justify-between mb-2">
       <UiFormLabel class="mb-1">
         {{ getEditorTranslation('label') }}
-        <SfTooltip :label="getEditorTranslation('tooltip')" :placement="'top'" :show-arrow="true" class="ml-2 z-10">
+        <SfTooltip
+          :label="getEditorTranslation('tooltip')"
+          :placement="'top'"
+          :show-arrow="true"
+          class="ml-2 z-dropdown"
+        >
           <SfIconInfo :size="'sm'" />
         </SfTooltip>
       </UiFormLabel>
@@ -17,10 +22,10 @@
 <script setup lang="ts">
 import { SfIconInfo, SfSwitch, SfTooltip } from '@storefront-ui/vue';
 
-const { updateSetting, getSetting } = useSiteSettings('useWebp');
+const { updateSetting, getBooleanSetting } = useSiteSettings('useWebp');
 
 const useWebp = computed({
-  get: () => Boolean(getSetting()),
+  get: () => getBooleanSetting(),
   set: (value) => updateSetting(value.toString()),
 });
 </script>

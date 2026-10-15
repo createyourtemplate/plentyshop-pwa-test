@@ -1,32 +1,18 @@
 <template>
-  <UiAccordionItem
-    v-model="textOpen"
-    summary-active-class="bg-neutral-100"
-    summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
-    data-testid="item-data-text"
-  >
-    <template #summary>
-      <h2>{{ getEditorTranslation('text-settings-label') }}</h2>
-    </template>
-
+  <EditorFormPanel v-model="textOpen" :title="getEditorTranslation('text-settings-label')" data-testid="item-data-text">
     <div class="py-2">
       <div class="flex justify-between mb-2">
         <UiFormLabel>{{ getEditorTranslation('main-title-label') }}</UiFormLabel>
       </div>
       <SfInput v-model="itemTableBlock.text.title" type="text" data-testid="item-data-main-title" />
     </div>
-  </UiAccordionItem>
+  </EditorFormPanel>
 
-  <UiAccordionItem
+  <EditorFormPanel
     v-model="fieldsOpen"
-    summary-active-class="bg-neutral-100"
-    summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
+    :title="getEditorTranslation('item-table-section-label')"
     data-testid="item-table-fields"
   >
-    <template #summary>
-      <h2>{{ getEditorTranslation('item-table-section-label') }}</h2>
-    </template>
-
     <div class="py-4">
       <UiFormLabel class="block mb-4">
         {{ getEditorTranslation('elements-display-order') }}
@@ -61,18 +47,13 @@
         </template>
       </draggable>
     </div>
-  </UiAccordionItem>
+  </EditorFormPanel>
 
-  <UiAccordionItem
+  <EditorFormPanel
     v-model="layoutOpen"
-    summary-active-class="bg-neutral-100"
-    summary-class="w-full hover:bg-neutral-100 px-4 py-5 flex justify-between items-center select-none border-b"
+    :title="getEditorTranslation('layout-settings-label')"
     data-testid="item-table-layout"
   >
-    <template #summary>
-      <h2>{{ getEditorTranslation('layout-settings-label') }}</h2>
-    </template>
-
     <div class="py-2">
       <div class="flex justify-between my-3">
         <span>{{ getEditorTranslation('display-as-collapsable') }}</span>
@@ -135,7 +116,7 @@
         </span>
       </div>
     </div>
-  </UiAccordionItem>
+  </EditorFormPanel>
 </template>
 
 <script setup lang="ts">
@@ -151,13 +132,7 @@ import {
 import dragIcon from '~/assets/icons/paths/drag.svg';
 import type { ItemDataContent, ItemDataFieldKey, ItemDataFieldLabels } from './types';
 
-const route = useRoute();
-
-const { data } = useBlockTemplates(
-  route?.meta?.identifier as string,
-  route.meta.type as string,
-  useNuxtApp().$i18n.locale.value,
-);
+const { allBlocks: data } = useBlocks();
 
 const { blockUuid } = useSiteConfiguration();
 const { findOrDeleteBlockByUuid } = useBlockManager();
@@ -246,7 +221,7 @@ const fieldLabels: ItemDataFieldLabels = {
 
 const textOpen = ref(true);
 const fieldsOpen = ref(true);
-const layoutOpen = ref(false);
+const layoutOpen = ref(true);
 
 const isCollapsible = ref(itemTableBlock.layout.displayAsCollapsable ?? false);
 const isInitiallyCollapsed = ref(itemTableBlock.layout.initiallyCollapsed ?? false);

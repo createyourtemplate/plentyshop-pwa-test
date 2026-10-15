@@ -30,27 +30,23 @@ export class BannerSliderObject extends PageObject {
   }
 
   openSlideActions() {
-    cy.get(`[data-testid="actions-menu-slide-0"]`).click();
+    cy.get(`[data-testid="actions-menu-item-0"]`).click();
   }
 
   openSlideOneSettings() {
-    cy.get('[data-testid="actions-edit-slide-0"]').click();
+    cy.get('[data-testid="actions-edit-item-0"]').click();
   }
 
   openSlideTwoSettings() {
-    cy.get('[data-testid="actions-edit-slide-1"]').click();
+    cy.get('[data-testid="actions-edit-item-1"]').click();
   }
 
   goBackToElementList() {
     cy.get('[data-testid="view-title"] button').first().click();
   }
 
-  addSlide() {
-    cy.get('[data-testid="actions-add-slide-button"]').click();
-  }
-
   deleteSlide() {
-    cy.get('[data-testid="actions-delete-slide-0"]').click();
+    cy.get('[data-testid="actions-delete-item-0"]').click();
   }
 
   checkIfSlideIsDeleted() {
@@ -63,7 +59,7 @@ export class BannerSliderObject extends PageObject {
   }
 
   quickAddSlide() {
-    cy.get('[data-testid="actions-add-slide-button"]').click();
+    cy.get('[data-testid="actions-add-block-button"]').click();
   }
 
   checkSlideSettings(index: number) {
@@ -87,7 +83,7 @@ export class BannerSliderObject extends PageObject {
   }
 
   openImageGroup() {
-    cy.get('[data-testid="slider-image-group"]').should('exist').click();
+    cy.get('[data-testid="slider-image-group-title"]').should('exist');
   }
 
   openImageSelector(imageType: string) {
@@ -107,7 +103,7 @@ export class BannerSliderObject extends PageObject {
     cy.get('[data-testid^="banner-image-"]').first().should('be.visible');
     cy.get('[data-testid^="banner-image-"]')
       .first()
-      .should('have.attr', 'src', 'https://cdn02.plentymarkets.com/mevofvd5omld/frontend/123-demo-picture.jpeg');
+      .should('have.attr', 'src', 'https://cdn02.plentyone.com/mevofvd5omld/frontend/123-demo-picture.jpeg');
   }
 
   checkBannerAltText() {
@@ -120,41 +116,25 @@ export class BannerSliderObject extends PageObject {
   }
 
   closeImageGroup() {
-    cy.get('[data-testid="slider-image-group"]').scrollIntoView().should('be.visible').click();
+    cy.get('[data-testid="slider-image-group-title"]').scrollIntoView().should('be.visible');
   }
 
   openTextGroup() {
-    cy.get('[data-testid="banner-text-group"]').scrollIntoView().should('be.visible').click();
+    cy.get('[data-testid="slider-text-group-title"]').scrollIntoView().should('be.visible');
   }
 
   changeTexts() {
-    cy.get('[data-testid="banner-input-pre-title"]')
+    cy.get('[data-testid="rte-editor"]')
       .scrollIntoView()
       .should('be.visible')
+      .find('[contenteditable="true"]')
+      .click()
       .clear()
       .type('New Pre-Title', { delay: 0 });
-    cy.get('[data-testid="banner-input-title"]')
-      .scrollIntoView()
-      .should('be.visible')
-      .clear()
-      .type('New Title', { delay: 0 });
-    cy.get('[data-testid="banner-input-sub-title"]')
-      .scrollIntoView()
-      .should('be.visible')
-      .clear()
-      .type('New Subtitle', { delay: 0 });
-    cy.get('[data-testid="banner-text-content"]')
-      .scrollIntoView()
-      .should('be.visible')
-      .clear()
-      .type('New Text Content', { delay: 0 });
   }
 
   checkNewTexts() {
-    cy.get('[data-testid^="text-pretitle"]').first().should('have.text', 'New Pre-Title');
-    cy.get('[data-testid^="text-title"]').first().should('have.text', 'New Title');
-    cy.get('[data-testid^="text-subtitle"]').first().should('have.text', 'New Subtitle');
-    cy.get('[data-testid^="text-html"]').first().should('have.text', 'New Text Content');
+    cy.get('[data-testid^="text-html"]').first().should('have.text', 'New Pre-Title');
   }
 
   scrollFormDown() {
@@ -162,56 +142,68 @@ export class BannerSliderObject extends PageObject {
   }
 
   alignBoxCenterX() {
-    cy.get('[data-testid="slider-textbox-align-center"]').should('exist').click();
+    cy.get('[data-testid="slider-textbox-align-x-center"]').should('exist').click();
     cy.get('[data-testid^="banner-overlay-"]').first().should('have.css', 'justify-content', 'center');
   }
 
   alignBoxBottomX() {
-    cy.get('[data-testid="slider-textbox-align-bottom"]').should('exist').click();
+    cy.get('[data-testid="slider-textbox-align-x-bottom"]').should('exist').click();
     cy.get('[data-testid^="banner-overlay-"]').first().should('have.css', 'justify-content', 'flex-end');
   }
 
   alignBoxTopX() {
-    cy.get('[data-testid="slider-textbox-align-top"]').should('exist').click();
+    cy.get('[data-testid="slider-textbox-align-x-top"]').should('exist').click();
     cy.get('[data-testid^="banner-overlay-"]').first().should('have.css', 'justify-content', 'flex-start');
   }
 
   alignBoxCenterY() {
-    cy.get('[data-testid="slider-textbox-y-align-center"]').should('exist').click();
+    cy.get('[data-testid="slider-textbox-align-y-center"]').should('exist').click();
     cy.get('[data-testid^="banner-overlay-"]').first().should('have.css', 'align-items', 'center');
   }
 
   alignBoxRightY() {
-    cy.get('[data-testid="slider-textbox-y-align-right"]').should('exist').click();
+    cy.get('[data-testid="slider-textbox-align-y-right"]').should('exist').click();
     cy.get('[data-testid^="banner-overlay-"]').first().should('have.css', 'align-items', 'flex-end');
   }
 
   alignBoxLeftY() {
-    cy.get('[data-testid="slider-textbox-y-align-left"]').should('exist').click();
+    cy.get('[data-testid="slider-textbox-align-y-left"]').should('exist').click();
     cy.get('[data-testid^="banner-overlay-"]').first().should('have.css', 'align-items', 'flex-start');
   }
 
   textAlignCenter() {
-    cy.get('[data-testid="slider-text-align-center"]').should('exist').click();
-    cy.get('[data-testid^="banner-overlay-"]').first().should('have.css', 'text-align', 'center');
+    cy.get('[data-testid="rte-editor"]').find('[contenteditable="true"]').click().type('{selectall}');
+    cy.get('[data-testid="rte-align-center"]').click();
+    cy.get('[data-testid="rte-editor"]')
+      .find('[contenteditable="true"] p')
+      .first()
+      .should('have.css', 'text-align', 'center');
   }
 
   textAlignRight() {
-    cy.get('[data-testid="slider-text-align-right"]').should('exist').click();
-    cy.get('[data-testid^="banner-overlay-"]').first().should('have.css', 'text-align', 'right');
+    cy.get('[data-testid="rte-editor"]').find('[contenteditable="true"]').click().type('{selectall}');
+    cy.get('[data-testid="rte-align-right"]').click();
+    cy.get('[data-testid="rte-editor"]')
+      .find('[contenteditable="true"] p')
+      .first()
+      .should('have.css', 'text-align', 'right');
   }
 
   textAlignLeft() {
-    cy.get('[data-testid="slider-text-align-left"]').should('exist').click();
-    cy.get('[data-testid^="banner-overlay-"]').first().should('have.css', 'text-align', 'left');
+    cy.get('[data-testid="rte-editor"]').find('[contenteditable="true"]').click().type('{selectall}');
+    cy.get('[data-testid="rte-align-left"]').click();
+    cy.get('[data-testid="rte-editor"]')
+      .find('[contenteditable="true"] p')
+      .first()
+      .should('have.css', 'text-align', 'left');
   }
 
   closeTextGroup() {
-    cy.get('[data-testid="banner-text-group"]').scrollIntoView().should('be.visible').click();
+    cy.get('[data-testid="slider-text-group-title"]').scrollIntoView().should('be.visible');
   }
 
   openButtonGroup() {
-    cy.get('[data-testid="slider-button-group-title"]').scrollIntoView().should('be.visible').click();
+    cy.get('[data-testid="slider-button-group-title"]').scrollIntoView().should('be.visible');
   }
 
   changeButtonLabelAndLink() {
@@ -235,12 +227,12 @@ export class BannerSliderObject extends PageObject {
   }
 
   checkButtonSecondary() {
-    cy.get('[data-testid="slider-button-secondary"]').should('exist').click();
+    cy.get('[data-testid="button-variant-secondary"]').should('exist').click();
     cy.get('[data-testid^="banner-button-"]').first().should('have.class', 'active:text-primary-900');
   }
 
   checkButtonPrimary() {
-    cy.get('[data-testid="slider-button-primary"]').should('exist').click();
+    cy.get('[data-testid="button-variant-primary"]').should('exist').click();
     cy.get('[data-testid^="banner-button-"]').first().should('have.class', 'active:bg-primary-700');
   }
 }

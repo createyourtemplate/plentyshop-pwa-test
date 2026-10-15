@@ -55,7 +55,7 @@ export class CartPageObject extends PageObject {
   }
 
   get cartIcon() {
-    return cy.getByTestId('navbar-top').find('[data-testid="shopping-cart"]');
+    return cy.getByTestId('navbar-top-desktop').find('[data-testid="shopping-cart"]');
   }
 
   get cartButton() {
@@ -122,6 +122,11 @@ export class CartPageObject extends PageObject {
 
     cy.wait('@getSession');
 
+    return this;
+  }
+
+  openCheckout() {
+    cy.getByTestId('checkout-button').click();
     return this;
   }
 

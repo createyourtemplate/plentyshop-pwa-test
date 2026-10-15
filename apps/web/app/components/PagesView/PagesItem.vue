@@ -26,7 +26,7 @@
       </span>
       <router-link
         v-if="!isTablet && !hasEmptyDetails"
-        :to="pagePath"
+        :to="localePagePath"
         class="flex-1 overflow-hidden whitespace-nowrap overflow-ellipsis"
       >
         <span v-if="props.icon">
@@ -51,7 +51,7 @@
           label="You have unsaved changes on this page"
           :placement="'top'"
           :show-arrow="true"
-          class="ml-2 z-10"
+          class="ml-2 z-dropdown"
         >
           <SfIconError viewBox="0 0 24 24" class="w-5 h-5" />
         </SfTooltip>
@@ -140,6 +140,8 @@ const pagePath = computed(() => {
 const currentGeneralPageId = ref<number | null>(null);
 const open = ref(false);
 const childrenPagination = usePaginatedChildren(item);
+const { getCorrectPreviewPathWithLocale } = useCategoryIdHelper();
+const localePagePath = getCorrectPreviewPathWithLocale(pagePath.value);
 
 const toggleOpen = async (isTabletCheck = false) => {
   if (item.level === 5) {

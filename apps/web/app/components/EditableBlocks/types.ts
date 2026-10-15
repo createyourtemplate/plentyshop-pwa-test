@@ -1,4 +1,13 @@
 import type { Block } from '@plentymarkets/shop-api';
+import type { Component } from 'vue';
+import type { PageBlockEditorProps, PageBlockProps } from '../PageBlock/types';
+
+export type BlockLayout = { narrowContainer?: boolean };
+
+export type BlockWithLayout = Block & {
+  content?: { layout?: BlockLayout };
+  layout?: BlockLayout;
+};
 
 export interface DragEvent<T = Block> {
   added?: {
@@ -24,3 +33,9 @@ export type EditableBlocksProps = {
   readOnly?: boolean;
   blocks?: Block[];
 };
+
+export interface EditableBlockItemProps extends PageBlockProps {
+  editorPageBlockProps?: PageBlockEditorProps;
+  pageBlockComponent: Component | string;
+  tabletEdit: (index: number) => void;
+}

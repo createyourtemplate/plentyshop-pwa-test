@@ -26,4 +26,12 @@ export interface UseEditorStateReturn {
   // Client-side
   /** Client-side only editor check (guaranteed to be set post-hydration) */
   isInEditorClient: Ref<boolean>;
+
+  // Device preview
+  /** Currently simulated device in editor preview */
+  device: Ref<PreviewDevice>;
+  /** Whether the preview is simulating a mobile or tablet device */
+  isMobilePreview: ComputedRef<boolean>;
+  /** Preview frame width (e.g. '375px' for mobile, '100%' for desktop) */
+  previewWidth: ComputedRef<string>;
 }

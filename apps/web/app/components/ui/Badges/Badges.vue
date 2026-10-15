@@ -1,5 +1,5 @@
 <template>
-  <div v-if="haveBadges" data-testid="badges" class="z-[2]">
+  <div v-if="haveBadges" data-testid="badges" class="z-overlap">
     <ul>
       <template v-if="useTags && productTags.length > 0">
         <SfListItem
@@ -36,7 +36,7 @@ import { SfListItem } from '@storefront-ui/vue';
 import { type ProductTag, productGetters, tagGetters } from '@plentymarkets/shop-api';
 import type { BadgesProps } from '~/components/ui/Badges/types';
 
-const localePath = useLocalePath();
+const localePath = useLocalizedPath();
 
 const { product, useTags = true, useAvailability = false } = defineProps<BadgesProps>();
 

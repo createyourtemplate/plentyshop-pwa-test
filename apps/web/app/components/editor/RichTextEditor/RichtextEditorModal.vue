@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <div
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[200]"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-modal-backdrop"
       @click.self="emit('close')"
     >
       <div class="bg-white w-[90%] m-20 h-[90%] p-6 rounded-lg shadow-xl flex flex-col overflow-hidden">
@@ -29,6 +29,9 @@
               :toggle-link="toggleLink"
               :current-font-size="currentFontSize"
               :on-text-size-change="setFontSize"
+              :insert-icon="insertIcon"
+              :insert-emoji="insertEmoji"
+              :on-open-i18n-modal="onOpenI18nModal"
             />
 
             <EditorRichTextEditorExtendedButtons
@@ -46,8 +49,16 @@
             />
           </div>
 
-          <div class="flex-1 overflow-y-auto p-4">
-            <EditorContent :editor="editor" class="rte__content rte-prose" :style="editorStyle" />
+          <EditorCustomCodeHints :content="content" />
+
+          <div class="flex-1 overflow-y-auto">
+            <div
+              class="p-2.5 editor-parent bg-white cursor-text border border-gray-300 rounded-md"
+              data-testid="rte-modal-editor"
+              @mousedown="editor?.chain().focus().run()"
+            >
+              <EditorContent :editor="editor" class="rte__content rte-prose h-full" :style="editorStyle" />
+            </div>
           </div>
         </main>
       </div>
@@ -57,35 +68,45 @@
 
 <script setup lang="ts">
 import type { Editor } from '@tiptap/vue-3';
-import type { RteCommand } from '~/composables/useRichTextEditor/types';
 import { EditorContent } from '@tiptap/vue-3';
 import { SfIconClose } from '@storefront-ui/vue';
 
-defineProps<{
-  editor: Editor | undefined;
-  editorStyle?: {
-    textAlign: globalThis.RteAlign;
-    minHeight: string;
-  };
-  cmd: (name: RteCommand) => void;
-  isActive: (name: string) => boolean;
-  currentBlockType: RteBlockType;
-  onFontSizeChange: (value: string) => void;
-  textColor: string;
-  highlightColor: string;
-  currentFontSize: string;
-  setFontSize: (value: string) => void;
-  setFontColor: (color: string) => void;
-  setHighlightColor: (color: string) => void;
-  setAlign: (align: RteAlign) => void;
-  isActiveAlign: (align: RteAlign) => boolean;
-  canUndo: boolean;
-  canRedo: boolean;
-  undo: () => void;
-  redo: () => void;
-  toggleLink: () => void;
-  clearFormatting: () => void;
-}>();
+withDefaults(
+  defineProps<{
+    editor: Editor | undefined;
+    editorStyle?: {
+      textAlign: globalThis.RteAlign;
+      minHeight: string;
+    };
+    cmd: (name: RteCommand) => void;
+    isActive: (name: string) => boolean;
+    currentBlockType: RteBlockType;
+    onFontSizeChange: (value: string) => void;
+    textColor: string;
+    highlightColor: string;
+    currentFontSize: string;
+    setFontSize: (value: string) => void;
+    setFontColor: (color: string) => void;
+    setHighlightColor: (color: string) => void;
+    setAlign: (align: RteAlign) => void;
+    isActiveAlign: (align: RteAlign) => boolean;
+    canUndo: boolean;
+    canRedo: boolean;
+    undo: () => void;
+    redo: () => void;
+    toggleLink: () => void;
+    clearFormatting: () => void;
+    insertIcon: (name: string) => void;
+    insertEmoji: (name: string) => void;
+    onOpenI18nModal?: () => void;
+    content?: string;
+  }>(),
+  {
+    editorStyle: undefined,
+    onOpenI18nModal: undefined,
+    content: '',
+  },
+);
 
 const emit = defineEmits<{
   (e: 'close' | 'switch-to-html'): void;

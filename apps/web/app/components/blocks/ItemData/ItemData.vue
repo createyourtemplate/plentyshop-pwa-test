@@ -8,47 +8,25 @@
       <div v-if="displayAsCollapsable">
         <UiAccordionItem
           v-model="isOpen"
-          summary-class="md:rounded-md w-full hover:bg-neutral-100 py-2 pl-4 pr-3 flex justify-between items-center select-none"
+          summary-class="@md:rounded-md w-full hover:bg-neutral-100 py-2 pl-4 pr-3 flex justify-between items-center select-none"
           data-testid="item-data"
         >
           <template #summary>
-            <h2 class="font-bold text-lg leading-6 md:text-2xl">
+            <h2 class="font-bold text-lg leading-6 @md:text-2xl">
               {{ title }}
             </h2>
           </template>
 
-          <v-table density="comfortable" class="item-info-table">
-            <tbody>
-              <tr v-for="row in visibleRows" :key="row.key" class="item-info-table__row">
-                <td class="item-info-table__cell item-info-table__label">
-                  {{ row.label }}
-                </td>
-                <td class="item-info-table__cell item-info-table__value">
-                  {{ row.value }}
-                </td>
-              </tr>
-            </tbody>
-          </v-table>
+          <ItemDataTable :rows="visibleRows" />
         </UiAccordionItem>
       </div>
 
       <div v-else>
-        <h2 v-if="title" class="font-bold text-lg leading-6 md:text-2xl mb-2">
+        <h2 v-if="title" class="font-bold text-lg leading-6 @md:text-2xl mb-2">
           {{ title }}
         </h2>
 
-        <v-table density="comfortable" class="item-info-table">
-          <tbody>
-            <tr v-for="row in visibleRows" :key="row.key" class="item-info-table__row">
-              <td class="item-info-table__cell item-info-table__label">
-                {{ row.label }}
-              </td>
-              <td class="item-info-table__cell item-info-table__value">
-                {{ row.value }}
-              </td>
-            </tr>
-          </tbody>
-        </v-table>
+        <ItemDataTable :rows="visibleRows" />
       </div>
     </template>
   </div>
@@ -58,6 +36,7 @@
 import type { Product } from '@plentymarkets/shop-api';
 import type { ItemDataContent, ItemDataFieldKey, ItemDataFieldLabels } from './types';
 import { SfIconWarning } from '@storefront-ui/vue';
+import ItemDataTable from './ItemDataTable.vue';
 
 const props = defineProps<{
   content: ItemDataContent;

@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <div
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[200]"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-modal-backdrop"
       @click.self="emit('close')"
     >
       <div
@@ -47,6 +47,8 @@
             <li v-for="(error, index) in htmlErrors.slice(0, 3)" :key="index">{{ error }}</li>
           </ul>
         </div>
+
+        <EditorCustomCodeHints :content="localValue" />
 
         <main class="flex-1 overflow-hidden flex flex-col">
           <div class="flex-1 overflow-y-auto">
