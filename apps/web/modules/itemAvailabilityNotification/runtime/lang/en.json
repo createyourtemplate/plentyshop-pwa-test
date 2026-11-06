@@ -1,0 +1,42 @@
+{
+  "itemAvailabilityNotification": {
+    "frontend": {
+      "formHintText": "Gerne informieren wir Sie, sobald der Artikel wieder verfügbar ist.",
+      "emailLabel": "E-Mail-Adresse",
+      "emailPlaceHolder": "E-Mail-Adresse",
+      "subscriptionSucceed": "Wir haben Ihnen eine E-Mail zur Bestätigung ihrer Registrierung gesendet. Bitte prüfen Sie ihr Postfach.",
+      "subscriptionFailed": "Bei der Registrierung kam es zu einem Fehler!",
+      "invalidMail": "Die E-Mail-Adresse ist ungültig",
+      "submitLabel": "Senden",
+      "formLabel": "Formular für Verfügbarkeitsbenachrichtigung",
+      "privacyPolicyLink": "Datenschutzerklärung (öffnet in neuem Tab)",
+      "readAndAccepted": "Ich habe die {privacyPolicy} gelesen und akzeptiert",
+      "securityVerification": "Sicherheitsüberprüfung",
+      "subscribeButton": "Für Verfügbarkeitsbenachrichtigung anmelden",
+      "turnstileFailed": "Turnstile Validierung Fehlgeschlagen",
+      "privacyHintText": "Mit der Anmeldung bestätige ich, dass ich die {privacyPolicy} gelesen habe.",
+      "confirmationSucceed": "Vielen Dank. Wir benachrichtigen Sie, sobald der gewünschte Artikel wieder verfügbar ist.",
+      "confirmationFailed": "Bei der Bestätigung Ihrer Registrierung kam es zu einem Fehler!"
+
+    },
+    "widget" : {
+      "widgetLabel": "Verfügbarkeitsbenachrichtigung",
+      "customClass": "Eigene Klasse",
+      "formVisibilityTypeLabel": "Formular anzeigen, wenn",
+      "sendMailTypeLabel": "Benachrichtigung versenden, wenn",
+      "conditionTypeAvailability": "Verfügbarkeit der Variante",
+      "conditionTypeStock": "Warenbestand der Variante",
+      "conditionComparisonEQ": "ist gleich",
+      "conditionComparisonLT": "ist kleiner als",
+      "conditionComparisonLTE": "ist kleiner oder gleich",
+      "conditionComparisonGT": "ist größer als",
+      "conditionComparisonGTE": "ist größer oder gleich",
+      "conditionCompareToCurrentLabel": "Wert zum Zeitpunkt der Anmeldung",
+      "conditionCompareToValueLabel": "fester Wert",
+      "conditionCompareToLabel": "Vergleichswert",
+      "hideForMainVariationLabel": "Bei Artikeln mit mehreren Varianten für die Hauptvariante immer ausblenden",
+      "showPrivacyHintLabel": "Hinweistext zur Datenschutzerklärung anzeigen",
+      "requirePrivacyHintLabel": "Zustimmung zur Datenschutzerklärung über Checkbox einholen"
+    }
+  }
+}

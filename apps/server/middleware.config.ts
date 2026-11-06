@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import * as path from 'path';
+import { itemAvailabilityNotificationExtension } from './extensions/itemAvailabilityNotification';
 dotenv.config({
   path: path.resolve(__dirname, '../web/.env'),
 });
@@ -26,6 +27,10 @@ const config = {
           res.status(500).send(error);
         }
       },
+      extensions: (extensions: any) => [
+        ...extensions,
+        itemAvailabilityNotificationExtension
+      ]
     },
   },
 };
